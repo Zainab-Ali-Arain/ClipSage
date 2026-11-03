@@ -1,0 +1,8 @@
+openai-whisper
+sentence-transformers
+chromadb
+fastapi
+uvicorn
+python-multipart
+requests
+matplotlib

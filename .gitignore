@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.pyc
+venv/
+.venv/
+.pytest_cache/
+
+# Secrets - never commit the API key
+.env
+
+# Large / regenerable files (rebuild with: python -m clipsage.index)
+data/index/
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Old prototype runtime files
+legacy/**/node_modules/
+legacy/**/chroma_db/
+legacy/**/data/

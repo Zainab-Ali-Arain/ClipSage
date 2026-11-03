@@ -1,0 +1,25 @@
+{
+  "_comment": "Subjects covered by the prototype (proposal section 4). 'keywords' are used to filter channel/playlist videos by title and to suggest related topics when a query is not covered. Add a new subject here and re-run collection to extend ClipSage.",
+  "subjects": {
+    "Machine Learning": {
+      "search_queries": ["machine learning lecture", "overfitting explained", "gradient descent explained", "decision tree algorithm"],
+      "keywords": ["machine learning", "overfitting", "underfitting", "regression", "classification", "gradient descent", "neural network", "decision tree", "random forest", "support vector", "svm", "k-means", "clustering", "cross validation", "regularization", "bias variance", "naive bayes", "logistic regression", "linear regression", "pca", "principal component", "backpropagation", "k nearest", "knn", "precision", "recall", "confusion matrix", "dropout", "loss function"]
+    },
+    "Data Structures": {
+      "search_queries": ["data structures lecture", "binary search tree explained", "linked list data structure", "hash table explained"],
+      "keywords": ["data structure", "array", "linked list", "stack", "queue", "binary tree", "binary search tree", "bst", "heap", "priority queue", "hash table", "hashing", "graph", "avl tree", "red black tree", "trie", "sorting", "quick sort", "merge sort", "binary search", "big o", "time complexity", "recursion", "bfs", "dfs", "dijkstra"]
+    },
+    "Databases": {
+      "search_queries": ["database management system lecture", "sql joins explained", "database normalization explained"],
+      "keywords": ["database", "dbms", "sql", "normalization", "normal form", "1nf", "2nf", "3nf", "bcnf", "er diagram", "entity relationship", "primary key", "foreign key", "join", "index", "transaction", "acid", "relational algebra", "query", "nosql", "concurrency control", "deadlock"]
+    },
+    "Operating Systems": {
+      "search_queries": ["operating system lecture", "process scheduling explained", "virtual memory explained"],
+      "keywords": ["operating system", "process", "thread", "scheduling", "cpu scheduling", "round robin", "deadlock", "semaphore", "mutex", "synchronization", "critical section", "paging", "page replacement", "virtual memory", "segmentation", "file system", "context switch", "kernel", "system call", "memory management"]
+    },
+    "Computer Networks": {
+      "search_queries": ["computer networks lecture", "tcp three way handshake", "osi model explained"],
+      "keywords": ["network", "tcp", "udp", "handshake", "osi model", "tcp/ip", "ip address", "subnet", "subnetting", "routing", "router", "switch", "dns", "http", "https", "mac address", "arp", "congestion control", "flow control", "sliding window", "ethernet", "packet", "socket", "firewall"]
+    }
+  }
+}

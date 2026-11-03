@@ -1,0 +1,49 @@
+{
+  "_comment": "Trusted educational sources (proposal section 8). Channels are given by @handle and resolved through the API (1 quota unit each). Before collecting, open each handle on youtube.com to confirm it is the channel you want, and add playlist IDs (the part after 'list=' in a playlist URL) for specific lecture series. 'subjects' limits which subjects a source is used for; leave it empty to use all.",
+  "channels": [
+    {
+      "handle": "@statquest",
+      "subjects": [
+        "Machine Learning"
+      ]
+    },
+    {
+      "handle": "@freecodecamp",
+      "subjects": []
+    },
+    {
+      "handle": "@cs50",
+      "subjects": []
+    },
+    {
+      "handle": "@mitocw",
+      "subjects": []
+    },
+    {
+      "handle": "@nesoacademy",
+      "subjects": [
+        "Operating Systems",
+        "Computer Networks",
+        "Databases",
+        "Data Structures"
+      ]
+    },
+    {
+      "handle": "@abdul_bari",
+      "subjects": [
+        "Data Structures"
+      ]
+    }
+  ],
+  "playlists": [],
+  "max_videos_per_channel": 120,
+  "max_total_videos": 500,
+  "use_search": true,
+  "max_search_calls": 25,
+  "_playlists_example": {
+    "id": "PLxxxxxxxxxxxxxxxx",
+    "subjects": [
+      "Databases"
+    ]
+  }
+}

@@ -1,0 +1,185 @@
+{
+  "_comment": "30 test queries (proposal section 8). Relevant videos are marked by hand: run `python -m clipsage.evaluate pool` and fill evaluation/relevance_labels.csv. You can also list known relevant video IDs in 'relevant_videos'.",
+  "queries": [
+    {
+      "id": 1,
+      "query": "overfitting",
+      "subject": "Machine Learning",
+      "relevant_videos": []
+    },
+    {
+      "id": 2,
+      "query": "gradient descent",
+      "subject": "Machine Learning",
+      "relevant_videos": []
+    },
+    {
+      "id": 3,
+      "query": "decision tree",
+      "subject": "Machine Learning",
+      "relevant_videos": []
+    },
+    {
+      "id": 4,
+      "query": "k-means clustering",
+      "subject": "Machine Learning",
+      "relevant_videos": []
+    },
+    {
+      "id": 5,
+      "query": "cross validation",
+      "subject": "Machine Learning",
+      "relevant_videos": []
+    },
+    {
+      "id": 6,
+      "query": "regularization",
+      "subject": "Machine Learning",
+      "relevant_videos": []
+    },
+    {
+      "id": 7,
+      "query": "binary search tree",
+      "subject": "Data Structures",
+      "relevant_videos": []
+    },
+    {
+      "id": 8,
+      "query": "linked list",
+      "subject": "Data Structures",
+      "relevant_videos": []
+    },
+    {
+      "id": 9,
+      "query": "hash table",
+      "subject": "Data Structures",
+      "relevant_videos": []
+    },
+    {
+      "id": 10,
+      "query": "stack and queue",
+      "subject": "Data Structures",
+      "relevant_videos": []
+    },
+    {
+      "id": 11,
+      "query": "heap data structure",
+      "subject": "Data Structures",
+      "relevant_videos": []
+    },
+    {
+      "id": 12,
+      "query": "big O notation",
+      "subject": "Data Structures",
+      "relevant_videos": []
+    },
+    {
+      "id": 13,
+      "query": "database normalization",
+      "subject": "Databases",
+      "relevant_videos": []
+    },
+    {
+      "id": 14,
+      "query": "SQL joins",
+      "subject": "Databases",
+      "relevant_videos": []
+    },
+    {
+      "id": 15,
+      "query": "primary key and foreign key",
+      "subject": "Databases",
+      "relevant_videos": []
+    },
+    {
+      "id": 16,
+      "query": "ACID properties of transactions",
+      "subject": "Databases",
+      "relevant_videos": []
+    },
+    {
+      "id": 17,
+      "query": "ER diagram",
+      "subject": "Databases",
+      "relevant_videos": []
+    },
+    {
+      "id": 18,
+      "query": "database indexing",
+      "subject": "Databases",
+      "relevant_videos": []
+    },
+    {
+      "id": 19,
+      "query": "deadlock",
+      "subject": "Operating Systems",
+      "relevant_videos": []
+    },
+    {
+      "id": 20,
+      "query": "CPU scheduling",
+      "subject": "Operating Systems",
+      "relevant_videos": []
+    },
+    {
+      "id": 21,
+      "query": "virtual memory",
+      "subject": "Operating Systems",
+      "relevant_videos": []
+    },
+    {
+      "id": 22,
+      "query": "semaphore",
+      "subject": "Operating Systems",
+      "relevant_videos": []
+    },
+    {
+      "id": 23,
+      "query": "paging",
+      "subject": "Operating Systems",
+      "relevant_videos": []
+    },
+    {
+      "id": 24,
+      "query": "process vs thread",
+      "subject": "Operating Systems",
+      "relevant_videos": []
+    },
+    {
+      "id": 25,
+      "query": "TCP handshake",
+      "subject": "Computer Networks",
+      "relevant_videos": []
+    },
+    {
+      "id": 26,
+      "query": "OSI model",
+      "subject": "Computer Networks",
+      "relevant_videos": []
+    },
+    {
+      "id": 27,
+      "query": "DNS",
+      "subject": "Computer Networks",
+      "relevant_videos": []
+    },
+    {
+      "id": 28,
+      "query": "TCP vs UDP",
+      "subject": "Computer Networks",
+      "relevant_videos": []
+    },
+    {
+      "id": 29,
+      "query": "subnetting",
+      "subject": "Computer Networks",
+      "relevant_videos": []
+    },
+    {
+      "id": 30,
+      "query": "routing",
+      "subject": "Computer Networks",
+      "relevant_videos": []
+    }
+  ]
+}

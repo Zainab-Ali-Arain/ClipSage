@@ -1,0 +1,37 @@
+{
+  "_comment": "Reference summaries for ROUGE (proposal section 10). Short textbook-style explanations of 4-6 sentences. The team should review them (and may rewrite them in their own words) before reporting ROUGE scores.",
+  "summaries": [
+    {
+      "query": "overfitting",
+      "reference": "Overfitting happens when a model learns the training data too closely, including its noise, so it performs very well on the training set but poorly on new, unseen data. It shows up as a low training error but a high validation or test error. Overfitting is more likely when the model is too complex for the amount of data available. It can be reduced with more training data, simpler models, regularization, dropout, early stopping and cross-validation."
+    },
+    {
+      "query": "gradient descent",
+      "reference": "Gradient descent is an optimization algorithm used to find the parameters that minimize a loss function. It starts with initial values and repeatedly moves the parameters in the direction of the negative gradient, which is the direction of steepest decrease of the loss. The size of each step is controlled by the learning rate. If the learning rate is too large the algorithm can overshoot the minimum, and if it is too small training becomes slow. Stochastic and mini-batch gradient descent use a subset of the data at each step."
+    },
+    {
+      "query": "binary search tree",
+      "reference": "A binary search tree is a binary tree in which every node's left subtree contains only smaller keys and its right subtree contains only larger keys. This ordering makes it possible to search, insert and delete by comparing the key with the current node and moving left or right. In a balanced tree these operations take O(log n) time, but in a skewed tree they can degrade to O(n). An in-order traversal of a binary search tree visits the keys in sorted order."
+    },
+    {
+      "query": "hash table",
+      "reference": "A hash table is a data structure that stores key-value pairs and uses a hash function to compute the index where each key is stored. This allows insertion, search and deletion in constant time on average. A collision happens when two keys hash to the same index. Collisions are handled with techniques such as chaining, where each slot holds a list, or open addressing, such as linear probing. The load factor affects performance, so the table is resized when it becomes too full."
+    },
+    {
+      "query": "database normalization",
+      "reference": "Normalization is the process of organizing the tables of a relational database to reduce redundancy and avoid insertion, update and deletion anomalies. It works by splitting tables according to functional dependencies. First normal form requires atomic values, second normal form removes partial dependencies on a composite key, and third normal form removes transitive dependencies. Boyce-Codd normal form is a stricter version of third normal form."
+    },
+    {
+      "query": "deadlock",
+      "reference": "A deadlock is a situation in which a set of processes are blocked forever because each process holds a resource and waits for a resource held by another process in the set. Four conditions must hold at the same time for a deadlock: mutual exclusion, hold and wait, no preemption and circular wait. Deadlocks can be handled by prevention, which breaks one of the conditions, by avoidance, such as the Banker's algorithm, or by detection and recovery."
+    },
+    {
+      "query": "virtual memory",
+      "reference": "Virtual memory is a memory management technique that gives each process the illusion of a large, contiguous address space that can be bigger than the physical memory. Only the needed parts of a program are kept in main memory, and the rest stays on disk. Virtual addresses are translated to physical addresses using page tables. When a process accesses a page that is not in memory, a page fault occurs and the operating system loads the page, using a page replacement algorithm if memory is full."
+    },
+    {
+      "query": "TCP handshake",
+      "reference": "TCP uses a three-way handshake to establish a reliable connection between a client and a server. First the client sends a SYN segment with its initial sequence number. The server replies with a SYN-ACK segment that acknowledges the client's number and sends its own sequence number. Finally the client sends an ACK, and the connection is established so data transfer can begin. The handshake synchronizes the sequence numbers that both sides use for reliable delivery."
+    }
+  ]
+}
