@@ -24,7 +24,8 @@ from ..subjects import get_subject, load_subjects, topics_by_category, topics_of
 from .common import (activity, ask_in_subject, badges, card, chat_messages, chips, content_html, esc, get_lesson,
                      get_sage, open_subject, open_topic, request_page, stat, store)
 from .tools import algorithm_practice, numerical_practice
-from .topic_view import render_lecture_explanation, render_question_set, render_topic, video_panel
+from .topic_view import (lecture_moments, render_lecture_explanation, render_question_set, render_topic, topic_panels,
+                         video_panel)
 
 LAYOUT = dict(template="plotly_white", paper_bgcolor="#FFFFFF", plot_bgcolor="#F5F9FF", margin=dict(l=30, r=20, t=40, b=30),
               font=dict(color="#243447"))
@@ -304,11 +305,14 @@ def _topic_answer(subject: dict, reply: dict, i: int) -> None:
     t = load_topics()[reply["topic_id"]]
     lang = _lang(reply)
     st.markdown(f"**{esc(pick(t['title'], lang))}**")
+    panels = topic_panels(t)
+    start_key = f"vstart_chat_{i}"
     left, right = st.columns([3, 2], gap="large")
     with left:
         badges("notes")
         st.markdown(f"<div class='cs-card cs-def'>{esc(pick(t['definition'], lang))}</div>", unsafe_allow_html=True)
         st.markdown(_html_p(pick(t["explanation"], lang)), unsafe_allow_html=True)
+        lecture_moments(panels, lang, start_key)
         with st.expander("Worked example"):
             st.markdown(_html_p(pick(t["example"], lang)), unsafe_allow_html=True)
         if t.get("exam_points"):
@@ -326,7 +330,7 @@ def _topic_answer(subject: dict, reply: dict, i: int) -> None:
             s.save_topic(t["id"], t["title"]["en"])
             st.rerun()
     with right:
-        video_panel(t)
+        video_panel(t, panels, start_key, show_stamps=False)
     activity().add_studied(subject["name"], t["id"], t["title"]["en"])
 
 

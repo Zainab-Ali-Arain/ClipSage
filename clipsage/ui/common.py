@@ -35,6 +35,7 @@ CSS = f"""
   .cs-hero h1 {{ margin: 0; font-size: 2rem; }}
   .cs-hero p {{ margin: 6px 0 0 0; font-size: 1.05rem; color: #3D5A78; }}
   .cs-center {{ text-align: center; }}
+  .cs-moments-title {{ font-weight: 600; color: {PRIMARY}; margin: 10px 0 4px 0; }}
   .cs-center h1 {{ font-size: 2.6rem; }}
   .cs-muted {{ color: #5B7590; font-size: 0.92rem; }}
   .cs-badge {{ display: inline-block; font-size: 0.75rem; font-weight: 600; padding: 3px 10px; border-radius: 999px;

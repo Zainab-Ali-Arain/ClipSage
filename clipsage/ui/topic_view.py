@@ -14,6 +14,7 @@ from typing import List, Optional
 import streamlit as st
 import streamlit.components.v1 as components
 
+from ..i18n import pick
 from ..library import videos_for_topic
 from ..quiz import CORRECT, PARTIAL, grade
 from ..utils import format_timestamp
@@ -121,17 +122,59 @@ def render_question_set(subject: str, topic_id: str, title: str, questions: List
 # ---------------------------------------------------------------------------
 # Video panel (right column)
 # ---------------------------------------------------------------------------
-def video_panel(topic: dict) -> None:
-    st.markdown("#### Video reference")
+MOMENTS_TITLE = {"en": "Where the lecture explains this", "ru": "Lecture mein yeh kahan samjhaya gaya hai"}
+BEST_PART = {"en": "Most relevant part of the lecture: {a}-{b}", "ru": "Lecture ka sab se mutaliq hissa: {a}-{b}"}
+NO_MOMENTS = {"en": "The captions of this video do not mention these sub-topics by name, so no exact timestamp is shown.",
+              "ru": "Is video ke captions mein yeh sub-topics naam se nahi aaye, is liye koi pakka timestamp nahi dikhaya gaya."}
+
+
+def topic_panels(topic: dict) -> list:
+    """Lecture videos for a topic with caption timestamps (empty when none were collected)."""
     sage = get_sage()
-    panels = videos_for_topic(topic, sage.engine if sage else None, effective_method())
+    return videos_for_topic(topic, sage.engine if sage else None, effective_method())
+
+
+def _jump(start_key: str, seconds: float) -> None:
+    st.session_state[start_key] = int(seconds or 0)
+
+
+def lecture_moments(panels: list, lang: str, start_key: str) -> None:
+    """Timestamps INSIDE the explanation: where each sub-topic is taught, with a button that
+    starts the embedded video at that second. Only real caption times are shown."""
+    if not panels:
+        return
+    main = panels[0]
+    st.markdown(f"<div class='cs-moments-title'>{esc(pick(MOMENTS_TITLE, lang))}</div>", unsafe_allow_html=True)
+    seg = main.get("segment")
+    if seg:
+        c1, c2 = st.columns([1, 5], vertical_alignment="center")
+        c1.button(seg["start_label"], key=f"{start_key}_best", icon=":material/play_arrow:", on_click=_jump,
+                  args=(start_key, seg["start"]), width="stretch")
+        c2.markdown(esc(pick(BEST_PART, lang).format(a=seg["start_label"], b=seg["end_label"])), unsafe_allow_html=True)
+    for i, m in enumerate(sorted(main["covered"], key=lambda m: m["start"])):
+        c1, c2 = st.columns([1, 5], vertical_alignment="center")
+        c1.button(m["label"], key=f"{start_key}_{i}", icon=":material/play_arrow:", on_click=_jump,
+                  args=(start_key, m["start"]), width="stretch")
+        c2.markdown(f"<b>{esc(m['name'])}</b> <span class='cs-muted'>- “{esc(m['sentence'][:140])}”</span>",
+                    unsafe_allow_html=True)
+    if not seg and not main["covered"] and main["has_transcript"]:
+        st.caption(pick(NO_MOMENTS, lang))
+
+
+def video_panel(topic: dict, panels: Optional[list] = None, start_key: Optional[str] = None,
+                show_stamps: bool = True) -> None:
+    st.markdown("#### Video reference")
+    if panels is None:
+        panels = topic_panels(topic)
     if not panels:
         st.info("No video has been collected for this topic yet. Run run_pipeline.bat to build the video library "
                 "(videos are found with the YouTube Data API - none are typed in by hand).")
         return
     main = panels[0]
     act = activity()
-    st.video(f"https://www.youtube.com/watch?v={main['video_id']}", start_time=int(main["start"] or 0))
+    start = st.session_state.get(start_key) if start_key else None
+    st.video(f"https://www.youtube.com/watch?v={main['video_id']}", start_time=int(start if start is not None else main["start"] or 0),
+             autoplay=start is not None)
     act.add_viewed(main["video_id"], main["title"], topic["subject"])
     st.markdown(f"<div class='cs-video'><b>{esc(main['title'])}</b><br><span class='cs-muted'>{esc(main['channel_title'])}"
                 f"</span><br><span class='cs-muted'>Topic covered: {esc(topic['title']['en'])} - {esc(main['source'])}</span>"
@@ -140,13 +183,13 @@ def video_panel(topic: dict) -> None:
         seg = main["segment"]
         st.markdown(f"**Best matching part:** <a class='cs-ts' href='{seg['url']}' target='_blank'>"
                     f"{seg['start_label']}-{seg['end_label']}</a> {chips(seg['terms'][:4])}", unsafe_allow_html=True)
-    if main["covered"]:
+    if main["covered"] and show_stamps:
         st.markdown("**Timestamps found in the captions**")
         for s in main["covered"]:
             st.markdown(f"<div class='cs-quote'><a class='cs-ts' href='{s['url']}' target='_blank'>{s['label']}</a> "
                         f"<b>{esc(s['name'])}</b> - <span class='cs-muted'>“{esc(s['sentence'][:120])}”</span></div>",
                         unsafe_allow_html=True)
-    if main["not_found"]:
+    if main["not_found"] and show_stamps:
         st.caption("No reliable timestamp in this video's captions for: " + ", ".join(main["not_found"]))
     if not main["has_transcript"]:
         st.caption("This video has no downloaded captions, so no timestamps can be shown.")
@@ -240,6 +283,7 @@ def render_topic(topic: dict, key: str, query: Optional[str] = None, show_questi
         s.save_material("explanation", topic["title"]["en"], lesson_as_text(topic), rlang())
         st.success(f"Saved in {subject} > Saved.")
 
+    panels = topic_panels(topic)
     left, right = st.columns([3, 2], gap="large")
     with left:
         badges("notes")
@@ -249,6 +293,7 @@ def render_topic(topic: dict, key: str, query: Optional[str] = None, show_questi
         st.markdown(f"<div class='cs-card'>{content_html(topic['definition'])}</div>", unsafe_allow_html=True)
         _section("Detailed explanation")
         show_content(topic["explanation"])
+        lecture_moments(panels, rlang(), f"vstart_{key}_{topic['id']}")
         _section("Worked example")
         badges("example")
         st.markdown(f"<div class='cs-card'>{content_html(topic['example'])}</div>", unsafe_allow_html=True)
@@ -278,7 +323,7 @@ def render_topic(topic: dict, key: str, query: Optional[str] = None, show_questi
         bullet_list(topic.get("common_mistakes", []))
         notes_box(subject, topic["id"], topic["title"]["en"], key)
     with right:
-        video_panel(topic)
+        video_panel(topic, panels, f"vstart_{key}_{topic['id']}", show_stamps=False)
 
     lesson = get_lesson(topic["title"]["en"]) if get_sage() else None   # transcripts are English
     result = lesson["lecture"] if lesson else None
