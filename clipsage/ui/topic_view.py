@@ -15,9 +15,9 @@ import streamlit as st
 import streamlit.components.v1 as components
 
 from ..i18n import pick
-from ..library import videos_for_topic
+from ..library import video_explanation, videos_for_topic
 from ..quiz import CORRECT, PARTIAL, grade
-from ..utils import format_timestamp
+from ..utils import format_timestamp, youtube_link
 from ..visualize import concept_map_html, keyword_cloud, timeline_figure
 from .common import (activity, badges, bullet_list, card, chips, content, content_html, effective_method, esc,
                      get_lesson, get_sage, lang_badge, rlang, show_content, store)
@@ -122,10 +122,11 @@ def render_question_set(subject: str, topic_id: str, title: str, questions: List
 # ---------------------------------------------------------------------------
 # Video panel (right column)
 # ---------------------------------------------------------------------------
-MOMENTS_TITLE = {"en": "Where the lecture explains this", "ru": "Lecture mein yeh kahan samjhaya gaya hai"}
-BEST_PART = {"en": "Most relevant part of the lecture: {a}-{b}", "ru": "Lecture ka sab se mutaliq hissa: {a}-{b}"}
-NO_MOMENTS = {"en": "The captions of this video do not mention these sub-topics by name, so no exact timestamp is shown.",
-              "ru": "Is video ke captions mein yeh sub-topics naam se nahi aaye, is liye koi pakka timestamp nahi dikhaya gaya."}
+MOMENTS_TITLE = {"en": "How the lecture explains it", "ru": "Lecture mein yeh kaise samjhaya gaya hai"}
+POINT_RANGE = {"en": "becomes clear from {a} to {b} in the video:", "ru": "video mein {a} se {b} tak yeh point clear hota hai:"}
+NOT_IN_VIDEO = {"en": "Not mentioned in this video's captions: {names}.",
+                "ru": "Is video ke captions mein in ka zikr nahi mila: {names}."}
+ENGLISH_NOTE = {"en": "", "ru": "Lecture ke jumle video ki asal zaban (English) mein hain."}
 
 
 def topic_panels(topic: dict) -> list:
@@ -138,27 +139,36 @@ def _jump(start_key: str, seconds: float) -> None:
     st.session_state[start_key] = int(seconds or 0)
 
 
-def lecture_moments(panels: list, lang: str, start_key: str) -> None:
-    """Timestamps INSIDE the explanation: where each sub-topic is taught, with a button that
-    starts the embedded video at that second. Only real caption times are shown."""
-    if not panels:
-        return
+def lecture_moments(topic: dict, panels: list, lang: str, start_key: str) -> bool:
+    """The explanation taken FROM the lecture: for the topic and each sub-topic, the lecturer's own
+    sentences and the time range in which that point becomes clear, with a button that plays the
+    embedded video from there. Only caption text and caption times are used. False = nothing to show."""
+    sage = get_sage()
+    if not panels or sage is None or not panels[0]["has_transcript"]:
+        return False
     main = panels[0]
-    st.markdown(f"<div class='cs-moments-title'>{esc(pick(MOMENTS_TITLE, lang))}</div>", unsafe_allow_html=True)
-    seg = main.get("segment")
-    if seg:
-        c1, c2 = st.columns([1, 5], vertical_alignment="center")
-        c1.button(seg["start_label"], key=f"{start_key}_best", icon=":material/play_arrow:", on_click=_jump,
-                  args=(start_key, seg["start"]), width="stretch")
-        c2.markdown(esc(pick(BEST_PART, lang).format(a=seg["start_label"], b=seg["end_label"])), unsafe_allow_html=True)
-    for i, m in enumerate(sorted(main["covered"], key=lambda m: m["start"])):
-        c1, c2 = st.columns([1, 5], vertical_alignment="center")
-        c1.button(m["label"], key=f"{start_key}_{i}", icon=":material/play_arrow:", on_click=_jump,
-                  args=(start_key, m["start"]), width="stretch")
-        c2.markdown(f"<b>{esc(m['name'])}</b> <span class='cs-muted'>- “{esc(m['sentence'][:140])}”</span>",
-                    unsafe_allow_html=True)
-    if not seg and not main["covered"] and main["has_transcript"]:
-        st.caption(pick(NO_MOMENTS, lang))
+    exp = video_explanation(sage.engine, main["video_id"], topic)
+    if not exp["points"]:
+        return False
+    st.markdown(f"<div class='cs-moments-title'>{esc(pick(MOMENTS_TITLE, lang))}</div>"
+                f"<span class='cs-muted'>{esc(main['title'])} - {esc(main['channel_title'])}</span>", unsafe_allow_html=True)
+    badges("lecture")
+    for i, pt in enumerate(exp["points"]):
+        with st.container(border=True):
+            c1, c2 = st.columns([1, 5], vertical_alignment="center")
+            c1.button(pt["start_label"], help=f"Play {pt['start_label']}-{pt['end_label']}", key=f"{start_key}_{i}", icon=":material/play_arrow:",
+                      on_click=_jump, args=(start_key, pt["start"]), width="stretch")
+            c2.markdown(f"<b>{esc(pt['name'])}</b> - "
+                        f"{esc(pick(POINT_RANGE, lang).format(a=pt['start_label'], b=pt['end_label']))}",
+                        unsafe_allow_html=True)
+            lines = "".join(f"<div><a class='cs-ts' href='{youtube_link(main['video_id'], x['start'])}' target='_blank'>"
+                            f"{x['label']}</a> {esc(x['text'])}</div>" for x in pt["sentences"])
+            st.markdown(f"<div class='cs-quote'>{lines}</div>", unsafe_allow_html=True)
+    if exp["missing"]:
+        st.caption(pick(NOT_IN_VIDEO, lang).format(names=", ".join(exp["missing"])))
+    if pick(ENGLISH_NOTE, lang):
+        st.caption(pick(ENGLISH_NOTE, lang))
+    return True
 
 
 def video_panel(topic: dict, panels: Optional[list] = None, start_key: Optional[str] = None,
@@ -293,7 +303,7 @@ def render_topic(topic: dict, key: str, query: Optional[str] = None, show_questi
         st.markdown(f"<div class='cs-card'>{content_html(topic['definition'])}</div>", unsafe_allow_html=True)
         _section("Detailed explanation")
         show_content(topic["explanation"])
-        lecture_moments(panels, rlang(), f"vstart_{key}_{topic['id']}")
+        lecture_moments(topic, panels, rlang(), f"vstart_{key}_{topic['id']}")
         _section("Worked example")
         badges("example")
         st.markdown(f"<div class='cs-card'>{content_html(topic['example'])}</div>", unsafe_allow_html=True)

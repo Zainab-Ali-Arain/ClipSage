@@ -12,6 +12,7 @@ If a video has no usable captions, no timestamps are shown and this is said.
 """
 
 import csv
+import re
 from typing import Dict, List, Optional
 
 from . import config
@@ -74,6 +75,98 @@ def subtopic_timestamps(engine, video_id: str, topic: dict) -> List[dict]:
                     "label": format_timestamp(hit["start"]) if hit else None,
                     "url": youtube_link(video_id, hit["start"]) if hit else None,
                     "sentence": hit["text"] if hit else None})
+    return out
+
+
+_STOP = {"what", "with", "from", "that", "this", "their", "there", "into", "between", "about", "using", "used",
+         "uses", "each", "they", "them", "then", "than", "when", "which", "also", "only", "more", "most", "very",
+         "does", "have", "will", "your", "lecture", "video", "example"}
+
+
+def _key_words(phrases: List[str]) -> set:
+    words = set()
+    for ph in phrases:
+        for w in re.findall(r"[a-z0-9]+", ph.lower()):
+            if len(w) > 3 and w not in _STOP:
+                words.add(w[:-1] if w.endswith("s") and not w.endswith("ss") else w)
+    return words
+
+
+CHATTER = re.compile(r"\b(welcome|subscribe|thanks for watching|thank you for watching|like and share|"
+                     r"in this video|in today'?s video|hello everyone|hi everyone|see you)\b", re.IGNORECASE)
+
+
+def _related(sentence: dict, phrases: List[str], words: set) -> bool:
+    if CHATTER.search(sentence["text"]):
+        return False
+    if any(contains_term(sentence["text"], ph) for ph in phrases):
+        return True
+    toks = {w[:-1] if w.endswith("s") and not w.endswith("ss") else w for w in re.findall(r"[a-z0-9]+", sentence["text"].lower())}
+    return bool(toks & words)
+
+
+def _block(sentences: List[dict], i: int, phrases: List[str], words: set, max_sentences: int = 6,
+           max_seconds: float = 120.0) -> List[dict]:
+    """The run of sentences around sentence i that keeps talking about the same point.
+    One unrelated sentence is bridged when the next one returns to the point."""
+    start = i - 1 if i > 0 and _related(sentences[i - 1], phrases, words) else i
+    while start < i and CHATTER.search(sentences[start]["text"]):
+        start += 1
+    j = i
+    while j + 1 < len(sentences) and j - start + 1 < max_sentences:
+        nxt = sentences[j + 1]
+        if nxt["start"] - sentences[start]["start"] > max_seconds:
+            break
+        if _related(nxt, phrases, words):
+            j += 1
+        elif j + 2 < len(sentences) and j - start + 2 < max_sentences and _related(sentences[j + 2], phrases, words):
+            j += 2
+        else:
+            break
+    return sentences[start:j + 1]
+
+
+def _point(video_id: str, name: str, kind: str, block: List[dict]) -> dict:
+    a, b = block[0]["start"], block[-1].get("end", block[-1]["start"])
+    return {"name": name, "kind": kind, "start": a, "end": b, "start_label": format_timestamp(a),
+            "end_label": format_timestamp(b), "url": youtube_link(video_id, a),
+            "sentences": [{"text": x["text"], "start": x["start"], "label": format_timestamp(x["start"])} for x in block]}
+
+
+def video_explanation(engine, video_id: str, topic: dict) -> Dict:
+    """
+    The topic explained FROM the lecture itself: for the topic and each of its
+    sub-topics, the passage of the transcript where the lecturer explains it,
+    with the time range in which that point becomes clear. Everything is taken
+    from the captions - nothing is generated - and sub-topics the captions never
+    mention are listed in `missing` instead of being guessed.
+    """
+    sentences = _video_sentences(engine, video_id)
+    out = {"video_id": video_id, "points": [], "missing": []}
+    if not sentences:
+        return out
+    names = [topic["title"]["en"].lower()] + [a.lower() for a in topic.get("aliases", [])]
+    words = _key_words([topic["title"]["en"]])
+    mentions = [k for k, x in enumerate(sentences)
+                if any(contains_term(x["text"], n) for n in names) and not CHATTER.search(x["text"])]
+    if mentions:
+        defn = next((k for k in mentions if re.search(r"\b(is|are|means|refers to|is called)\b", sentences[k]["text"].lower())),
+                    mentions[0])
+        out["points"].append(_point(video_id, topic["title"]["en"], "topic",
+                                    _block(sentences, defn, names, words, max_sentences=3)))
+    for sub in topic.get("subtopics", []):
+        terms = [t.lower() for t in sub["terms"]]
+        hit = next((k for k, x in enumerate(sentences)
+                    if any(contains_term(x["text"], t) for t in terms) and not CHATTER.search(x["text"])), None)
+        if hit is None:
+            out["missing"].append(sub["name"])
+            continue
+        pt = _point(video_id, sub["name"], "subtopic", _block(sentences, hit, terms, _key_words([sub["name"]] + terms)))
+        said = {x["start"] for q in out["points"] for x in q["sentences"]}
+        if all(x["start"] in said for x in pt["sentences"]):   # nothing new beyond an earlier point
+            continue
+        out["points"].append(pt)
+    out["points"].sort(key=lambda pt: pt["start"])
     return out
 
 

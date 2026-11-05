@@ -114,3 +114,26 @@ def test_auto_caption_videos_are_accepted_and_missing_transcripts_replaced(raw_d
     assert bad == [first[0]]
     again = collect.collect_library(AutoOnly(), per_topic=2, topics=topics)
     assert len(again) == 2 and first[0] not in again and first[1] in again
+
+
+def test_video_explanation_points_come_from_the_captions_with_time_ranges(built):
+    from clipsage.library import video_explanation
+    from clipsage.retrieve import get_engine
+
+    topics = load_topics()
+    exp = video_explanation(get_engine(), "fake_os_001", topics["deadlock"])
+    points = {p["name"]: p for p in exp["points"]}
+    assert exp["missing"] == []
+    conditions = points["Four conditions"]
+    text = " ".join(s["text"] for s in conditions["sentences"]).lower()
+    assert "mutual exclusion" in text and "hold and wait" in text and "circular wait" in text
+    assert conditions["start"] < conditions["end"]
+    assert all(conditions["start"] <= s["start"] <= conditions["end"] for s in conditions["sentences"])
+    assert [p["start"] for p in exp["points"]] == sorted(p["start"] for p in exp["points"])
+    # every sentence shown is a real caption sentence of that video
+    from clipsage.lectures import video_sentences
+    real = {s["text"] for s in video_sentences(get_engine(), "fake_os_001")}
+    assert all(s["text"] in real for p in exp["points"] for s in p["sentences"])
+    # intro chatter is never used as an explanation
+    ml = video_explanation(get_engine(), "fake_ml_001", topics["overfitting"])
+    assert not any("welcome" in s["text"].lower() for p in ml["points"] for s in p["sentences"])

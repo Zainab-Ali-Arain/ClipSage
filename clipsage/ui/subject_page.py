@@ -261,6 +261,7 @@ NOT_COVERED = {"en": "I could not find this in the {subject} lessons or the coll
                "ru": "Yeh {subject} ke lessons ya collected lectures mein nahi mila."}
 LECTURE_ONLY = {"en": "There is no written lesson for this, so here is what the lectures say (original English transcript).",
                 "ru": "Is ka likha hua lesson nahi hai, is liye lectures se jawab diya gaya hai (transcript English mein hai)."}
+WRITTEN = {"en": "Written explanation (ClipSage notes)", "ru": "Likhi hui explanation (ClipSage notes)"}
 OTHER_SUBJECT = {"en": "This topic belongs to {other}: {title}.", "ru": "Yeh topic {other} ka hai: {title}."}
 
 
@@ -311,8 +312,11 @@ def _topic_answer(subject: dict, reply: dict, i: int) -> None:
     with left:
         badges("notes")
         st.markdown(f"<div class='cs-card cs-def'>{esc(pick(t['definition'], lang))}</div>", unsafe_allow_html=True)
-        st.markdown(_html_p(pick(t["explanation"], lang)), unsafe_allow_html=True)
-        lecture_moments(panels, lang, start_key)
+        if lecture_moments(t, panels, lang, start_key):      # explained from the lecture, with time ranges
+            with st.expander(pick(WRITTEN, lang)):
+                st.markdown(_html_p(pick(t["explanation"], lang)), unsafe_allow_html=True)
+        else:
+            st.markdown(_html_p(pick(t["explanation"], lang)), unsafe_allow_html=True)
         with st.expander("Worked example"):
             st.markdown(_html_p(pick(t["example"], lang)), unsafe_allow_html=True)
         if t.get("exam_points"):
