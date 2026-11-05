@@ -123,8 +123,13 @@ def _scores(method: str, sent_vecs: np.ndarray, query_vec: np.ndarray, sentences
 
 def extractive_summary(query: str, hits: List[dict], method: str = "textrank",
                        retrieval_method: str = "sbert", engine=None,
-                       n_sentences: int = config.SUMMARY_SENTENCES) -> List[dict]:
-    """Return the explanation as a list of cited sentences."""
+                       n_sentences: int = config.SUMMARY_SENTENCES,
+                       topic_terms: Optional[List[str]] = None) -> List[dict]:
+    """
+    Return the explanation as a list of cited sentences.
+    `topic_terms` are names of the topic (e.g. 'k-means', 'kmeans') used to spot
+    sentences that mention or define it; by default the query itself.
+    """
     sentences = collect_sentences(hits)
     if not sentences:
         return []
@@ -135,7 +140,8 @@ def extractive_summary(query: str, hits: List[dict], method: str = "textrank",
     scores = _scores(method, sent_vecs, query_vec, sentences)
 
     # Mention of the topic itself is a strong signal for a short explanation.
-    mentions = np.array([1.0 if contains_term(s["text"], topic) else 0.0 for s in sentences])
+    terms = [t for t in (topic_terms or [topic]) if t]
+    mentions = np.array([1.0 if any(contains_term(s["text"], t) for t in terms) else 0.0 for s in sentences])
     scores = scores * (1 + 0.3 * mentions)
 
     order = list(np.argsort(-scores))

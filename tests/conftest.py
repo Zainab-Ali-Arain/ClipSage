@@ -6,6 +6,11 @@ downloading the Sentence-BERT model. The real dataset is never touched.
 
 import csv
 import json
+import os
+
+# Never try to download models during tests (the real model is not needed).
+os.environ.setdefault("HF_HUB_OFFLINE", "1")
+os.environ.setdefault("TRANSFORMERS_OFFLINE", "1")
 
 import numpy as np
 import pytest

@@ -52,7 +52,7 @@ class ClipSage:
     def ask(self, query: str, method: str = "sbert", summarizer: str = "textrank",
             keyword_method: Optional[str] = None, top_k: int = config.TOP_K_SEGMENTS,
             n_sentences: int = config.SUMMARY_SENTENCES, abstractive: bool = False,
-            with_subtopics: bool = True) -> dict:
+            with_subtopics: bool = True, topic_terms: Optional[List[str]] = None) -> dict:
         timings = {}
         t_total = t0 = time.perf_counter()
         keyword_method = keyword_method or ("keybert" if method == "sbert" else "tfidf")
@@ -72,7 +72,7 @@ class ClipSage:
             return result
 
         t0 = time.perf_counter()
-        explanation = extractive_summary(query, hits, summarizer, method, self.engine, n_sentences)
+        explanation = extractive_summary(query, hits, summarizer, method, self.engine, n_sentences, topic_terms)
         timings["explanation"] = time.perf_counter() - t0
 
         if abstractive:

@@ -10,6 +10,33 @@ A student types a topic, such as *overfitting*, *binary search tree* or *TCP han
 
 The project follows the proposal step by step. [`docs/proposal_mapping.md`](docs/proposal_mapping.md) shows where each item of the proposal is implemented.
 
+### Study features (version 2)
+
+On top of the ML pipeline, ClipSage is a full bilingual study app:
+
+| Section | What it does |
+|---|---|
+| **Dashboard** | Topic search, recent searches, recommended topics, recently viewed lectures, saved topics, progress at a glance |
+| **Explore Topics** | 20 core topics (ML algorithms, NLP, maths, CS) with written lessons; any other topic is explained from the lectures |
+| **Video Lectures** | Lecture timeline with the main terms of every section, the most useful sections for your topic, jump-to-time player, *"What is taught between 10:20 and 15:30?"* and questions about a lecture, all answered from the transcript |
+| **Topic Learning** | Introduction, definition, Roman Urdu explanation, detailed explanation, worked example, concepts, formulas, workflow, Python code, applications, lecture references, exam points, common mistakes, practice |
+| **Practice & Quizzes** | MCQ, numerical and written questions with hints, retries, bilingual feedback and scores. Written answers are graded by meaning (Sentence-BERT similarity plus key terms). Fill-in-the-blank questions are built from real lecture sentences |
+| **Mathematics Playground** | Matrices, determinant, inverse, eigenvalues, vectors, statistics, Bayes, binomial, derivatives, integrals, minima, equations and gradient descent, solved step by step and verified with SymPy, NumPy or SciPy, plus random practice problems that are checked automatically |
+| **ML Algorithm Playground** | Linear and logistic regression, gradient descent, KNN, Naive Bayes, decision tree, SVM, K-Means (animated iterations), TF-IDF, cosine similarity and Sentence-BERT, on sample data or your own CSV, with intermediate calculations and plots |
+| **Saved Topics / Learning Progress / Settings** | Bookmarks, per-topic scores, topics to review, language and retrieval settings |
+
+**Languages:** you can choose English, Roman Urdu or both. Roman Urdu is written in English letters. All Roman Urdu text was written by hand; nothing is machine-translated. Lecture transcripts always stay in their original English.
+
+**Source labels:** every block is labelled as one of these:
+
+- 🎥 **From lectures:** a retrieved transcript, with real timestamps
+- 📘 **ClipSage notes:** a written explanation
+- **Additional example**
+- 🧮 **Computed result**
+- **Sample data:** synthetic, clearly marked
+
+Nothing is ever presented as coming from a lecture unless it does.
+
 ---
 
 ## How it works (7-stage pipeline)
@@ -87,6 +114,8 @@ streamlit run app.py
 
 Then open http://localhost:8501.
 
+The app has a light-blue dashboard with 10 sections in the sidebar. Lessons, quizzes and both playgrounds work even before you collect any data. Video references and lecture navigation need the index built by `run_pipeline.bat`.
+
 You can also query from the command line:
 
 ```bash
@@ -123,7 +152,14 @@ The reference summaries for ROUGE are in `evaluation/reference_summaries.json`. 
 pytest -q
 ```
 
-The tests use a small **synthetic** corpus with fake video IDs and a stand-in embedder. They check every stage without needing the API key or the SBERT download.
+The 83 tests use a small **synthetic** corpus with fake video IDs and a stand-in embedder, so they need neither the API key nor the SBERT download. They cover:
+
+- every pipeline stage
+- every lesson's Python code (it is executed)
+- every quiz answer and practice problem
+- every maths solver, checked against NumPy, SymPy and SciPy
+- every playground algorithm, checked against scikit-learn
+- lecture navigation and time-range explanations
 
 ## Project structure
 
@@ -142,6 +178,16 @@ clipsage/
   pipeline.py              ties everything together (also a CLI)
   evaluate.py              evaluation plan
   explore.py               dataset report
+  lessons.py               lesson = written notes + what the lectures say
+  lectures.py              segment references, lecture timeline, time-range explain, ask a lecture
+  quiz.py                  grading (MCQ / numerical / SBERT short answers), lecture fill-in-the-blank
+  mathsolve.py             step-by-step maths with SymPy/NumPy verification
+  playground.py            ML algorithms with intermediate calculations and plots
+  knowledge.py, i18n.py    bilingual lessons loader, English / Roman Urdu UI text
+  progress.py              local learning progress (data/user/progress.json)
+  ui/                      the 10 dashboard pages
+knowledge/                 hand-written bilingual lessons + question banks (JSON, easy to extend)
+.streamlit/config.toml     light-blue theme
 config/                    sources.json (channels/playlists), topics.json (subjects)
 evaluation/                30 test queries, reference summaries, labelling sheets
 docs/                      proposal mapping, usability survey
@@ -155,7 +201,7 @@ legacy/whisper_rag_prototype/   the earlier upload-a-video prototype (kept for r
 - ClipSage uses only the official YouTube Data API and publicly available captions.
 - Videos are **never downloaded or re-hosted**. The app only links to youtube.com, and the embedded player is YouTube's own.
 - Every explanation sentence credits its video and channel.
-- No user data is stored. Queries are not logged.
+- Learning progress (recent searches, quiz scores, saved topics, language) is stored only on the student's own computer in `data/user/progress.json`. It is never uploaded, and Learning Progress → Reset clears it.
 - ClipSage is a study aid. Students should watch the referenced lectures.
 
 ## Team roles

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="240" height="56" viewBox="0 0 240 56">
+  <rect x="2" y="6" width="44" height="44" rx="12" fill="#4A90E2"/>
+  <path d="M10 24 L24 17 L38 24 L24 31 Z" fill="#FFFFFF"/>
+  <path d="M16 27 V34 C16 37 32 37 32 34 V27 L24 31 Z" fill="#EAF4FF"/>
+  <rect x="35" y="24" width="2" height="10" rx="1" fill="#FFFFFF"/>
+  <text x="56" y="37" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="26" font-weight="700" fill="#243447">Clip<tspan fill="#4A90E2">Sage</tspan></text>
+</svg>

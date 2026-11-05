@@ -1,0 +1,344 @@
+[
+  {
+    "id": "binary_search_tree",
+    "title": {"en": "Binary Search Tree", "ru": "Binary Search Tree"},
+    "subject": "Data Structures",
+    "category": "cs",
+    "aliases": ["binary search tree", "bst", "binary tree", "tree traversal", "inorder traversal"],
+    "search_query": "binary search tree insertion search",
+    "intro": {
+      "en": "A binary search tree keeps data sorted in a tree shape so that searching, inserting and deleting can be fast.",
+      "ru": "Binary search tree data ko tree ki shakal mein tarteeb se rakhta hai taake search, insert aur delete tez ho sakein."
+    },
+    "definition": {
+      "en": "A binary search tree (BST) is a binary tree in which every key in a node's left subtree is smaller than the node's key and every key in its right subtree is larger.",
+      "ru": "Binary search tree (BST) aisa binary tree hai jis mein har node ke left subtree ki har key us node ki key se chhoti aur right subtree ki har key bari hoti hai."
+    },
+    "explanation": {
+      "en": "To search, compare the key with the root and go left if it is smaller or right if it is larger, repeating until the key is found or a null child is reached. Insertion follows the same path and adds the new key as a leaf. Deleting a node with two children replaces it with its in-order successor (the smallest key in its right subtree). All of these take O(h) time where h is the height: O(log n) for a balanced tree but O(n) for a skewed tree (e.g. inserting sorted data). Self-balancing trees such as AVL and red-black trees keep h = O(log n). An in-order traversal (left, node, right) visits the keys in sorted order.",
+      "ru": "Search ke liye key ko root se milayein: chhoti ho to left, bari ho to right jayein, aur yahi dohrayein jab tak key mil na jaye ya khali child aa jaye. Insertion isi raste par chal kar nayi key ko leaf ke taur par lagati hai. Do children wali node delete karne ke liye use in-order successor (right subtree ki sab se chhoti key) se badla jata hai. Yeh sab O(h) waqt lete hain jahan h height hai: balanced tree mein O(log n) lekin skewed tree (maslan sorted data insert karna) mein O(n). AVL aur red-black jaise self-balancing trees h = O(log n) rakhte hain. In-order traversal (left, node, right) keys ko tarteeb se dikhata hai."
+    },
+    "example": {
+      "en": "Insert 50, 30, 70, 20, 40, 60, 80. Root 50; 30 goes left; 70 right; 20 left of 30; 40 right of 30; 60 left of 70; 80 right of 70. Searching 60: 60 > 50 go right to 70, 60 < 70 go left, found in 3 comparisons. In-order traversal: 20, 30, 40, 50, 60, 70, 80.",
+      "ru": "50, 30, 70, 20, 40, 60, 80 insert karein. Root 50; 30 left; 70 right; 20, 30 ke left; 40, 30 ke right; 60, 70 ke left; 80, 70 ke right. 60 search: 60 > 50 to right 70 par, 60 < 70 to left, 3 muqablon mein mil gaya. In-order traversal: 20, 30, 40, 50, 60, 70, 80."
+    },
+    "key_concepts": [
+      {"term": "BST property", "en": "Left subtree smaller, right subtree larger.", "ru": "Left subtree chhota, right subtree bara."},
+      {"term": "Height", "en": "Longest root-to-leaf path; determines the running time.", "ru": "Root se leaf tak sab se lamba rasta; yahi waqt tay karta hai."},
+      {"term": "In-order successor", "en": "Smallest key in the right subtree; used in deletion.", "ru": "Right subtree ki sab se chhoti key; deletion mein istemal."},
+      {"term": "Balanced tree", "en": "Height O(log n), e.g. AVL or red-black trees.", "ru": "Height O(log n), maslan AVL ya red-black trees."}
+    ],
+    "formulas": [
+      {"latex": "T_{search} = O(h), \\quad h = O(\\log n) \\text{ (balanced)}, \\; O(n) \\text{ (skewed)}", "en": "Time complexity of search/insert/delete.", "ru": "Search/insert/delete ki time complexity."}
+    ],
+    "code": [
+      "class Node:",
+      "    def __init__(self, key):",
+      "        self.key, self.left, self.right = key, None, None",
+      "",
+      "def insert(root, key):",
+      "    if root is None:",
+      "        return Node(key)",
+      "    if key < root.key:",
+      "        root.left = insert(root.left, key)",
+      "    else:",
+      "        root.right = insert(root.right, key)",
+      "    return root",
+      "",
+      "def inorder(root):",
+      "    return inorder(root.left) + [root.key] + inorder(root.right) if root else []",
+      "",
+      "root = None",
+      "for k in [50, 30, 70, 20, 40, 60, 80]:",
+      "    root = insert(root, k)",
+      "print('in-order:', inorder(root))"
+    ],
+    "code_explanation": [
+      {"en": "insert walks left or right by comparing keys and attaches the new node at an empty spot.", "ru": "insert keys milate hue left ya right chalta hai aur khali jagah par nayi node lagata hai."},
+      {"en": "inorder visits left subtree, node, right subtree, which prints the keys sorted.", "ru": "inorder left subtree, node, right subtree dekhta hai, jis se keys tarteeb se print hoti hain."}
+    ],
+    "applications": [
+      {"en": "Implementing sorted sets and maps (e.g. TreeMap in Java).", "ru": "Sorted sets aur maps banana (maslan Java ka TreeMap)."},
+      {"en": "Database indexes (B-trees are a generalisation).", "ru": "Database indexes (B-trees is ki wasee shakal hain)."},
+      {"en": "Range queries such as 'all students with marks between 60 and 80'.", "ru": "Range queries jaise '60 se 80 marks wale tamam students'."}
+    ],
+    "exam_points": [
+      {"en": "Draw the BST for a given insertion order and write its traversals.", "ru": "Di gayi tarteeb se BST banayein aur traversals likhein."},
+      {"en": "State the complexities for balanced and skewed trees.", "ru": "Balanced aur skewed trees ki complexities likhein."},
+      {"en": "Explain deletion of a node with two children.", "ru": "Do children wali node ki deletion samjhayein."}
+    ],
+    "common_mistakes": [
+      {"en": "Checking the BST property only against the parent instead of the whole subtree.", "ru": "BST property sirf parent se check karna, poore subtree se nahi."},
+      {"en": "Assuming search is always O(log n).", "ru": "Search ko hamesha O(log n) samajhna."},
+      {"en": "Mixing up pre-order, in-order and post-order traversals.", "ru": "Pre-order, in-order aur post-order traversals gadmad karna."}
+    ],
+    "questions": [
+      {"type": "mcq", "kind": "basic", "q": {"en": "Which traversal of a BST gives the keys in sorted order?", "ru": "BST ka kaunsa traversal keys ko tarteeb se deta hai?"},
+       "options": [{"en": "In-order", "ru": "In-order"}, {"en": "Pre-order", "ru": "Pre-order"}, {"en": "Post-order", "ru": "Post-order"}, {"en": "None of them", "ru": "Koi nahi"}],
+       "answer": 0,
+       "hints": [{"en": "Left, node, right.", "ru": "Left, node, right."}],
+       "explanation": {"en": "In-order visits smaller keys, then the node, then larger keys.", "ru": "In-order pehle chhoti keys, phir node, phir bari keys dekhta hai."}},
+      {"type": "mcq", "kind": "conceptual", "q": {"en": "Inserting 1, 2, 3, 4, 5 in that order into an empty BST makes search take:", "ru": "Khali BST mein 1, 2, 3, 4, 5 isi tarteeb se dalne par search kitna waqt lega?"},
+       "options": [{"en": "O(n), the tree is a chain", "ru": "O(n), tree ek zanjeer ban gaya"}, {"en": "O(log n)", "ru": "O(log n)"}, {"en": "O(1)", "ru": "O(1)"}, {"en": "O(n log n)", "ru": "O(n log n)"}],
+       "answer": 0,
+       "hints": [{"en": "Where does each new key go?", "ru": "Har nayi key kahan jati hai?"}],
+       "explanation": {"en": "Every key goes to the right, so the height equals n.", "ru": "Har key right mein jati hai, height n ke barabar ho jati hai."}},
+      {"type": "numerical", "kind": "problem", "q": {"en": "After inserting 50, 30, 70, 20, 40, 60, 80, how many comparisons are needed to find 60 (counting the comparison that finds it)?", "ru": "50, 30, 70, 20, 40, 60, 80 dalne ke baad 60 dhoondne mein kitne muqable lagenge (jis muqable par mile woh bhi gin kar)?"},
+       "answer": 3, "tolerance": 0,
+       "hints": [{"en": "Compare with 50, then 70, then ...", "ru": "50 se, phir 70 se, phir ..."}],
+       "explanation": {"en": "50 (go right), 70 (go left), 60 (found): 3 comparisons.", "ru": "50 (right), 70 (left), 60 (mil gaya): 3 muqable."}}
+    ]
+  },
+  {
+    "id": "deadlock",
+    "title": {"en": "Deadlock", "ru": "Deadlock"},
+    "subject": "Operating Systems",
+    "category": "cs",
+    "aliases": ["deadlock", "deadlocks", "coffman conditions", "bankers algorithm", "banker's algorithm", "circular wait"],
+    "search_query": "deadlock conditions prevention avoidance",
+    "intro": {
+      "en": "Deadlock is a classic operating-system problem in which programs wait for each other forever, so none of them can continue.",
+      "ru": "Deadlock operating system ka classic masla hai jis mein programs hamesha ek doosre ka intezar karte rehte hain aur koi aage nahi barh pata."
+    },
+    "definition": {
+      "en": "A deadlock is a state in which each process in a set holds at least one resource and waits for a resource held by another process in the same set, so none of them can proceed.",
+      "ru": "Deadlock aisi halat hai jis mein ek group ka har process kam az kam ek resource pakre hota hai aur usi group ke kisi doosre process ke resource ka intezar karta hai, is liye koi bhi aage nahi barh sakta."
+    },
+    "explanation": {
+      "en": "A deadlock can only happen when four (Coffman) conditions hold at the same time: mutual exclusion (a resource can be used by one process at a time), hold and wait (a process holds resources while waiting for more), no preemption (resources cannot be taken away), and circular wait (a cycle of processes each waiting for the next). Handling strategies: prevention breaks one condition (e.g. request all resources at once, or order resources and always request them in that order); avoidance grants requests only if the system stays in a safe state (Banker's algorithm); detection builds a wait-for / resource-allocation graph and looks for a cycle, then recovers by terminating a process or preempting resources; or the system ignores the problem (the 'ostrich' approach used by many desktop OSs).",
+      "ru": "Deadlock sirf tab hota hai jab chaar (Coffman) conditions ek saath poori hon: mutual exclusion (resource ek waqt mein ek process istemal kare), hold and wait (process resources pakre hue mazeed ka intezar kare), no preemption (resources cheene nahi ja sakte), aur circular wait (processes ka daira jis mein har ek agle ka intezar kare). Hal ke tareeqe: prevention ek condition tor deta hai (maslan saare resources ek saath maangna, ya resources ko tarteeb de kar hamesha usi tarteeb mein maangna); avoidance sirf tab request deta hai jab system safe state mein rahe (Banker's algorithm); detection wait-for / resource-allocation graph bana kar cycle dhoondta hai, phir process khatam kar ke ya resources cheen kar recover karta hai; ya system masle ko nazar andaz karta hai ('ostrich' tareeqa, kai desktop OS yahi karte hain)."
+    },
+    "example": {
+      "en": "Process P1 holds the printer and requests the scanner. Process P2 holds the scanner and requests the printer. Both wait forever: mutual exclusion (one user per device), hold and wait (each holds one), no preemption (the OS will not take the printer away), circular wait (P1 -> P2 -> P1). If both processes always request the printer before the scanner (resource ordering), circular wait is impossible and the deadlock cannot occur.",
+      "ru": "Process P1 printer pakre hue scanner maangta hai. Process P2 scanner pakre hue printer maangta hai. Dono hamesha intezar karte rehte hain: mutual exclusion (ek device ka ek user), hold and wait (har ek ne ek pakra hai), no preemption (OS printer nahi cheenta), circular wait (P1 -> P2 -> P1). Agar dono hamesha pehle printer phir scanner maangein (resource ordering), to circular wait mumkin nahi aur deadlock nahi hoga."
+    },
+    "key_concepts": [
+      {"term": "Coffman conditions", "en": "Mutual exclusion, hold and wait, no preemption, circular wait.", "ru": "Mutual exclusion, hold and wait, no preemption, circular wait."},
+      {"term": "Safe state", "en": "There is an order in which all processes can finish.", "ru": "Aisi tarteeb maujood hai jis mein saare processes mukammal ho sakein."},
+      {"term": "Resource allocation graph", "en": "Graph of processes and resources; a cycle indicates (possible) deadlock.", "ru": "Processes aur resources ka graph; cycle (mumkin) deadlock ki nishani hai."}
+    ],
+    "formulas": [
+      {"latex": "Need_{ij} = Max_{ij} - Allocation_{ij}", "en": "Banker's algorithm: remaining need of process i for resource j.", "ru": "Banker's algorithm: process i ki resource j ki baqi zaroorat."}
+    ],
+    "code": [
+      "def is_safe(available, max_need, allocation):",
+      "    n = len(allocation)",
+      "    need = [[m - a for m, a in zip(max_need[i], allocation[i])] for i in range(n)]",
+      "    work, finished, order = list(available), [False] * n, []",
+      "    while len(order) < n:",
+      "        progressed = False",
+      "        for i in range(n):",
+      "            if not finished[i] and all(nd <= w for nd, w in zip(need[i], work)):",
+      "                work = [w + a for w, a in zip(work, allocation[i])]",
+      "                finished[i], progressed = True, True",
+      "                order.append(f'P{i}')",
+      "        if not progressed:",
+      "            return False, order",
+      "    return True, order",
+      "",
+      "print(is_safe(available=[3, 3, 2],",
+      "              max_need=[[7, 5, 3], [3, 2, 2], [9, 0, 2], [2, 2, 2], [4, 3, 3]],",
+      "              allocation=[[0, 1, 0], [2, 0, 0], [3, 0, 2], [2, 1, 1], [0, 0, 2]]))"
+    ],
+    "code_explanation": [
+      {"en": "need = max - allocation for every process and resource type.", "ru": "Har process aur resource ke liye need = max - allocation."},
+      {"en": "The loop repeatedly finds a process whose need fits in the available work vector, lets it finish and returns its resources.", "ru": "Loop baar baar aisa process dhoondta hai jis ki need available mein aa jaye, use mukammal karwata hai aur us ke resources wapas karta hai."},
+      {"en": "If every process can finish, the state is safe and the order is a safe sequence.", "ru": "Agar har process mukammal ho sake to state safe hai aur order ek safe sequence hai."}
+    ],
+    "applications": [
+      {"en": "Database transaction locking.", "ru": "Database transactions ki locking."},
+      {"en": "Multithreaded programs that use several locks.", "ru": "Kai locks istemal karne wale multithreaded programs."},
+      {"en": "Resource scheduling in operating systems.", "ru": "Operating systems mein resource scheduling."}
+    ],
+    "exam_points": [
+      {"en": "List and explain the four necessary conditions.", "ru": "Chaar zaroori conditions likh kar samjhayein."},
+      {"en": "Compare prevention, avoidance, detection and recovery.", "ru": "Prevention, avoidance, detection aur recovery ka muqabla karein."},
+      {"en": "Run the Banker's safety algorithm on a small table.", "ru": "Chhote table par Banker's safety algorithm chalayein."}
+    ],
+    "common_mistakes": [
+      {"en": "Thinking any one condition alone causes deadlock - all four are needed.", "ru": "Yeh samajhna ke koi ek condition deadlock ke liye kaafi hai - chaaron zaroori hain."},
+      {"en": "Confusing deadlock with starvation.", "ru": "Deadlock ko starvation samajhna."},
+      {"en": "Assuming an unsafe state is always a deadlock (it only might lead to one).", "ru": "Unsafe state ko hamesha deadlock samajhna (yeh sirf deadlock ki taraf le ja sakti hai)."}
+    ],
+    "questions": [
+      {"type": "mcq", "kind": "basic", "q": {"en": "Which of these is NOT one of the four necessary conditions for deadlock?", "ru": "In mein se kaunsi deadlock ki chaar zaroori conditions mein se NAHI hai?"},
+       "options": [{"en": "Preemption of resources", "ru": "Resources ka preemption"}, {"en": "Mutual exclusion", "ru": "Mutual exclusion"}, {"en": "Hold and wait", "ru": "Hold and wait"}, {"en": "Circular wait", "ru": "Circular wait"}],
+       "answer": 0,
+       "hints": [{"en": "The real condition is NO preemption.", "ru": "Asal condition NO preemption hai."}],
+       "explanation": {"en": "The conditions are mutual exclusion, hold and wait, NO preemption and circular wait.", "ru": "Conditions hain mutual exclusion, hold and wait, NO preemption aur circular wait."}},
+      {"type": "short", "kind": "application", "q": {"en": "How does ordering resources prevent deadlock?", "ru": "Resources ko tarteeb dena deadlock kaise rokta hai?"},
+       "answer": "If every process requests resources in the same global order, a cycle of processes waiting for each other cannot form, so the circular wait condition is broken and deadlock cannot occur.",
+       "keywords": ["order", "circular wait", "cycle"],
+       "hints": [{"en": "Which of the four conditions is broken?", "ru": "Chaar mein se kaunsi condition toot-ti hai?"}],
+       "explanation": {"en": "A global order makes a cycle impossible, which removes circular wait.", "ru": "Aalami tarteeb se cycle mumkin nahi rehti, circular wait khatam ho jata hai."}},
+      {"type": "mcq", "kind": "conceptual", "q": {"en": "The Banker's algorithm is a deadlock ... technique.", "ru": "Banker's algorithm deadlock ki kaunsi technique hai?"},
+       "options": [{"en": "Avoidance", "ru": "Avoidance"}, {"en": "Prevention", "ru": "Prevention"}, {"en": "Detection", "ru": "Detection"}, {"en": "Recovery", "ru": "Recovery"}],
+       "answer": 0,
+       "hints": [{"en": "It checks whether granting a request keeps the system in a safe state.", "ru": "Yeh check karta hai ke request dene se system safe state mein rehta hai ya nahi."}],
+       "explanation": {"en": "It avoids unsafe states before they happen: avoidance.", "ru": "Yeh unsafe states se pehle hi bachata hai: avoidance."}}
+    ]
+  },
+  {
+    "id": "tcp_handshake",
+    "title": {"en": "TCP Three-Way Handshake", "ru": "TCP Three-Way Handshake"},
+    "subject": "Computer Networks",
+    "category": "cs",
+    "aliases": ["tcp handshake", "three way handshake", "3-way handshake", "tcp", "syn ack", "tcp connection"],
+    "search_query": "tcp three way handshake syn ack",
+    "intro": {
+      "en": "Before TCP sends any data, the two computers agree to talk and synchronise their sequence numbers. This short exchange is the three-way handshake.",
+      "ru": "TCP data bhejne se pehle dono computers baat karne par ittefaq karte hain aur apne sequence numbers milate hain. Yeh chhota sa tabadla three-way handshake hai."
+    },
+    "definition": {
+      "en": "The TCP three-way handshake establishes a connection with three segments: the client sends SYN, the server replies SYN-ACK, and the client answers ACK.",
+      "ru": "TCP three-way handshake teen segments se connection banata hai: client SYN bhejta hai, server SYN-ACK se jawab deta hai, aur client ACK bhejta hai."
+    },
+    "explanation": {
+      "en": "1) The client sends a segment with the SYN flag and a random initial sequence number x. 2) The server replies with SYN and ACK flags, its own initial sequence number y and acknowledgement number x + 1 (meaning 'I received your SYN'). 3) The client sends ACK with acknowledgement number y + 1. Now both sides know each other's starting sequence numbers and the connection is ESTABLISHED. Three messages are the minimum that confirms both directions work. Random initial sequence numbers protect against old duplicate segments and spoofing. A SYN flood attack sends many SYNs without completing step 3, filling the server's half-open connection queue. Closing uses FIN and ACK segments from both sides (a four-way exchange).",
+      "ru": "1) Client SYN flag aur random shuruati sequence number x ke saath segment bhejta hai. 2) Server SYN aur ACK flags, apne shuruati sequence number y aur acknowledgement number x + 1 ke saath jawab deta hai (matlab 'tumhara SYN mil gaya'). 3) Client acknowledgement number y + 1 ke saath ACK bhejta hai. Ab dono ko ek doosre ke shuruati sequence numbers maloom hain aur connection ESTABLISHED hai. Teen messages kam se kam hain jo dono simton ka kaam karna tasdeeq karte hain. Random shuruati sequence numbers purane duplicate segments aur spoofing se bachate hain. SYN flood attack bohat se SYN bhejta hai lekin step 3 poora nahi karta, jis se server ki adhoore connections wali queue bhar jati hai. Band karne ke liye dono taraf se FIN aur ACK segments jate hain (chaar hisson wala tabadla)."
+    },
+    "example": {
+      "en": "Client initial sequence number = 1000, server initial sequence number = 5000. 1) Client -> Server: SYN, seq = 1000. 2) Server -> Client: SYN-ACK, seq = 5000, ack = 1001. 3) Client -> Server: ACK, seq = 1001, ack = 5001. The first data byte from the client will have sequence number 1001.",
+      "ru": "Client ka shuruati sequence number = 1000, server ka = 5000. 1) Client -> Server: SYN, seq = 1000. 2) Server -> Client: SYN-ACK, seq = 5000, ack = 1001. 3) Client -> Server: ACK, seq = 1001, ack = 5001. Client ke pehle data byte ka sequence number 1001 hoga."
+    },
+    "key_concepts": [
+      {"term": "SYN", "en": "Synchronise flag: asks to open a connection and carries the initial sequence number.", "ru": "Synchronise flag: connection kholne ki darkhwast aur shuruati sequence number."},
+      {"term": "ACK", "en": "Acknowledgement; the ack number is the next byte expected.", "ru": "Acknowledgement; ack number agla mutawaqqa byte hai."},
+      {"term": "Initial sequence number", "en": "Randomly chosen starting byte number for each direction.", "ru": "Har simt ke liye random chuna gaya shuruati byte number."},
+      {"term": "SYN flood", "en": "Attack that leaves many half-open connections.", "ru": "Attack jo bohat si adhoori connections chhor deta hai."}
+    ],
+    "formulas": [
+      {"latex": "ack_{SYN\\text{-}ACK} = x + 1, \\quad ack_{ACK} = y + 1", "en": "Acknowledgement numbers in the handshake.", "ru": "Handshake mein acknowledgement numbers."}
+    ],
+    "code": [
+      "def handshake(client_isn, server_isn):",
+      "    steps = [",
+      "        ('client -> server', 'SYN', {'seq': client_isn}),",
+      "        ('server -> client', 'SYN-ACK', {'seq': server_isn, 'ack': client_isn + 1}),",
+      "        ('client -> server', 'ACK', {'seq': client_isn + 1, 'ack': server_isn + 1}),",
+      "    ]",
+      "    for direction, flags, fields in steps:",
+      "        print(f'{direction:17} {flags:8} {fields}')",
+      "",
+      "handshake(client_isn=1000, server_isn=5000)"
+    ],
+    "code_explanation": [
+      {"en": "The function prints the three segments with their sequence and acknowledgement numbers.", "ru": "Function teeno segments un ke sequence aur acknowledgement numbers ke saath print karta hai."},
+      {"en": "Each ack number is the other side's sequence number plus one (SYN consumes one sequence number).", "ru": "Har ack number doosri taraf ka sequence number + 1 hai (SYN ek sequence number istemal karta hai)."}
+    ],
+    "applications": [
+      {"en": "Every HTTP/HTTPS web request starts with a TCP handshake (HTTP/1.1 and HTTP/2).", "ru": "Har HTTP/HTTPS web request TCP handshake se shuru hoti hai (HTTP/1.1 aur HTTP/2)."},
+      {"en": "Firewalls track handshake states to allow or block connections.", "ru": "Firewalls handshake ki halat dekh kar connections allow ya block karte hain."},
+      {"en": "Understanding SYN flood attacks and their defences.", "ru": "SYN flood attacks aur un se bachao samajhna."}
+    ],
+    "exam_points": [
+      {"en": "Draw the three segments with seq and ack numbers.", "ru": "Teen segments seq aur ack numbers ke saath banayein."},
+      {"en": "Explain why two messages are not enough.", "ru": "Batayein do messages kyun kaafi nahi."},
+      {"en": "Describe connection termination (FIN/ACK).", "ru": "Connection band karna (FIN/ACK) bayan karein."}
+    ],
+    "common_mistakes": [
+      {"en": "Writing the ack number equal to the received sequence number instead of plus one.", "ru": "Ack number ko + 1 ki jagah mile hue sequence number ke barabar likhna."},
+      {"en": "Thinking UDP also performs a handshake.", "ru": "Yeh samajhna ke UDP bhi handshake karta hai."},
+      {"en": "Forgetting that each side has its own sequence number.", "ru": "Bhool jana ke har taraf ka apna sequence number hota hai."}
+    ],
+    "questions": [
+      {"type": "mcq", "kind": "basic", "q": {"en": "What is the correct order of the TCP three-way handshake?", "ru": "TCP three-way handshake ki sahi tarteeb kya hai?"},
+       "options": [{"en": "SYN, SYN-ACK, ACK", "ru": "SYN, SYN-ACK, ACK"}, {"en": "ACK, SYN, SYN-ACK", "ru": "ACK, SYN, SYN-ACK"}, {"en": "SYN, ACK, FIN", "ru": "SYN, ACK, FIN"}, {"en": "SYN-ACK, SYN, ACK", "ru": "SYN-ACK, SYN, ACK"}],
+       "answer": 0,
+       "hints": [{"en": "The client asks first.", "ru": "Pehle client poochta hai."}],
+       "explanation": {"en": "Client SYN, server SYN-ACK, client ACK.", "ru": "Client SYN, server SYN-ACK, client ACK."}},
+      {"type": "numerical", "kind": "problem", "q": {"en": "The client's SYN has seq = 1000. What acknowledgement number does the server put in its SYN-ACK?", "ru": "Client ke SYN mein seq = 1000 hai. Server apne SYN-ACK mein kaunsa acknowledgement number dega?"},
+       "answer": 1001, "tolerance": 0,
+       "hints": [{"en": "The ack number is the next sequence number expected.", "ru": "Ack number agla mutawaqqa sequence number hai."}],
+       "explanation": {"en": "SYN consumes one sequence number, so ack = 1000 + 1 = 1001.", "ru": "SYN ek sequence number leta hai, is liye ack = 1001."}},
+      {"type": "short", "kind": "conceptual", "q": {"en": "Why does TCP use three messages instead of two?", "ru": "TCP do ki jagah teen messages kyun istemal karta hai?"},
+       "answer": "Both sides must send their initial sequence number and receive an acknowledgement for it; with only two messages the server would not know whether the client received its sequence number, so the third ACK confirms the server-to-client direction.",
+       "keywords": ["both sides", "sequence number", "acknowledge", "confirm"],
+       "hints": [{"en": "Each side needs its own SYN acknowledged.", "ru": "Har taraf ko apne SYN ki tasdeeq chahiye."}],
+       "explanation": {"en": "The third message acknowledges the server's SYN, so both directions are confirmed.", "ru": "Teesra message server ke SYN ki tasdeeq karta hai, is tarah dono simtein confirm hoti hain."}}
+    ]
+  },
+  {
+    "id": "normalization",
+    "title": {"en": "Database Normalization", "ru": "Database Normalization"},
+    "subject": "Databases",
+    "category": "cs",
+    "aliases": ["normalization", "normalisation", "database normalization", "normal forms", "1nf", "2nf", "3nf", "bcnf", "functional dependency"],
+    "search_query": "database normalization 1nf 2nf 3nf",
+    "intro": {
+      "en": "Normalization is how database designers organise tables so that the same fact is not stored in many places, which avoids inconsistent data.",
+      "ru": "Normalization ke zariye database designers tables ko aise tarteeb dete hain ke ek hi baat kai jagah save na ho, taake data be-rabt (inconsistent) na ho."
+    },
+    "definition": {
+      "en": "Normalization is the process of decomposing relational tables, guided by functional dependencies, to reduce redundancy and avoid insertion, update and deletion anomalies.",
+      "ru": "Normalization functional dependencies ki rehnumai mein relational tables ko chhote tables mein todne ka amal hai, taake redundancy kam ho aur insertion, update aur deletion anomalies se bacha ja sake."
+    },
+    "explanation": {
+      "en": "A functional dependency A -> B means the value of A determines the value of B. First normal form (1NF): every column holds a single atomic value (no lists). Second normal form (2NF): 1NF and no non-key column depends on only part of a composite primary key (no partial dependency). Third normal form (3NF): 2NF and no non-key column depends on another non-key column (no transitive dependency). Boyce-Codd normal form (BCNF) is stricter: the left side of every non-trivial functional dependency must be a candidate key. The smaller tables are linked again with foreign keys. Over-normalising can slow reads because queries need many joins, so some systems denormalise on purpose.",
+      "ru": "Functional dependency A -> B ka matlab hai A ki value B ki value tay karti hai. First normal form (1NF): har column mein ek hi atomic value (lists nahi). Second normal form (2NF): 1NF aur koi non-key column composite primary key ke sirf ek hisse par munhasir na ho (partial dependency nahi). Third normal form (3NF): 2NF aur koi non-key column doosre non-key column par munhasir na ho (transitive dependency nahi). Boyce-Codd normal form (BCNF) zyada sakht hai: har non-trivial functional dependency ka baayan hissa candidate key ho. Chhote tables foreign keys se dobara jore jate hain. Zyada normalisation reads ko dheema kar sakti hai kyunki queries ko bohat se joins chahiye, is liye kuch systems jaan boojh kar denormalise karte hain."
+    },
+    "example": {
+      "en": "Table Enrollment(student_id, course_id, student_name, course_title, instructor, instructor_office) with key (student_id, course_id). student_name depends only on student_id and course_title only on course_id: partial dependencies, so it is not 2NF. Split into Student(student_id, student_name), Course(course_id, course_title, instructor, instructor_office) and Enrollment(student_id, course_id). In Course, instructor_office depends on instructor (a non-key column): a transitive dependency, so split again into Course(course_id, course_title, instructor) and Instructor(instructor, instructor_office) to reach 3NF.",
+      "ru": "Table Enrollment(student_id, course_id, student_name, course_title, instructor, instructor_office), key (student_id, course_id). student_name sirf student_id par aur course_title sirf course_id par munhasir hai: partial dependencies, yaani 2NF nahi. Todein: Student(student_id, student_name), Course(course_id, course_title, instructor, instructor_office) aur Enrollment(student_id, course_id). Course mein instructor_office instructor (non-key) par munhasir hai: transitive dependency, is liye 3NF ke liye mazeed todein: Course(course_id, course_title, instructor) aur Instructor(instructor, instructor_office)."
+    },
+    "key_concepts": [
+      {"term": "Functional dependency", "en": "A -> B: A determines B.", "ru": "A -> B: A, B ko tay karta hai."},
+      {"term": "Anomalies", "en": "Insertion, update and deletion problems caused by redundancy.", "ru": "Redundancy se paida hone wale insertion, update aur deletion masail."},
+      {"term": "Partial vs transitive dependency", "en": "On part of the key (breaks 2NF) vs through a non-key column (breaks 3NF).", "ru": "Key ke hisse par (2NF torti hai) vs non-key column ke zariye (3NF torti hai)."}
+    ],
+    "formulas": [
+      {"latex": "X \\rightarrow Y", "en": "Functional dependency notation.", "ru": "Functional dependency likhne ka tareeqa."}
+    ],
+    "code": [
+      "import sqlite3",
+      "",
+      "db = sqlite3.connect(':memory:')",
+      "db.executescript('''",
+      "CREATE TABLE Instructor(instructor TEXT PRIMARY KEY, office TEXT);",
+      "CREATE TABLE Course(course_id TEXT PRIMARY KEY, title TEXT,",
+      "                    instructor TEXT REFERENCES Instructor(instructor));",
+      "INSERT INTO Instructor VALUES ('Dr. Khan', 'B-12');",
+      "INSERT INTO Course VALUES ('CS301', 'Databases', 'Dr. Khan'), ('CS302', 'Networks', 'Dr. Khan');",
+      "''')",
+      "db.execute(\"UPDATE Instructor SET office = 'C-7' WHERE instructor = 'Dr. Khan'\")",
+      "for row in db.execute('SELECT c.course_id, c.title, i.office FROM Course c JOIN Instructor i USING (instructor)'):",
+      "    print(row)"
+    ],
+    "code_explanation": [
+      {"en": "The instructor's office is stored once in the Instructor table (3NF), not in every course row.", "ru": "Instructor ka office Instructor table mein ek dafa save hai (3NF), har course ki row mein nahi."},
+      {"en": "One UPDATE changes the office for every course - no update anomaly.", "ru": "Ek UPDATE har course ke liye office badal deta hai - koi update anomaly nahi."},
+      {"en": "The JOIN puts the information back together when it is needed.", "ru": "JOIN zaroorat par maloomat ko dobara jorta hai."}
+    ],
+    "applications": [
+      {"en": "Designing schemas for banking, university and e-commerce systems.", "ru": "Banking, university aur e-commerce systems ke schemas banana."},
+      {"en": "Keeping data consistent when many users update it.", "ru": "Jab bohat se users update karein to data ko durust rakhna."}
+    ],
+    "exam_points": [
+      {"en": "Define 1NF, 2NF, 3NF and BCNF with examples.", "ru": "Misalon ke saath 1NF, 2NF, 3NF aur BCNF ki tareef."},
+      {"en": "Identify partial and transitive dependencies in a given table and decompose it.", "ru": "Diye gaye table mein partial aur transitive dependencies pehchan kar use todein."},
+      {"en": "Explain the three anomalies.", "ru": "Teen anomalies samjhayein."}
+    ],
+    "common_mistakes": [
+      {"en": "Confusing partial dependency (2NF) with transitive dependency (3NF).", "ru": "Partial dependency (2NF) ko transitive dependency (3NF) samajhna."},
+      {"en": "Decomposing in a way that loses information (lossy join).", "ru": "Aise todna ke maloomat zaya ho (lossy join)."},
+      {"en": "Believing more normalisation is always better for performance.", "ru": "Yeh samajhna ke zyada normalisation hamesha performance ke liye behtar hai."}
+    ],
+    "questions": [
+      {"type": "mcq", "kind": "basic", "q": {"en": "A column that stores 'Math, Physics' (a list of values) violates:", "ru": "Jo column 'Math, Physics' (values ki list) rakhta hai woh kis ki khilaf warzi hai?"},
+       "options": [{"en": "1NF", "ru": "1NF"}, {"en": "2NF only", "ru": "Sirf 2NF"}, {"en": "3NF only", "ru": "Sirf 3NF"}, {"en": "Nothing", "ru": "Kisi ki nahi"}],
+       "answer": 0,
+       "hints": [{"en": "1NF requires atomic values.", "ru": "1NF atomic values maangta hai."}],
+       "explanation": {"en": "A list in one cell is not atomic, so the table is not in 1NF.", "ru": "Ek cell mein list atomic nahi, is liye table 1NF mein nahi."}},
+      {"type": "mcq", "kind": "conceptual", "q": {"en": "A non-key column depends on another non-key column. Which normal form is violated?", "ru": "Ek non-key column doosre non-key column par munhasir hai. Kaunsa normal form toota?"},
+       "options": [{"en": "3NF", "ru": "3NF"}, {"en": "1NF", "ru": "1NF"}, {"en": "2NF", "ru": "2NF"}, {"en": "None", "ru": "Koi nahi"}],
+       "answer": 0,
+       "hints": [{"en": "This is a transitive dependency.", "ru": "Yeh transitive dependency hai."}],
+       "explanation": {"en": "Transitive dependencies are removed in 3NF.", "ru": "Transitive dependencies 3NF mein khatam hoti hain."}},
+      {"type": "short", "kind": "exam", "q": {"en": "What is an update anomaly?", "ru": "Update anomaly kya hai?"},
+       "answer": "When the same fact is stored in several rows, updating it in only some of them leaves the database inconsistent; for example changing an instructor's office in one course row but not the others.",
+       "keywords": ["same fact", "several rows", "inconsistent"],
+       "hints": [{"en": "Think of redundant copies of the same data.", "ru": "Ek hi data ki faltu copies ke baare mein sochein."}],
+       "explanation": {"en": "Redundant copies can disagree after a partial update.", "ru": "Adhoore update ke baad faltu copies mein ikhtilaf ho sakta hai."}}
+    ]
+  }
+]

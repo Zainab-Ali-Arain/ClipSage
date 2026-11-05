@@ -1,0 +1,801 @@
+[
+  {
+    "id": "linear_regression",
+    "title": {"en": "Linear Regression", "ru": "Linear Regression"},
+    "subject": "Machine Learning",
+    "category": "ml_algorithm",
+    "aliases": ["linear regression", "least squares", "simple linear regression", "regression line"],
+    "search_query": "linear regression least squares line",
+    "playground": "linear_regression",
+    "intro": {
+      "en": "Linear regression is usually the first supervised learning algorithm students meet. It predicts a number (such as a house price or an exam score) from one or more input features by fitting a straight line (or a flat plane) through the data.",
+      "ru": "Linear regression aam taur par pehla supervised learning algorithm hota hai jo students seekhte hain. Yeh ek ya zyada input features se koi number predict karta hai (maslan ghar ki qeemat ya exam ke marks), data ke beech mein ek seedhi line (ya plane) fit kar ke."
+    },
+    "definition": {
+      "en": "Linear regression models the output as a weighted sum of the inputs plus a bias, y = w x + b, and chooses w and b so that the mean squared error between predictions and true values is as small as possible.",
+      "ru": "Linear regression output ko inputs ke weighted sum aur bias ke taur par dekhta hai, y = w x + b, aur w aur b aise chunta hai ke predictions aur asal values ke darmiyan mean squared error sab se kam ho."
+    },
+    "explanation": {
+      "en": "Each training example gives an error (residual): the vertical distance between the true value and the line. Squaring the residuals makes them positive and punishes large errors more. The best line is the one with the smallest average squared error. For one feature there is a closed-form solution: the slope is the covariance of x and y divided by the variance of x, and the intercept makes the line pass through the point (mean of x, mean of y). With many features we use the normal equation or gradient descent. The slope tells you how much y changes when x increases by one unit. R squared tells you what fraction of the variation in y the line explains (1 is perfect, 0 means no better than predicting the mean).",
+      "ru": "Har training example ka ek error (residual) hota hai: asal value aur line ke darmiyan khara (vertical) faasla. Residuals ko square karne se woh positive ho jate hain aur bare errors ki saza zyada hoti hai. Behtareen line woh hai jis ka average squared error sab se kam ho. Ek feature ke liye seedha formula maujood hai: slope = x aur y ki covariance / x ki variance, aur intercept aisa hota hai ke line (x ka mean, y ka mean) wale point se guzre. Zyada features ke liye normal equation ya gradient descent istemal hota hai. Slope batata hai ke x mein 1 unit izafe se y kitna badalta hai. R squared batata hai ke y ki variation ka kitna hissa line samjha pati hai (1 matlab perfect, 0 matlab mean predict karne se behtar nahi)."
+    },
+    "example": {
+      "en": "Study hours x = [1, 2, 3, 4] and marks y = [2, 4, 5, 8]. Mean x = 2.5, mean y = 4.75. Covariance sum: (-1.5)(-2.75) + (-0.5)(-0.75) + (0.5)(0.25) + (1.5)(3.25) = 4.125 + 0.375 + 0.125 + 4.875 = 9.5. Variance sum: 2.25 + 0.25 + 0.25 + 2.25 = 5. Slope w = 9.5 / 5 = 1.9. Intercept b = 4.75 - 1.9 x 2.5 = 0. So marks = 1.9 x hours. A student who studies 5 hours is predicted to get 9.5 marks.",
+      "ru": "Parhai ke ghante x = [1, 2, 3, 4] aur marks y = [2, 4, 5, 8]. x ka mean = 2.5, y ka mean = 4.75. Covariance ka sum: (-1.5)(-2.75) + (-0.5)(-0.75) + (0.5)(0.25) + (1.5)(3.25) = 9.5. Variance ka sum: 2.25 + 0.25 + 0.25 + 2.25 = 5. Slope w = 9.5 / 5 = 1.9. Intercept b = 4.75 - 1.9 x 2.5 = 0. Yaani marks = 1.9 x ghante. Jo student 5 ghante parhe us ke 9.5 marks predict honge."
+    },
+    "key_concepts": [
+      {"term": "Residual", "en": "Difference between the true value and the predicted value.", "ru": "Asal value aur predicted value ka farq."},
+      {"term": "Mean squared error (MSE)", "en": "Average of the squared residuals; the loss that linear regression minimises.", "ru": "Squared residuals ka average; yahi loss linear regression kam karta hai."},
+      {"term": "Slope and intercept", "en": "Slope = change in y per unit of x; intercept = prediction when x = 0.", "ru": "Slope = x ke 1 unit par y ki tabdeeli; intercept = jab x = 0 ho to prediction."},
+      {"term": "R squared", "en": "Share of the variance of y explained by the model.", "ru": "y ki variance ka woh hissa jo model samjha pata hai."}
+    ],
+    "formulas": [
+      {"latex": "\\hat{y} = w x + b", "en": "Prediction: weight times input plus bias.", "ru": "Prediction: weight x input + bias."},
+      {"latex": "w = \\frac{\\sum (x_i-\\bar{x})(y_i-\\bar{y})}{\\sum (x_i-\\bar{x})^2}, \\quad b = \\bar{y} - w\\bar{x}", "en": "Closed-form least-squares slope and intercept for one feature.", "ru": "Ek feature ke liye least squares slope aur intercept ka seedha formula."},
+      {"latex": "MSE = \\frac{1}{n}\\sum_{i=1}^{n} (y_i - \\hat{y}_i)^2", "en": "Mean squared error.", "ru": "Mean squared error."},
+      {"latex": "R^2 = 1 - \\frac{\\sum (y_i-\\hat{y}_i)^2}{\\sum (y_i-\\bar{y})^2}", "en": "Coefficient of determination.", "ru": "Coefficient of determination (R squared)."}
+    ],
+    "workflow": [
+      {"en": "Collect pairs (x, y) and plot them to check the relationship looks roughly linear.", "ru": "(x, y) ke pairs jama karein aur plot kar ke dekhein ke rishta takreeban seedha hai."},
+      {"en": "Compute the means of x and y.", "ru": "x aur y ke means nikalein."},
+      {"en": "Compute the slope from covariance / variance, then the intercept.", "ru": "Covariance / variance se slope, phir intercept nikalein."},
+      {"en": "Predict y for every x and compute the residuals, MSE and R squared.", "ru": "Har x ke liye y predict karein aur residuals, MSE aur R squared nikalein."},
+      {"en": "Use the line to predict new values (only inside a sensible range of x).", "ru": "Line se nayi values predict karein (sirf x ki munasib range ke andar)."}
+    ],
+    "code": [
+      "import numpy as np",
+      "from sklearn.linear_model import LinearRegression",
+      "",
+      "x = np.array([1, 2, 3, 4], dtype=float)",
+      "y = np.array([2, 4, 5, 8], dtype=float)",
+      "",
+      "# 1) closed-form least squares by hand",
+      "w = np.sum((x - x.mean()) * (y - y.mean())) / np.sum((x - x.mean()) ** 2)",
+      "b = y.mean() - w * x.mean()",
+      "print('slope', round(w, 3), 'intercept', round(b, 3))",
+      "",
+      "# 2) the same model with scikit-learn",
+      "model = LinearRegression().fit(x.reshape(-1, 1), y)",
+      "print('sklearn', round(model.coef_[0], 3), round(model.intercept_, 3))",
+      "print('prediction for 5 hours:', model.predict([[5]])[0])",
+      "print('R squared:', round(model.score(x.reshape(-1, 1), y), 3))"
+    ],
+    "code_explanation": [
+      {"en": "x and y are NumPy arrays so we can do element-wise arithmetic.", "ru": "x aur y NumPy arrays hain taake har element par hisaab ho sake."},
+      {"en": "The slope line is exactly the covariance / variance formula; the intercept makes the line pass through the means.", "ru": "Slope wali line bilkul covariance / variance ka formula hai; intercept line ko means se guzarta hai."},
+      {"en": "scikit-learn needs a 2-D feature matrix, hence reshape(-1, 1). Its coef_ and intercept_ match the hand calculation.", "ru": "scikit-learn ko 2-D feature matrix chahiye, is liye reshape(-1, 1). Is ke coef_ aur intercept_ haath wale hisaab se milte hain."},
+      {"en": "score() returns R squared on the given data.", "ru": "score() diye gaye data par R squared deta hai."}
+    ],
+    "applications": [
+      {"en": "Predicting house prices from area and location features.", "ru": "Area aur location se ghar ki qeemat ka andaza."},
+      {"en": "Forecasting sales from advertising spend.", "ru": "Advertising ke kharch se sales ka andaza."},
+      {"en": "Estimating the trend of a measurement over time.", "ru": "Waqt ke saath kisi measurement ka trend dekhna."}
+    ],
+    "exam_points": [
+      {"en": "Write the model y = wx + b and the MSE loss; state that least squares minimises MSE.", "ru": "Model y = wx + b aur MSE loss likhein; batayein ke least squares MSE ko kam karta hai."},
+      {"en": "Know the closed-form slope and intercept formulas and be able to compute them for 4-5 points.", "ru": "Slope aur intercept ke formulas yaad rakhein aur 4-5 points par hisaab kar sakein."},
+      {"en": "Interpret slope, intercept and R squared in words.", "ru": "Slope, intercept aur R squared ka matlab alfaaz mein bata sakein."},
+      {"en": "Assumptions: linear relationship, independent errors, roughly constant error variance.", "ru": "Assumptions: seedha rishta, errors ek doosre se azad, error ki variance takreeban barabar."}
+    ],
+    "common_mistakes": [
+      {"en": "Using linear regression for a yes/no (classification) target - use logistic regression instead.", "ru": "Haan/nahi (classification) target ke liye linear regression lagana - is ke liye logistic regression istemal karein."},
+      {"en": "Extrapolating far outside the range of the training data.", "ru": "Training data ki range se bohat bahar predict karna."},
+      {"en": "Forgetting that outliers pull the line strongly because errors are squared.", "ru": "Bhool jana ke outliers line ko zor se khenchte hain kyunki errors square hote hain."},
+      {"en": "Confusing correlation with causation.", "ru": "Correlation ko causation (wajah) samajh lena."}
+    ],
+    "questions": [
+      {"type": "mcq", "kind": "basic", "q": {"en": "Which loss does ordinary least squares linear regression minimise?", "ru": "Ordinary least squares linear regression kaunsa loss kam karta hai?"},
+       "options": [{"en": "Mean squared error", "ru": "Mean squared error"}, {"en": "Cross-entropy", "ru": "Cross-entropy"}, {"en": "Hinge loss", "ru": "Hinge loss"}, {"en": "Number of misclassified points", "ru": "Ghalat classify hue points ki tadaad"}],
+       "answer": 0,
+       "hints": [{"en": "The residuals are squared before averaging.", "ru": "Average se pehle residuals square kiye jate hain."}],
+       "explanation": {"en": "Least squares chooses w and b that minimise the mean of the squared residuals (MSE).", "ru": "Least squares aise w aur b chunta hai jin se squared residuals ka mean (MSE) sab se kam ho."}},
+      {"type": "numerical", "kind": "problem", "q": {"en": "For x = [1, 2, 3, 4] and y = [2, 4, 5, 8], what is the least-squares slope w?", "ru": "x = [1, 2, 3, 4] aur y = [2, 4, 5, 8] ke liye least squares slope w kya hai?"},
+       "answer": 1.9, "tolerance": 0.01,
+       "hints": [{"en": "Means: x = 2.5, y = 4.75.", "ru": "Means: x = 2.5, y = 4.75."}, {"en": "Slope = sum((x-xbar)(y-ybar)) / sum((x-xbar)^2) = 9.5 / 5.", "ru": "Slope = sum((x-xbar)(y-ybar)) / sum((x-xbar)^2) = 9.5 / 5."}],
+       "explanation": {"en": "Covariance sum = 9.5 and variance sum = 5, so w = 9.5 / 5 = 1.9.", "ru": "Covariance ka sum 9.5 aur variance ka sum 5 hai, is liye w = 9.5 / 5 = 1.9."}},
+      {"type": "numerical", "kind": "application", "q": {"en": "A fitted model is y = 1.9x + 0. What does it predict for x = 5?", "ru": "Fit kiya gaya model y = 1.9x + 0 hai. x = 5 par prediction kya hogi?"},
+       "answer": 9.5, "tolerance": 0.01,
+       "hints": [{"en": "Substitute x = 5 into the equation.", "ru": "Equation mein x = 5 rakhein."}],
+       "explanation": {"en": "y = 1.9 x 5 + 0 = 9.5.", "ru": "y = 1.9 x 5 + 0 = 9.5."}},
+      {"type": "short", "kind": "conceptual", "q": {"en": "What does an R squared of 0.9 mean?", "ru": "R squared 0.9 ka kya matlab hai?"},
+       "answer": "The model explains 90 percent of the variance of the target variable y; only 10 percent of the variation is left unexplained.",
+       "keywords": ["90", "variance", "explain"],
+       "hints": [{"en": "R squared is a share of variance.", "ru": "R squared variance ka ek hissa hai."}],
+       "explanation": {"en": "R squared = 1 - SS_res / SS_tot, so 0.9 means the line explains 90% of the variation in y.", "ru": "R squared = 1 - SS_res / SS_tot, to 0.9 ka matlab hai line y ki 90% variation samjha deti hai."}},
+      {"type": "short", "kind": "exam", "q": {"en": "Why are residuals squared in the least-squares loss?", "ru": "Least squares loss mein residuals ko square kyun kiya jata hai?"},
+       "answer": "Squaring makes every error positive so positive and negative errors do not cancel, and it penalises large errors more than small ones; it also gives a smooth loss with a closed-form minimum.",
+       "keywords": ["positive", "cancel", "large errors"],
+       "hints": [{"en": "Think about what happens when you add +3 and -3.", "ru": "Sochein +3 aur -3 jama karne se kya hota hai."}],
+       "explanation": {"en": "Without squaring, positive and negative residuals would cancel; squaring keeps them positive and punishes big mistakes more.", "ru": "Square na karein to positive aur negative residuals ek doosre ko khatam kar dete; square karne se sab positive rehte hain aur bari ghaltiyon ki saza zyada hoti hai."}}
+    ]
+  },
+  {
+    "id": "logistic_regression",
+    "title": {"en": "Logistic Regression", "ru": "Logistic Regression"},
+    "subject": "Machine Learning",
+    "category": "ml_algorithm",
+    "aliases": ["logistic regression", "sigmoid", "binary classification"],
+    "search_query": "logistic regression sigmoid classification",
+    "playground": "logistic_regression",
+    "intro": {
+      "en": "Despite its name, logistic regression is a classification algorithm. It predicts the probability that an example belongs to the positive class, for example whether an email is spam.",
+      "ru": "Naam ke bawajood logistic regression classification ka algorithm hai. Yeh predict karta hai ke koi example positive class mein hone ka kitna imkan (probability) hai, maslan email spam hai ya nahi."
+    },
+    "definition": {
+      "en": "Logistic regression computes a linear score z = w . x + b and passes it through the sigmoid function to get a probability p = 1 / (1 + e^-z). The class is positive when p is at least a threshold, usually 0.5.",
+      "ru": "Logistic regression pehle linear score z = w . x + b nikalta hai aur phir sigmoid function se probability p = 1 / (1 + e^-z) banata hai. Agar p threshold (aam taur par 0.5) ya us se zyada ho to class positive hoti hai."
+    },
+    "explanation": {
+      "en": "The sigmoid squeezes any real number into the range 0 to 1, so the output can be read as a probability. The decision boundary is where p = 0.5, which is where z = 0: a straight line (or plane) in feature space, so logistic regression is a linear classifier. The weights are learned by minimising the log loss (binary cross-entropy), which strongly punishes confident wrong predictions. There is no closed-form solution, so gradient descent or a similar optimiser is used. A positive weight means that increasing the feature increases the probability of the positive class.",
+      "ru": "Sigmoid kisi bhi number ko 0 aur 1 ke darmiyan le aata hai, is liye output ko probability samjha ja sakta hai. Decision boundary wahan hai jahan p = 0.5, yaani z = 0: feature space mein ek seedhi line (ya plane), is liye logistic regression linear classifier hai. Weights log loss (binary cross-entropy) kam kar ke seekhe jate hain, jo pakke yaqeen wali ghalat predictions ki bari saza deta hai. Iska seedha formula nahi, is liye gradient descent jaisa optimiser lagta hai. Positive weight ka matlab hai ke feature barhne se positive class ki probability barhti hai."
+    },
+    "example": {
+      "en": "Suppose a trained model has w = 2 and b = -4 for one feature (hours studied) and predicts pass/fail. For 3 hours: z = 2 x 3 - 4 = 2, p = 1 / (1 + e^-2) = 0.881, so the student is predicted to pass. For 1 hour: z = -2, p = 0.119, predicted fail. The boundary is at z = 0, i.e. 2 hours.",
+      "ru": "Farz karein ek trained model mein ek feature (parhai ke ghante) ke liye w = 2 aur b = -4 hai aur yeh pass/fail predict karta hai. 3 ghante: z = 2 x 3 - 4 = 2, p = 1 / (1 + e^-2) = 0.881, yaani pass. 1 ghanta: z = -2, p = 0.119, yaani fail. Boundary z = 0 par hai, yaani 2 ghante."
+    },
+    "key_concepts": [
+      {"term": "Sigmoid", "en": "S-shaped function mapping any number to (0, 1).", "ru": "S shakal ka function jo har number ko (0, 1) mein le aata hai."},
+      {"term": "Decision boundary", "en": "Where p = 0.5 (z = 0); a line or plane.", "ru": "Jahan p = 0.5 (z = 0); ek line ya plane."},
+      {"term": "Log loss", "en": "Binary cross-entropy; the loss minimised during training.", "ru": "Binary cross-entropy; training mein yahi loss kam hota hai."},
+      {"term": "Threshold", "en": "Probability cut-off for predicting the positive class (default 0.5).", "ru": "Positive class kehne ki probability ki had (aam taur par 0.5)."}
+    ],
+    "formulas": [
+      {"latex": "p = \\sigma(z) = \\frac{1}{1+e^{-z}}, \\quad z = w \\cdot x + b", "en": "Sigmoid of the linear score.", "ru": "Linear score ka sigmoid."},
+      {"latex": "L = -\\frac{1}{n}\\sum [y_i \\log p_i + (1-y_i)\\log(1-p_i)]", "en": "Log loss (binary cross-entropy).", "ru": "Log loss (binary cross-entropy)."}
+    ],
+    "workflow": [
+      {"en": "Compute z = w . x + b for each example.", "ru": "Har example ke liye z = w . x + b nikalein."},
+      {"en": "Convert z to a probability with the sigmoid.", "ru": "Sigmoid se z ko probability banayein."},
+      {"en": "Compute the log loss and its gradient; update w and b with gradient descent.", "ru": "Log loss aur us ka gradient nikal kar gradient descent se w aur b update karein."},
+      {"en": "Repeat until the loss stops decreasing; predict class 1 when p >= 0.5.", "ru": "Loss kam hona band ho tab tak dohrayein; p >= 0.5 ho to class 1 predict karein."}
+    ],
+    "code": [
+      "import numpy as np",
+      "from sklearn.linear_model import LogisticRegression",
+      "",
+      "hours = np.array([[0.5], [1], [1.5], [2.5], [3], [3.5], [4], [5]])",
+      "passed = np.array([0, 0, 0, 1, 1, 1, 1, 1])",
+      "",
+      "model = LogisticRegression().fit(hours, passed)",
+      "w, b = model.coef_[0][0], model.intercept_[0]",
+      "z = w * 2.75 + b",
+      "p_manual = 1 / (1 + np.exp(-z))",
+      "print('w', round(w, 3), 'b', round(b, 3))",
+      "print('P(pass | 2.75 h) by hand:', round(p_manual, 3))",
+      "print('sklearn:', round(model.predict_proba([[2.75]])[0, 1], 3))",
+      "print('boundary at', round(-b / w, 2), 'hours')"
+    ],
+    "code_explanation": [
+      {"en": "The labels are 0 (fail) and 1 (pass), so this is binary classification.", "ru": "Labels 0 (fail) aur 1 (pass) hain, yaani binary classification."},
+      {"en": "After fitting, coef_ is w and intercept_ is b of the linear score.", "ru": "Fit ke baad coef_ w hai aur intercept_ b."},
+      {"en": "Applying the sigmoid by hand gives exactly predict_proba.", "ru": "Haath se sigmoid lagane se bilkul predict_proba wala jawab aata hai."},
+      {"en": "The boundary is where z = 0, i.e. x = -b / w.", "ru": "Boundary wahan hai jahan z = 0, yaani x = -b / w."}
+    ],
+    "applications": [
+      {"en": "Spam detection and fraud detection.", "ru": "Spam aur fraud ki pehchan."},
+      {"en": "Predicting whether a patient has a disease from test results.", "ru": "Test results se marz hone ka andaza."},
+      {"en": "Click-through prediction in online advertising.", "ru": "Online ads par click hone ka andaza."}
+    ],
+    "exam_points": [
+      {"en": "It is a classification algorithm that outputs probabilities.", "ru": "Yeh classification algorithm hai jo probabilities deta hai."},
+      {"en": "Write the sigmoid and the log loss; the boundary is linear (z = 0).", "ru": "Sigmoid aur log loss likhein; boundary linear hai (z = 0)."},
+      {"en": "Trained with gradient descent because there is no closed form.", "ru": "Seedha formula nahi, is liye gradient descent se train hota hai."}
+    ],
+    "common_mistakes": [
+      {"en": "Using mean squared error instead of log loss for training.", "ru": "Training mein log loss ki jagah mean squared error lagana."},
+      {"en": "Thinking it is a regression algorithm because of its name.", "ru": "Naam ki wajah se ise regression algorithm samajhna."},
+      {"en": "Always using 0.5 as threshold even when classes are very unbalanced.", "ru": "Classes bohat ghair mutawazin hon tab bhi hamesha 0.5 threshold rakhna."}
+    ],
+    "questions": [
+      {"type": "mcq", "kind": "basic", "q": {"en": "What is the output range of the sigmoid function?", "ru": "Sigmoid function ka output kis range mein hota hai?"},
+       "options": [{"en": "0 to 1", "ru": "0 se 1"}, {"en": "-1 to 1", "ru": "-1 se 1"}, {"en": "0 to infinity", "ru": "0 se infinity"}, {"en": "Any real number", "ru": "Koi bhi real number"}],
+       "answer": 0,
+       "hints": [{"en": "The output is read as a probability.", "ru": "Output ko probability samjha jata hai."}],
+       "explanation": {"en": "1 / (1 + e^-z) is always strictly between 0 and 1.", "ru": "1 / (1 + e^-z) hamesha 0 aur 1 ke darmiyan hota hai."}},
+      {"type": "numerical", "kind": "problem", "q": {"en": "With w = 2 and b = -4, what is the predicted probability for x = 3? (3 decimals)", "ru": "w = 2 aur b = -4 ho to x = 3 par predicted probability kya hai? (3 decimal)"},
+       "answer": 0.881, "tolerance": 0.002,
+       "hints": [{"en": "First z = 2 x 3 - 4 = 2.", "ru": "Pehle z = 2 x 3 - 4 = 2."}, {"en": "Then p = 1 / (1 + e^-2).", "ru": "Phir p = 1 / (1 + e^-2)."}],
+       "explanation": {"en": "z = 2, e^-2 = 0.1353, p = 1 / 1.1353 = 0.881.", "ru": "z = 2, e^-2 = 0.1353, p = 1 / 1.1353 = 0.881."}},
+      {"type": "mcq", "kind": "conceptual", "q": {"en": "The decision boundary of logistic regression (without feature transformations) is:", "ru": "Logistic regression (features badle baghair) ki decision boundary kaisi hoti hai?"},
+       "options": [{"en": "Linear", "ru": "Linear (seedhi)"}, {"en": "A circle", "ru": "Daira"}, {"en": "Always curved", "ru": "Hamesha murhi hui"}, {"en": "It has no boundary", "ru": "Koi boundary nahi hoti"}],
+       "answer": 0,
+       "hints": [{"en": "p = 0.5 exactly when w . x + b = 0.", "ru": "p = 0.5 bilkul tab hota hai jab w . x + b = 0."}],
+       "explanation": {"en": "w . x + b = 0 is the equation of a line/plane, so the boundary is linear.", "ru": "w . x + b = 0 line/plane ki equation hai, is liye boundary linear hai."}},
+      {"type": "short", "kind": "exam", "q": {"en": "Why is log loss preferred over mean squared error for logistic regression?", "ru": "Logistic regression mein mean squared error ki jagah log loss kyun behtar hai?"},
+       "answer": "Log loss heavily penalises confident wrong probabilities and, with the sigmoid, gives a convex loss with useful gradients, while MSE with a sigmoid is non-convex and gives tiny gradients.",
+       "keywords": ["convex", "confident", "gradient"],
+       "hints": [{"en": "Think about convexity and how wrong-but-confident predictions are punished.", "ru": "Convexity aur pakke yaqeen wali ghalat predictions ki saza ke baare mein sochein."}],
+       "explanation": {"en": "Log loss is convex in w for logistic regression and punishes confident mistakes strongly; MSE + sigmoid is non-convex and learns slowly.", "ru": "Logistic regression mein log loss convex hai aur pakke yaqeen wali ghaltiyon ki sakht saza deta hai; MSE + sigmoid non-convex hai aur dheere seekhta hai."}}
+    ]
+  },
+  {
+    "id": "decision_tree",
+    "title": {"en": "Decision Tree", "ru": "Decision Tree"},
+    "subject": "Machine Learning",
+    "category": "ml_algorithm",
+    "aliases": ["decision tree", "decision trees", "gini", "entropy", "information gain", "id3", "cart"],
+    "search_query": "decision tree gini entropy information gain",
+    "playground": "decision_tree",
+    "intro": {
+      "en": "A decision tree makes predictions by asking a sequence of yes/no questions about the features, like a flowchart. It is easy to read and explain, which makes it popular in practice.",
+      "ru": "Decision tree features ke baare mein haan/nahi wale sawalon ka silsila pooch kar prediction karta hai, bilkul flowchart ki tarah. Ise parhna aur samjhana asaan hai, is liye yeh bohat istemal hota hai."
+    },
+    "definition": {
+      "en": "A decision tree recursively splits the data on the feature and threshold that make the child nodes as pure as possible (lowest Gini impurity or entropy). Leaves hold the predicted class (or value).",
+      "ru": "Decision tree data ko baar baar us feature aur threshold par taqseem karta hai jis se bachay (child) nodes sab se zyada khalis (pure) hon, yaani Gini impurity ya entropy sab se kam ho. Leaves mein predicted class (ya value) hoti hai."
+    },
+    "explanation": {
+      "en": "At each node the algorithm tries every feature and candidate threshold, measures the impurity of the two resulting groups, and keeps the split with the biggest impurity decrease (information gain). Gini impurity is 1 minus the sum of squared class proportions: 0 for a pure node, 0.5 for a 50/50 binary node. Entropy is -sum p log2 p: 0 for pure, 1 for 50/50. Splitting stops at a maximum depth, a minimum number of samples, or when nodes are pure. Deep trees memorise the training data (overfitting), so depth limits or pruning are important.",
+      "ru": "Har node par algorithm har feature aur har mumkin threshold azmata hai, do banne wale groups ki impurity naapta hai, aur woh split rakhta hai jis se impurity sab se zyada kam ho (information gain). Gini impurity = 1 - classes ke hisson ke squares ka sum: pure node ke liye 0, binary 50/50 ke liye 0.5. Entropy = -sum p log2 p: pure ke liye 0, 50/50 ke liye 1. Splitting maximum depth, kam az kam samples, ya pure nodes par ruk jati hai. Bohat gehre trees training data ratt lete hain (overfitting), is liye depth ki had ya pruning zaroori hai."
+    },
+    "example": {
+      "en": "A node has 6 'yes' and 4 'no' examples: Gini = 1 - (0.6^2 + 0.4^2) = 1 - 0.52 = 0.48. A split gives left = 5 yes / 1 no and right = 1 yes / 3 no. Gini left = 1 - (0.833^2 + 0.167^2) = 0.278; Gini right = 1 - (0.25^2 + 0.75^2) = 0.375. Weighted = 0.6 x 0.278 + 0.4 x 0.375 = 0.317. The impurity drops from 0.48 to 0.317, a gain of 0.163.",
+      "ru": "Ek node mein 6 'haan' aur 4 'nahi' hain: Gini = 1 - (0.6^2 + 0.4^2) = 0.48. Ek split se left = 5 haan / 1 nahi aur right = 1 haan / 3 nahi. Left ka Gini = 0.278; right ka Gini = 0.375. Weighted = 0.6 x 0.278 + 0.4 x 0.375 = 0.317. Impurity 0.48 se 0.317 ho gayi, yaani 0.163 ka gain."
+    },
+    "key_concepts": [
+      {"term": "Gini impurity", "en": "1 - sum of squared class proportions.", "ru": "1 - classes ke hisson ke squares ka sum."},
+      {"term": "Entropy and information gain", "en": "Entropy measures disorder; gain = parent entropy - weighted child entropy.", "ru": "Entropy be-tarteebi naapti hai; gain = parent entropy - children ki weighted entropy."},
+      {"term": "Max depth / pruning", "en": "Limits on tree size that reduce overfitting.", "ru": "Tree ke size ki had jo overfitting kam karti hai."},
+      {"term": "Leaf", "en": "End node that gives the prediction.", "ru": "Aakhri node jo prediction deti hai."}
+    ],
+    "formulas": [
+      {"latex": "Gini = 1 - \\sum_k p_k^2", "en": "Gini impurity of a node.", "ru": "Node ki Gini impurity."},
+      {"latex": "H = -\\sum_k p_k \\log_2 p_k", "en": "Entropy of a node.", "ru": "Node ki entropy."},
+      {"latex": "Gain = H(parent) - \\sum_j \\frac{n_j}{n} H(child_j)", "en": "Information gain of a split.", "ru": "Split ka information gain."}
+    ],
+    "workflow": [
+      {"en": "Start with all training data at the root.", "ru": "Saara training data root par rakhein."},
+      {"en": "For every feature and threshold, compute the weighted impurity of the two children.", "ru": "Har feature aur threshold ke liye dono children ki weighted impurity nikalein."},
+      {"en": "Choose the split with the largest impurity decrease and create two child nodes.", "ru": "Sab se zyada impurity kam karne wala split chunein aur do child nodes banayein."},
+      {"en": "Repeat on each child until a stopping rule is met; leaves predict the majority class.", "ru": "Har child par dohrayein jab tak rukne ka qaida poora na ho; leaves majority class batati hain."}
+    ],
+    "code": [
+      "import numpy as np",
+      "from sklearn.tree import DecisionTreeClassifier, export_text",
+      "",
+      "X = np.array([[25, 0], [35, 1], [45, 1], [20, 0], [30, 1], [50, 0], [40, 1], [23, 0]])",
+      "y = np.array([0, 1, 1, 0, 1, 0, 1, 0])  # 1 = buys the product",
+      "",
+      "tree = DecisionTreeClassifier(max_depth=2, criterion='gini', random_state=0).fit(X, y)",
+      "print(export_text(tree, feature_names=['age', 'has_job']))",
+      "print('prediction for age 33 with a job:', tree.predict([[33, 1]])[0])",
+      "",
+      "def gini(labels):",
+      "    _, counts = np.unique(labels, return_counts=True)",
+      "    p = counts / counts.sum()",
+      "    return 1 - np.sum(p ** 2)",
+      "",
+      "print('root Gini:', round(gini(y), 3))"
+    ],
+    "code_explanation": [
+      {"en": "Each row is a person (age, has_job) and y says whether they bought the product.", "ru": "Har row ek shakhs (age, has_job) hai aur y batata hai ke us ne product khareeda ya nahi."},
+      {"en": "max_depth=2 limits the tree to two levels of questions to avoid overfitting.", "ru": "max_depth=2 tree ko sawalon ki do levels tak rokta hai taake overfitting na ho."},
+      {"en": "export_text prints the learned questions and thresholds as a readable flowchart.", "ru": "export_text seekhe hue sawal aur thresholds flowchart ki tarah print karta hai."},
+      {"en": "The small gini() function computes the impurity exactly as in the formula.", "ru": "Chhota gini() function impurity bilkul formula ki tarah nikalta hai."}
+    ],
+    "applications": [
+      {"en": "Loan approval and credit scoring with explainable rules.", "ru": "Samajh aane wale rules ke saath loan approval aur credit scoring."},
+      {"en": "Medical decision support (which test to do next).", "ru": "Medical faislon mein madad (agla kaunsa test karein)."},
+      {"en": "Building block of random forests and gradient boosting.", "ru": "Random forest aur gradient boosting ki buniyad."}
+    ],
+    "exam_points": [
+      {"en": "Compute Gini or entropy for a node and the information gain of a split.", "ru": "Node ka Gini ya entropy aur split ka information gain nikal sakein."},
+      {"en": "Explain why deep trees overfit and how max depth / pruning help.", "ru": "Batayein gehre trees kyun overfit karte hain aur max depth / pruning kaise madad karte hain."},
+      {"en": "Trees need no feature scaling and handle non-linear boundaries.", "ru": "Trees ko feature scaling ki zaroorat nahi aur yeh non-linear boundaries bana lete hain."}
+    ],
+    "common_mistakes": [
+      {"en": "Letting the tree grow without limits and trusting 100% training accuracy.", "ru": "Tree ko be-had barhne dena aur 100% training accuracy par bharosa karna."},
+      {"en": "Mixing up Gini (max 0.5 for two classes) and entropy (max 1).", "ru": "Gini (do classes mein max 0.5) aur entropy (max 1) ko gadmad karna."},
+      {"en": "Forgetting to weight child impurities by their size.", "ru": "Children ki impurity ko un ke size se weight na karna."}
+    ],
+    "questions": [
+      {"type": "numerical", "kind": "problem", "q": {"en": "A node has 6 examples of class A and 4 of class B. What is its Gini impurity?", "ru": "Ek node mein class A ke 6 aur class B ke 4 examples hain. Is ki Gini impurity kya hai?"},
+       "answer": 0.48, "tolerance": 0.005,
+       "hints": [{"en": "Proportions are 0.6 and 0.4.", "ru": "Hisse 0.6 aur 0.4 hain."}, {"en": "Gini = 1 - (0.6^2 + 0.4^2).", "ru": "Gini = 1 - (0.6^2 + 0.4^2)."}],
+       "explanation": {"en": "1 - (0.36 + 0.16) = 0.48.", "ru": "1 - (0.36 + 0.16) = 0.48."}},
+      {"type": "mcq", "kind": "basic", "q": {"en": "What is the Gini impurity of a pure node?", "ru": "Pure node ki Gini impurity kitni hoti hai?"},
+       "options": [{"en": "0", "ru": "0"}, {"en": "0.5", "ru": "0.5"}, {"en": "1", "ru": "1"}, {"en": "It depends on the depth", "ru": "Depth par munhasir hai"}],
+       "answer": 0,
+       "hints": [{"en": "In a pure node one class has proportion 1.", "ru": "Pure node mein ek class ka hissa 1 hota hai."}],
+       "explanation": {"en": "1 - 1^2 = 0.", "ru": "1 - 1^2 = 0."}},
+      {"type": "numerical", "kind": "problem", "q": {"en": "What is the entropy (base 2) of a node with 50% class A and 50% class B?", "ru": "50% class A aur 50% class B wali node ki entropy (base 2) kya hai?"},
+       "answer": 1.0, "tolerance": 0.001,
+       "hints": [{"en": "H = -(0.5 log2 0.5 + 0.5 log2 0.5).", "ru": "H = -(0.5 log2 0.5 + 0.5 log2 0.5)."}],
+       "explanation": {"en": "log2 0.5 = -1, so H = -(0.5 x -1 + 0.5 x -1) = 1.", "ru": "log2 0.5 = -1, to H = -(-0.5 - 0.5) = 1."}},
+      {"type": "short", "kind": "conceptual", "q": {"en": "Why does a very deep decision tree often perform badly on test data?", "ru": "Bohat gehra decision tree test data par aksar bura kyun karta hai?"},
+       "answer": "A very deep tree keeps splitting until it memorises the training data including noise, so it overfits and does not generalise to new data; limiting depth or pruning helps.",
+       "keywords": ["overfit", "memorise", "noise", "generalise"],
+       "hints": [{"en": "Think of the overfitting topic.", "ru": "Overfitting wale topic ko yaad karein."}],
+       "explanation": {"en": "Deep trees fit noise in the training set (overfitting) and generalise poorly.", "ru": "Gehre trees training set ke noise ko bhi fit kar lete hain (overfitting) aur naye data par kamzor hote hain."}}
+    ]
+  },
+  {
+    "id": "knn",
+    "title": {"en": "K-Nearest Neighbors (KNN)", "ru": "K-Nearest Neighbors (KNN)"},
+    "subject": "Machine Learning",
+    "category": "ml_algorithm",
+    "aliases": ["knn", "k nearest neighbors", "k-nearest neighbors", "k nearest neighbour", "nearest neighbor"],
+    "search_query": "k nearest neighbors knn classification distance",
+    "playground": "knn",
+    "intro": {
+      "en": "KNN is one of the simplest ML algorithms: to classify a new point, look at the k closest training points and take a vote.",
+      "ru": "KNN sab se aasaan ML algorithms mein se hai: naye point ki class janne ke liye k sab se qareebi training points dekhein aur vote lein."
+    },
+    "definition": {
+      "en": "K-Nearest Neighbors predicts the label of a new example from the labels of the k training examples closest to it (usually by Euclidean distance): majority vote for classification, average for regression.",
+      "ru": "K-Nearest Neighbors naye example ka label un k training examples ke labels se predict karta hai jo us ke sab se qareeb hon (aam taur par Euclidean distance se): classification mein majority vote, regression mein average."
+    },
+    "explanation": {
+      "en": "KNN is a lazy learner: training just stores the data, and all the work happens at prediction time. The choice of k controls the bias-variance trade-off: k = 1 follows every noisy point (high variance), a large k smooths too much (high bias). An odd k avoids ties in binary problems. Because it relies on distances, features must be on similar scales, so standardise them first. Prediction is slow for large datasets because the distance to every training point is computed, unless an index such as a KD-tree is used.",
+      "ru": "KNN lazy learner hai: training mein sirf data save hota hai aur saara kaam prediction ke waqt hota hai. k ka intikhab bias-variance trade-off tay karta hai: k = 1 har noisy point ke peeche jata hai (high variance), bohat bara k cheezon ko zyada hamwar kar deta hai (high bias). Binary masail mein taaq (odd) k se tie nahi hota. Yeh distance par chalta hai, is liye features ka scale milta julta hona chahiye, pehle standardise karein. Bare datasets par prediction dheemi hoti hai kyunki har training point tak distance nikalta hai, jab tak KD-tree jaisa index na ho."
+    },
+    "example": {
+      "en": "Training points: A(1,1) red, B(2,1) red, C(4,4) blue, D(5,4) blue, E(4,5) blue. New point P(2,2). Distances: A = sqrt(1+1) = 1.41, B = sqrt(0+1) = 1, C = sqrt(4+4) = 2.83, D = sqrt(9+4) = 3.61, E = sqrt(4+9) = 3.61. With k = 3 the neighbours are B, A, C: two red, one blue, so P is red.",
+      "ru": "Training points: A(1,1) laal, B(2,1) laal, C(4,4) neela, D(5,4) neela, E(4,5) neela. Naya point P(2,2). Distances: A = 1.41, B = 1, C = 2.83, D = 3.61, E = 3.61. k = 3 par neighbours B, A, C hain: do laal, ek neela, to P laal hai."
+    },
+    "key_concepts": [
+      {"term": "k", "en": "Number of neighbours that vote.", "ru": "Vote dene wale neighbours ki tadaad."},
+      {"term": "Euclidean distance", "en": "Straight-line distance between two points.", "ru": "Do points ke darmiyan seedha faasla."},
+      {"term": "Feature scaling", "en": "Putting features on comparable scales so no feature dominates distances.", "ru": "Features ko milte julte scale par lana taake koi ek feature distance par haavi na ho."},
+      {"term": "Lazy learning", "en": "No training phase; computation happens at prediction.", "ru": "Training ka marhala nahi; hisaab prediction par hota hai."}
+    ],
+    "formulas": [
+      {"latex": "d(p, q) = \\sqrt{\\sum_{i} (p_i - q_i)^2}", "en": "Euclidean distance.", "ru": "Euclidean distance."},
+      {"latex": "\\hat{y} = \\text{mode}\\{y_j : j \\in N_k(x)\\}", "en": "Majority vote among the k nearest neighbours.", "ru": "k qareebi neighbours mein majority vote."}
+    ],
+    "workflow": [
+      {"en": "Scale the features.", "ru": "Features scale karein."},
+      {"en": "Compute the distance from the new point to every training point.", "ru": "Naye point se har training point tak distance nikalein."},
+      {"en": "Sort by distance and take the k closest.", "ru": "Distance se sort kar ke k sab se qareebi lein."},
+      {"en": "Return the majority label (or the mean value for regression).", "ru": "Majority label (ya regression mein mean) batayein."}
+    ],
+    "code": [
+      "import numpy as np",
+      "from sklearn.neighbors import KNeighborsClassifier",
+      "",
+      "X = np.array([[1, 1], [2, 1], [4, 4], [5, 4], [4, 5]])",
+      "y = np.array(['red', 'red', 'blue', 'blue', 'blue'])",
+      "p = np.array([2, 2])",
+      "",
+      "distances = np.sqrt(((X - p) ** 2).sum(axis=1))",
+      "nearest = np.argsort(distances)[:3]",
+      "print('distances:', distances.round(2))",
+      "print('3 nearest labels:', y[nearest])",
+      "",
+      "knn = KNeighborsClassifier(n_neighbors=3).fit(X, y)",
+      "print('sklearn prediction:', knn.predict([p])[0])"
+    ],
+    "code_explanation": [
+      {"en": "The distance line applies the Euclidean formula to all training points at once.", "ru": "Distance wali line Euclidean formula ek saath saare training points par lagati hai."},
+      {"en": "argsort gives the indices from closest to farthest; we keep the first 3.", "ru": "argsort qareeb se door tak indices deta hai; hum pehle 3 rakhte hain."},
+      {"en": "scikit-learn's KNeighborsClassifier does the same vote and agrees with the manual result.", "ru": "scikit-learn ka KNeighborsClassifier yahi vote karta hai aur jawab haath wale se milta hai."}
+    ],
+    "applications": [
+      {"en": "Recommendation systems (users similar to you liked ...).", "ru": "Recommendation systems (aap jaise users ne yeh pasand kiya ...)."},
+      {"en": "Handwritten digit recognition on small datasets.", "ru": "Chhote datasets par haath se likhe digits pehchanna."},
+      {"en": "Filling missing values using similar records.", "ru": "Milte julte records se missing values bharna."}
+    ],
+    "exam_points": [
+      {"en": "Compute Euclidean distances and do the vote by hand.", "ru": "Euclidean distances nikal kar haath se vote karein."},
+      {"en": "Explain the effect of small vs large k (variance vs bias).", "ru": "Chhote aur bare k ka asar batayein (variance vs bias)."},
+      {"en": "Feature scaling is essential for distance-based methods.", "ru": "Distance par chalne wale methods ke liye feature scaling zaroori hai."}
+    ],
+    "common_mistakes": [
+      {"en": "Not scaling features (e.g. salary in thousands vs age in years).", "ru": "Features scale na karna (maslan hazaron mein salary vs saalon mein age)."},
+      {"en": "Choosing k by training accuracy (k = 1 always gives 100%).", "ru": "Training accuracy se k chunna (k = 1 hamesha 100% deta hai)."},
+      {"en": "Using an even k for two classes and getting ties.", "ru": "Do classes ke liye juft (even) k lena aur tie aa jana."}
+    ],
+    "questions": [
+      {"type": "numerical", "kind": "problem", "q": {"en": "What is the Euclidean distance between (1, 2) and (4, 6)?", "ru": "(1, 2) aur (4, 6) ke darmiyan Euclidean distance kya hai?"},
+       "answer": 5.0, "tolerance": 0.001,
+       "hints": [{"en": "Differences are 3 and 4.", "ru": "Farq 3 aur 4 hai."}, {"en": "sqrt(3^2 + 4^2).", "ru": "sqrt(3^2 + 4^2)."}],
+       "explanation": {"en": "sqrt(9 + 16) = sqrt(25) = 5.", "ru": "sqrt(9 + 16) = sqrt(25) = 5."}},
+      {"type": "mcq", "kind": "conceptual", "q": {"en": "What usually happens when k = 1?", "ru": "k = 1 hone par aam taur par kya hota hai?"},
+       "options": [{"en": "The model follows noise closely (high variance)", "ru": "Model noise ke peeche chalta hai (high variance)"}, {"en": "The model becomes too simple (high bias)", "ru": "Model bohat saada ho jata hai (high bias)"}, {"en": "Training becomes slower", "ru": "Training dheemi ho jati hai"}, {"en": "Feature scaling is no longer needed", "ru": "Feature scaling ki zaroorat nahi rehti"}],
+       "answer": 0,
+       "hints": [{"en": "With k = 1 a single noisy neighbour decides the label.", "ru": "k = 1 par ek hi noisy neighbour label tay karta hai."}],
+       "explanation": {"en": "k = 1 makes a very wiggly boundary that fits noise: high variance / overfitting.", "ru": "k = 1 bohat tedhi boundary banata hai jo noise fit karti hai: high variance / overfitting."}},
+      {"type": "mcq", "kind": "application", "q": {"en": "Features are age (20-60) and income (20,000-200,000). What should you do before KNN?", "ru": "Features age (20-60) aur income (20,000-200,000) hain. KNN se pehle kya karna chahiye?"},
+       "options": [{"en": "Standardise / scale the features", "ru": "Features standardise / scale karein"}, {"en": "Remove the age feature", "ru": "Age feature hata dein"}, {"en": "Use k = 1", "ru": "k = 1 rakhein"}, {"en": "Nothing", "ru": "Kuch nahi"}],
+       "answer": 0,
+       "hints": [{"en": "Which feature would dominate the distance?", "ru": "Distance par kaunsa feature haavi hoga?"}],
+       "explanation": {"en": "Income differences are thousands of times larger, so without scaling the distance ignores age.", "ru": "Income ke farq hazaron guna bare hain, scaling ke baghair distance age ko nazar andaz kar deta hai."}},
+      {"type": "short", "kind": "exam", "q": {"en": "Why is KNN called a lazy learner?", "ru": "KNN ko lazy learner kyun kehte hain?"},
+       "answer": "Because it does not learn a model during training; it only stores the training data and does all computation (distance calculation and voting) at prediction time.",
+       "keywords": ["stores", "training data", "prediction time"],
+       "hints": [{"en": "What happens in the fit step?", "ru": "Fit wale step mein kya hota hai?"}],
+       "explanation": {"en": "Training only stores the data; distances and votes are computed when a prediction is requested.", "ru": "Training mein sirf data save hota hai; distances aur votes prediction ke waqt nikalte hain."}}
+    ]
+  },
+  {
+    "id": "naive_bayes",
+    "title": {"en": "Naive Bayes", "ru": "Naive Bayes"},
+    "subject": "Machine Learning",
+    "category": "ml_algorithm",
+    "aliases": ["naive bayes", "naive bayes classifier", "gaussian naive bayes", "multinomial naive bayes"],
+    "search_query": "naive bayes classifier bayes theorem",
+    "playground": "naive_bayes",
+    "intro": {
+      "en": "Naive Bayes is a fast probabilistic classifier based on Bayes' theorem. It works surprisingly well for text problems such as spam filtering.",
+      "ru": "Naive Bayes Bayes' theorem par mabni ek tez probabilistic classifier hai. Yeh text ke masail jaise spam filtering mein heraan kun had tak acha kaam karta hai."
+    },
+    "definition": {
+      "en": "Naive Bayes chooses the class c that maximises P(c) x P(x1 | c) x P(x2 | c) x ..., assuming the features are conditionally independent given the class (the 'naive' assumption).",
+      "ru": "Naive Bayes woh class c chunta hai jis ke liye P(c) x P(x1 | c) x P(x2 | c) x ... sab se zyada ho, yeh farz kar ke ke class maloom ho to features ek doosre se azad hain (yahi 'naive' assumption hai)."
+    },
+    "explanation": {
+      "en": "Bayes' theorem turns 'how likely are these features for each class' into 'how likely is each class given these features'. The prior P(c) is the share of each class in the training data. The likelihoods P(xi | c) are estimated per feature: counts for categorical/word features (Multinomial NB) or a normal distribution with the class mean and variance for numeric features (Gaussian NB). Because the evidence P(x) is the same for all classes, we only compare the numerators. Laplace smoothing adds 1 to counts so that an unseen word does not make a probability zero. In practice log-probabilities are added instead of multiplying tiny numbers.",
+      "ru": "Bayes' theorem 'har class mein yeh features kitne mumkin hain' ko 'in features ke saath har class kitni mumkin hai' mein badal deta hai. Prior P(c) training data mein har class ka hissa hai. Likelihoods P(xi | c) har feature ke liye nikalte hain: categorical/words ke liye ginti (Multinomial NB) ya numeric features ke liye class ke mean aur variance wali normal distribution (Gaussian NB). Evidence P(x) har class ke liye barabar hai, is liye sirf numerators ka muqabla hota hai. Laplace smoothing ginti mein 1 jama karti hai taake koi na dekha hua lafz probability ko zero na kar de. Amal mein bohat chhote numbers zarab karne ki jagah log-probabilities jama ki jati hain."
+    },
+    "example": {
+      "en": "Spam filter: P(spam) = 0.4, P(ham) = 0.6. P('free' | spam) = 0.5, P('free' | ham) = 0.1. For an email containing 'free': spam score = 0.4 x 0.5 = 0.20, ham score = 0.6 x 0.1 = 0.06. Normalising: P(spam | 'free') = 0.20 / 0.26 = 0.769, so the email is classified as spam.",
+      "ru": "Spam filter: P(spam) = 0.4, P(ham) = 0.6. P('free' | spam) = 0.5, P('free' | ham) = 0.1. 'free' wali email ke liye: spam score = 0.4 x 0.5 = 0.20, ham score = 0.6 x 0.1 = 0.06. Normalise karne par P(spam | 'free') = 0.20 / 0.26 = 0.769, yaani email spam hai."
+    },
+    "key_concepts": [
+      {"term": "Prior", "en": "P(c), how common each class is before seeing the features.", "ru": "P(c), features dekhne se pehle har class kitni aam hai."},
+      {"term": "Likelihood", "en": "P(x | c), how likely the features are inside a class.", "ru": "P(x | c), class ke andar features kitne mumkin hain."},
+      {"term": "Conditional independence", "en": "The naive assumption that features do not influence each other given the class.", "ru": "Naive assumption ke class maloom ho to features ek doosre par asar nahi daalte."},
+      {"term": "Laplace smoothing", "en": "Adding 1 to counts to avoid zero probabilities.", "ru": "Zero probability se bachne ke liye ginti mein 1 jama karna."}
+    ],
+    "formulas": [
+      {"latex": "P(c \\mid x) = \\frac{P(x \\mid c) P(c)}{P(x)}", "en": "Bayes' theorem.", "ru": "Bayes' theorem."},
+      {"latex": "\\hat{c} = \\arg\\max_c \\; P(c) \\prod_i P(x_i \\mid c)", "en": "Naive Bayes decision rule.", "ru": "Naive Bayes ka faisla karne ka qaida."}
+    ],
+    "workflow": [
+      {"en": "Estimate the prior of each class from the training labels.", "ru": "Training labels se har class ka prior nikalein."},
+      {"en": "Estimate P(feature | class) for every feature (counts or mean/variance).", "ru": "Har feature ke liye P(feature | class) nikalein (ginti ya mean/variance)."},
+      {"en": "For a new example multiply prior and likelihoods (or add logs) for each class.", "ru": "Naye example ke liye har class ka prior aur likelihoods zarab karein (ya logs jama karein)."},
+      {"en": "Predict the class with the highest score; normalise to get probabilities.", "ru": "Sab se zyada score wali class predict karein; normalise kar ke probabilities lein."}
+    ],
+    "code": [
+      "from sklearn.feature_extraction.text import CountVectorizer",
+      "from sklearn.naive_bayes import MultinomialNB",
+      "",
+      "emails = ['win free money now', 'free prize claim now', 'meeting at noon',",
+      "          'project report attached', 'free lunch at the meeting']",
+      "labels = ['spam', 'spam', 'ham', 'ham', 'ham']",
+      "",
+      "vectorizer = CountVectorizer()",
+      "X = vectorizer.fit_transform(emails)",
+      "model = MultinomialNB(alpha=1.0).fit(X, labels)",
+      "",
+      "test = vectorizer.transform(['claim your free money'])",
+      "print('classes:', model.classes_)",
+      "print('probabilities:', model.predict_proba(test).round(3))",
+      "print('prediction:', model.predict(test)[0])"
+    ],
+    "code_explanation": [
+      {"en": "CountVectorizer turns each email into word counts (bag of words).", "ru": "CountVectorizer har email ko words ki ginti (bag of words) mein badalta hai."},
+      {"en": "MultinomialNB learns priors and word likelihoods; alpha=1.0 is Laplace smoothing.", "ru": "MultinomialNB priors aur words ki likelihoods seekhta hai; alpha=1.0 Laplace smoothing hai."},
+      {"en": "predict_proba gives the normalised posterior for each class.", "ru": "predict_proba har class ki normalised posterior deta hai."}
+    ],
+    "applications": [
+      {"en": "Spam filtering and sentiment analysis.", "ru": "Spam filtering aur sentiment analysis."},
+      {"en": "News or document categorisation.", "ru": "Khabron ya documents ki categories banana."},
+      {"en": "Quick baseline for any text classification task.", "ru": "Kisi bhi text classification ka tez baseline."}
+    ],
+    "exam_points": [
+      {"en": "State Bayes' theorem and the independence assumption.", "ru": "Bayes' theorem aur independence assumption likhein."},
+      {"en": "Compute posteriors for a small spam example by hand.", "ru": "Chhote spam example par haath se posteriors nikalein."},
+      {"en": "Explain Laplace smoothing and why logs are used.", "ru": "Laplace smoothing aur logs ke istemal ki wajah batayein."}
+    ],
+    "common_mistakes": [
+      {"en": "Forgetting the prior P(c).", "ru": "Prior P(c) bhool jana."},
+      {"en": "Getting a zero probability because a word never appeared in a class (no smoothing).", "ru": "Smoothing na karne se kisi class mein na aaye lafz par zero probability aa jana."},
+      {"en": "Believing the features really are independent - it is only an assumption.", "ru": "Yeh samajhna ke features waqai azad hain - yeh sirf ek assumption hai."}
+    ],
+    "questions": [
+      {"type": "numerical", "kind": "problem", "q": {"en": "P(spam) = 0.4, P('free' | spam) = 0.5, P(ham) = 0.6, P('free' | ham) = 0.1. What is P(spam | 'free')? (3 decimals)", "ru": "P(spam) = 0.4, P('free' | spam) = 0.5, P(ham) = 0.6, P('free' | ham) = 0.1. P(spam | 'free') kya hai? (3 decimal)"},
+       "answer": 0.769, "tolerance": 0.002,
+       "hints": [{"en": "Spam score = 0.4 x 0.5, ham score = 0.6 x 0.1.", "ru": "Spam score = 0.4 x 0.5, ham score = 0.6 x 0.1."}, {"en": "Divide the spam score by the sum of both scores.", "ru": "Spam score ko dono scores ke sum se taqseem karein."}],
+       "explanation": {"en": "0.20 / (0.20 + 0.06) = 0.769.", "ru": "0.20 / (0.20 + 0.06) = 0.769."}},
+      {"type": "mcq", "kind": "basic", "q": {"en": "What is 'naive' about Naive Bayes?", "ru": "Naive Bayes mein 'naive' kya hai?"},
+       "options": [{"en": "It assumes features are independent given the class", "ru": "Yeh farz karta hai ke class maloom ho to features azad hain"}, {"en": "It ignores the prior", "ru": "Yeh prior ko nazar andaz karta hai"}, {"en": "It uses only one feature", "ru": "Yeh sirf ek feature istemal karta hai"}, {"en": "It cannot output probabilities", "ru": "Yeh probabilities nahi de sakta"}],
+       "answer": 0,
+       "hints": [{"en": "It lets us multiply the per-feature likelihoods.", "ru": "Isi ki wajah se har feature ki likelihood zarab kar sakte hain."}],
+       "explanation": {"en": "The conditional independence assumption is what makes it naive.", "ru": "Conditional independence ka assumption hi ise naive banata hai."}},
+      {"type": "short", "kind": "conceptual", "q": {"en": "Why is Laplace smoothing used in Naive Bayes?", "ru": "Naive Bayes mein Laplace smoothing kyun lagayi jati hai?"},
+       "answer": "To avoid zero probabilities: if a word never appeared with a class its count would be zero and would make the whole product zero, so we add 1 to every count.",
+       "keywords": ["zero", "probability", "add 1"],
+       "hints": [{"en": "What happens to a product when one factor is 0?", "ru": "Agar zarab mein ek factor 0 ho to kya hota hai?"}],
+       "explanation": {"en": "Adding 1 to counts keeps every likelihood above zero so one unseen word cannot zero out a class.", "ru": "Ginti mein 1 jama karne se har likelihood zero se upar rehti hai, aur ek na dekha lafz class ko zero nahi karta."}}
+    ]
+  },
+  {
+    "id": "svm",
+    "title": {"en": "Support Vector Machine (SVM)", "ru": "Support Vector Machine (SVM)"},
+    "subject": "Machine Learning",
+    "category": "ml_algorithm",
+    "aliases": ["svm", "support vector machine", "support vector machines", "support vector", "kernel trick", "maximum margin"],
+    "search_query": "support vector machine svm margin kernel",
+    "playground": "svm",
+    "intro": {
+      "en": "A Support Vector Machine finds the boundary that separates two classes with the widest possible safety gap (margin). With kernels it can also draw curved boundaries.",
+      "ru": "Support Vector Machine woh boundary dhoondti hai jo do classes ko sab se chaure hifazati faasle (margin) ke saath alag kare. Kernels ke saath yeh murhi hui boundaries bhi bana sakti hai."
+    },
+    "definition": {
+      "en": "An SVM is a classifier that chooses the hyperplane w . x + b = 0 with the maximum margin between the classes; the training points that touch the margin are called support vectors.",
+      "ru": "SVM ek classifier hai jo woh hyperplane w . x + b = 0 chunta hai jis ka classes ke darmiyan margin sab se zyada ho; jo training points margin ko chhoote hain unhein support vectors kehte hain."
+    },
+    "explanation": {
+      "en": "Many lines can separate two groups, but the one with the widest margin usually generalises best. The margin width is 2 / ||w||, so maximising it means minimising ||w|| while every point stays on the correct side. Only the support vectors determine the boundary; moving other points does not change it. Real data overlaps, so the soft-margin SVM allows some violations, controlled by C: a large C punishes violations heavily (narrow margin, risk of overfitting), a small C allows more violations (wider margin). The kernel trick (RBF, polynomial) computes similarities in a higher-dimensional space without building it, which gives non-linear boundaries.",
+      "ru": "Do groups ko bohat si lines alag kar sakti hain, lekin sab se chaure margin wali aam taur par naye data par behtar chalti hai. Margin ki chaurai 2 / ||w|| hai, is liye ise barhane ka matlab ||w|| ko kam karna hai jabke har point sahi taraf rahe. Sirf support vectors boundary tay karte hain; baqi points hilane se boundary nahi badalti. Asal data aapas mein mila hota hai, is liye soft-margin SVM kuch khilaf warziyon ki ijazat deti hai, jinhein C control karta hai: bara C sakht saza (patla margin, overfitting ka khatra), chhota C zyada narmi (chaura margin). Kernel trick (RBF, polynomial) zyada dimensions wali space ko banaye baghair similarities nikalta hai, jis se non-linear boundaries banti hain."
+    },
+    "example": {
+      "en": "Suppose a trained linear SVM has w = (1, 1) and b = -3. For the point (2, 2): w . x + b = 2 + 2 - 3 = 1 > 0, so it is in the positive class (and exactly on the margin). For (1, 1): 1 + 1 - 3 = -1, negative class (also on the margin). The margin width is 2 / ||w|| = 2 / sqrt(2) = 1.414.",
+      "ru": "Farz karein trained linear SVM mein w = (1, 1) aur b = -3 hai. Point (2, 2): w . x + b = 2 + 2 - 3 = 1 > 0, yaani positive class (aur bilkul margin par). (1, 1): 1 + 1 - 3 = -1, negative class (yeh bhi margin par). Margin ki chaurai 2 / ||w|| = 2 / sqrt(2) = 1.414."
+    },
+    "key_concepts": [
+      {"term": "Margin", "en": "Distance between the boundary and the closest points of each class.", "ru": "Boundary aur har class ke sab se qareebi points ka faasla."},
+      {"term": "Support vectors", "en": "Training points on or inside the margin that define the boundary.", "ru": "Margin par ya us ke andar wale training points jo boundary tay karte hain."},
+      {"term": "C parameter", "en": "Trade-off between a wide margin and few training errors.", "ru": "Chaure margin aur kam training errors ke darmiyan tawazun."},
+      {"term": "Kernel trick", "en": "Non-linear boundaries via similarity functions such as RBF.", "ru": "RBF jaise similarity functions se non-linear boundaries."}
+    ],
+    "formulas": [
+      {"latex": "w \\cdot x + b = 0", "en": "Separating hyperplane.", "ru": "Alag karne wala hyperplane."},
+      {"latex": "\\text{margin} = \\frac{2}{\\lVert w \\rVert}", "en": "Width of the margin.", "ru": "Margin ki chaurai."},
+      {"latex": "\\min \\tfrac{1}{2}\\lVert w \\rVert^2 + C \\sum_i \\xi_i \\; \\text{s.t.} \\; y_i(w\\cdot x_i + b) \\ge 1 - \\xi_i", "en": "Soft-margin optimisation problem.", "ru": "Soft-margin optimisation ka masla."}
+    ],
+    "workflow": [
+      {"en": "Scale the features.", "ru": "Features scale karein."},
+      {"en": "Choose a kernel (linear or RBF) and the value of C (and gamma for RBF).", "ru": "Kernel (linear ya RBF) aur C (aur RBF ke liye gamma) chunein."},
+      {"en": "Solve the optimisation to find w, b and the support vectors.", "ru": "Optimisation hal kar ke w, b aur support vectors nikalein."},
+      {"en": "Classify new points by the sign of w . x + b.", "ru": "Naye points ko w . x + b ke sign se classify karein."}
+    ],
+    "code": [
+      "import numpy as np",
+      "from sklearn.svm import SVC",
+      "",
+      "X = np.array([[1, 1], [1, 2], [2, 1], [3, 4], [4, 3], [4, 4]])",
+      "y = np.array([0, 0, 0, 1, 1, 1])",
+      "",
+      "svm = SVC(kernel='linear', C=10).fit(X, y)",
+      "w, b = svm.coef_[0], svm.intercept_[0]",
+      "print('w =', w.round(3), 'b =', round(b, 3))",
+      "print('support vectors:', svm.support_vectors_.tolist())",
+      "print('margin width:', round(2 / np.linalg.norm(w), 3))",
+      "print('class of (3, 3):', svm.predict([[3, 3]])[0])"
+    ],
+    "code_explanation": [
+      {"en": "SVC with a linear kernel learns w and b of the separating line.", "ru": "Linear kernel wala SVC alag karne wali line ke w aur b seekhta hai."},
+      {"en": "support_vectors_ lists the few points that define the boundary.", "ru": "support_vectors_ un chand points ki list hai jo boundary tay karte hain."},
+      {"en": "The margin width is computed from the formula 2 / ||w||.", "ru": "Margin ki chaurai formula 2 / ||w|| se nikalti hai."}
+    ],
+    "applications": [
+      {"en": "Text classification with many features.", "ru": "Bohat zyada features wali text classification."},
+      {"en": "Image classification and face detection (classic computer vision).", "ru": "Image classification aur face detection (classic computer vision)."},
+      {"en": "Bioinformatics, e.g. classifying proteins or genes.", "ru": "Bioinformatics, maslan proteins ya genes ki classification."}
+    ],
+    "exam_points": [
+      {"en": "Define margin and support vectors; margin = 2 / ||w||.", "ru": "Margin aur support vectors ki tareef; margin = 2 / ||w||."},
+      {"en": "Explain the effect of C (hard vs soft margin).", "ru": "C ka asar batayein (hard vs soft margin)."},
+      {"en": "Explain the kernel trick for non-linear data.", "ru": "Non-linear data ke liye kernel trick samjhayein."}
+    ],
+    "common_mistakes": [
+      {"en": "Not scaling the features before training.", "ru": "Training se pehle features scale na karna."},
+      {"en": "Thinking all training points matter equally - only support vectors define the boundary.", "ru": "Yeh samajhna ke saare points barabar ahem hain - sirf support vectors boundary tay karte hain."},
+      {"en": "Using a huge C and overfitting noisy data.", "ru": "Bohat bara C rakh kar noisy data par overfit karna."}
+    ],
+    "questions": [
+      {"type": "numerical", "kind": "problem", "q": {"en": "A linear SVM has w = (3, 4). What is the margin width 2 / ||w||?", "ru": "Linear SVM mein w = (3, 4) hai. Margin ki chaurai 2 / ||w|| kya hai?"},
+       "answer": 0.4, "tolerance": 0.001,
+       "hints": [{"en": "||w|| = sqrt(3^2 + 4^2).", "ru": "||w|| = sqrt(3^2 + 4^2)."}],
+       "explanation": {"en": "||w|| = 5, so the margin is 2 / 5 = 0.4.", "ru": "||w|| = 5, to margin 2 / 5 = 0.4 hai."}},
+      {"type": "mcq", "kind": "basic", "q": {"en": "Which training points determine the SVM boundary?", "ru": "SVM ki boundary kaunse training points tay karte hain?"},
+       "options": [{"en": "The support vectors", "ru": "Support vectors"}, {"en": "All points equally", "ru": "Saare points barabar"}, {"en": "The points farthest from the boundary", "ru": "Boundary se sab se door points"}, {"en": "Randomly chosen points", "ru": "Be-tarteeb chune gaye points"}],
+       "answer": 0,
+       "hints": [{"en": "They lie on the edge of the margin.", "ru": "Yeh margin ke kinare par hote hain."}],
+       "explanation": {"en": "Only the support vectors appear in the solution; other points can move without changing it.", "ru": "Hal mein sirf support vectors aate hain; baqi points hilane se kuch nahi badalta."}},
+      {"type": "mcq", "kind": "conceptual", "q": {"en": "Increasing C in a soft-margin SVM generally:", "ru": "Soft-margin SVM mein C barhane se aam taur par:"},
+       "options": [{"en": "Narrows the margin and fits training data more tightly", "ru": "Margin patla hota hai aur training data zyada qareeb se fit hota hai"}, {"en": "Widens the margin", "ru": "Margin chaura hota hai"}, {"en": "Removes the need for a kernel", "ru": "Kernel ki zaroorat khatam ho jati hai"}, {"en": "Has no effect", "ru": "Koi asar nahi hota"}],
+       "answer": 0,
+       "hints": [{"en": "C is the penalty for points inside the margin.", "ru": "C margin ke andar wale points ki saza hai."}],
+       "explanation": {"en": "A larger penalty allows fewer violations, so the margin shrinks and the risk of overfitting rises.", "ru": "Bari saza kam khilaf warzi ki ijazat deti hai, margin sikurta hai aur overfitting ka khatra barhta hai."}},
+      {"type": "short", "kind": "exam", "q": {"en": "What is the kernel trick?", "ru": "Kernel trick kya hai?"},
+       "answer": "The kernel trick computes dot products (similarities) of points in a higher-dimensional feature space directly with a kernel function such as RBF, without building that space, so a linear SVM there gives a non-linear boundary in the original space.",
+       "keywords": ["higher-dimensional", "kernel function", "non-linear"],
+       "hints": [{"en": "It lets a linear method draw curved boundaries.", "ru": "Is se linear method murhi hui boundaries bana leta hai."}],
+       "explanation": {"en": "Kernels replace dot products with similarities in an implicit high-dimensional space, giving non-linear boundaries cheaply.", "ru": "Kernels dot products ki jagah ek chhupi zyada dimension wali space ki similarities dete hain, jis se sasti non-linear boundaries banti hain."}}
+    ]
+  },
+  {
+    "id": "kmeans",
+    "title": {"en": "K-Means Clustering", "ru": "K-Means Clustering"},
+    "subject": "Machine Learning",
+    "category": "ml_algorithm",
+    "aliases": ["k-means", "kmeans", "k means", "k-means clustering", "clustering", "centroid"],
+    "search_query": "k-means clustering centroids",
+    "playground": "kmeans",
+    "intro": {
+      "en": "K-Means is the classic unsupervised learning algorithm. It groups unlabeled data into k clusters of similar points, for example grouping customers by shopping behaviour.",
+      "ru": "K-Means unsupervised learning ka classic algorithm hai. Yeh be-label data ko k milte julte points ke groups (clusters) mein baant deta hai, maslan customers ko shopping ke andaaz se groups mein."
+    },
+    "definition": {
+      "en": "K-Means partitions the data into k clusters by repeatedly assigning each point to the nearest centroid and moving each centroid to the mean of its assigned points, until the assignments stop changing.",
+      "ru": "K-Means data ko k clusters mein baantta hai: baar baar har point ko qareebi centroid ko dena, aur har centroid ko us ke points ke mean par le jana, jab tak assignments badalna band na ho jayein."
+    },
+    "explanation": {
+      "en": "The algorithm minimises the within-cluster sum of squares (inertia): the total squared distance of points to their centroid. Each step (assign, then update) can only lower inertia, so it always converges, but possibly to a local minimum that depends on the starting centroids - that is why k-means++ initialisation and several restarts are used. You must choose k yourself; the elbow method plots inertia against k and looks for the bend, and the silhouette score measures how well separated the clusters are. K-Means assumes roughly round clusters of similar size and is sensitive to feature scale and outliers.",
+      "ru": "Algorithm within-cluster sum of squares (inertia) kam karta hai: points ka apne centroid tak kul squared faasla. Har step (assign, phir update) inertia ko sirf kam kar sakta hai, is liye yeh hamesha converge hota hai, lekin shuruati centroids ke hisaab se local minimum par bhi ruk sakta hai - isi liye k-means++ aur kai dafa dobara chalana istemal hota hai. k aap ko khud chunna hota hai; elbow method k ke muqable inertia ka graph bana kar mor (bend) dhoondta hai, aur silhouette score batata hai ke clusters kitne alag hain. K-Means golai wale aur milte julte size ke clusters farz karta hai aur feature scale aur outliers se asar leta hai."
+    },
+    "example": {
+      "en": "Points 1, 2, 3, 10, 11, 12 on a line with k = 2 and starting centroids 1 and 2. Step 1: 1 goes to centroid 1; 2, 3, 10, 11, 12 go to centroid 2. Update: c1 = 1, c2 = (2+3+10+11+12)/5 = 7.6. Step 2: 1, 2, 3 are closer to 1; 10, 11, 12 closer to 7.6. Update: c1 = 2, c2 = 11. Step 3: assignments do not change, so the algorithm stops with clusters {1, 2, 3} and {10, 11, 12}.",
+      "ru": "Ek line par points 1, 2, 3, 10, 11, 12, k = 2 aur shuruati centroids 1 aur 2. Step 1: 1 centroid 1 ko; 2, 3, 10, 11, 12 centroid 2 ko. Update: c1 = 1, c2 = 7.6. Step 2: 1, 2, 3 centroid 1 ke qareeb; 10, 11, 12 centroid 7.6 ke qareeb. Update: c1 = 2, c2 = 11. Step 3: assignments nahi badle, algorithm ruk gaya: clusters {1, 2, 3} aur {10, 11, 12}."
+    },
+    "key_concepts": [
+      {"term": "Centroid", "en": "Mean of the points in a cluster.", "ru": "Cluster ke points ka mean."},
+      {"term": "Inertia (WCSS)", "en": "Sum of squared distances of points to their centroid.", "ru": "Points ke apne centroid tak squared faaslon ka sum."},
+      {"term": "Elbow method", "en": "Pick k where adding clusters stops reducing inertia much.", "ru": "Woh k chunein jahan mazeed clusters se inertia zyada kam nahi hoti."},
+      {"term": "k-means++", "en": "Smart initialisation that spreads the starting centroids out.", "ru": "Samajhdar shuruat jo centroids ko phaila kar rakhti hai."}
+    ],
+    "formulas": [
+      {"latex": "J = \\sum_{j=1}^{k} \\sum_{x \\in C_j} \\lVert x - \\mu_j \\rVert^2", "en": "Objective (inertia) minimised by K-Means.", "ru": "K-Means ka objective (inertia)."},
+      {"latex": "\\mu_j = \\frac{1}{|C_j|} \\sum_{x \\in C_j} x", "en": "Centroid update.", "ru": "Centroid ka update."}
+    ],
+    "workflow": [
+      {"en": "Choose k and initialise k centroids.", "ru": "k chunein aur k centroids rakhein."},
+      {"en": "Assign each point to its nearest centroid.", "ru": "Har point ko qareebi centroid ko dein."},
+      {"en": "Move each centroid to the mean of its points.", "ru": "Har centroid ko us ke points ke mean par le jayein."},
+      {"en": "Repeat until assignments stop changing.", "ru": "Assignments badalna band hone tak dohrayein."}
+    ],
+    "code": [
+      "import numpy as np",
+      "from sklearn.cluster import KMeans",
+      "",
+      "X = np.array([[1, 1], [1.5, 2], [1, 1.5], [8, 8], [8.5, 9], [9, 8]])",
+      "",
+      "km = KMeans(n_clusters=2, n_init=10, random_state=0).fit(X)",
+      "print('labels:', km.labels_)",
+      "print('centroids:', km.cluster_centers_.round(2))",
+      "print('inertia:', round(km.inertia_, 3))",
+      "",
+      "# the same inertia by hand",
+      "manual = sum(np.sum((X[km.labels_ == j] - c) ** 2) for j, c in enumerate(km.cluster_centers_))",
+      "print('manual inertia:', round(manual, 3))"
+    ],
+    "code_explanation": [
+      {"en": "n_clusters is k; n_init=10 runs 10 different starts and keeps the best.", "ru": "n_clusters k hai; n_init=10 das dafa mukhtalif shuruat se chala kar behtareen rakhta hai."},
+      {"en": "labels_ says which cluster each point belongs to; cluster_centers_ are the centroids.", "ru": "labels_ batata hai har point kis cluster mein hai; cluster_centers_ centroids hain."},
+      {"en": "The manual line recomputes inertia from its definition to show it matches.", "ru": "Manual line inertia ko us ki tareef se dobara nikalti hai taake dikhe ke jawab milta hai."}
+    ],
+    "applications": [
+      {"en": "Customer segmentation for marketing.", "ru": "Marketing ke liye customers ke groups."},
+      {"en": "Image colour compression (k colours).", "ru": "Image mein rangon ko k tak kam karna."},
+      {"en": "Grouping documents or lecture segments into sub-topics (used inside ClipSage).", "ru": "Documents ya lecture segments ko sub-topics mein baantna (ClipSage ke andar istemal hota hai)."}
+    ],
+    "exam_points": [
+      {"en": "Run 1-2 iterations of K-Means by hand.", "ru": "Haath se K-Means ki 1-2 iterations chalayein."},
+      {"en": "K-Means is unsupervised; k must be chosen (elbow, silhouette).", "ru": "K-Means unsupervised hai; k chunna parta hai (elbow, silhouette)."},
+      {"en": "It converges to a local minimum that depends on initialisation.", "ru": "Yeh shuruat ke hisaab se local minimum par converge hota hai."}
+    ],
+    "common_mistakes": [
+      {"en": "Choosing k by lowest inertia (it always decreases as k grows).", "ru": "Sab se kam inertia se k chunna (k barhne se yeh hamesha kam hoti hai)."},
+      {"en": "Not scaling features of very different ranges.", "ru": "Bohat mukhtalif range wale features scale na karna."},
+      {"en": "Treating cluster numbers as meaningful labels.", "ru": "Cluster ke numbers ko mani-khez labels samajhna."}
+    ],
+    "questions": [
+      {"type": "numerical", "kind": "problem", "q": {"en": "A cluster contains the points 2, 4 and 9. What is its new centroid?", "ru": "Ek cluster mein points 2, 4 aur 9 hain. Naya centroid kya hai?"},
+       "answer": 5.0, "tolerance": 0.001,
+       "hints": [{"en": "The centroid is the mean.", "ru": "Centroid mean hota hai."}],
+       "explanation": {"en": "(2 + 4 + 9) / 3 = 5.", "ru": "(2 + 4 + 9) / 3 = 5."}},
+      {"type": "mcq", "kind": "basic", "q": {"en": "K-Means is an example of:", "ru": "K-Means kis qisam ki learning ki misaal hai?"},
+       "options": [{"en": "Unsupervised learning", "ru": "Unsupervised learning"}, {"en": "Supervised classification", "ru": "Supervised classification"}, {"en": "Reinforcement learning", "ru": "Reinforcement learning"}, {"en": "Supervised regression", "ru": "Supervised regression"}],
+       "answer": 0,
+       "hints": [{"en": "Does K-Means need labels?", "ru": "Kya K-Means ko labels chahiye?"}],
+       "explanation": {"en": "It groups unlabeled data, so it is unsupervised.", "ru": "Yeh be-label data ko group karta hai, is liye unsupervised hai."}},
+      {"type": "mcq", "kind": "conceptual", "q": {"en": "Why is K-Means usually run several times with different starts?", "ru": "K-Means ko aam taur par kai dafa mukhtalif shuruat se kyun chalaya jata hai?"},
+       "options": [{"en": "It can get stuck in a local minimum that depends on initialisation", "ru": "Yeh shuruat par munhasir local minimum mein atak sakta hai"}, {"en": "It never converges", "ru": "Yeh kabhi converge nahi hota"}, {"en": "To choose the labels", "ru": "Labels chunne ke liye"}, {"en": "To scale the features", "ru": "Features scale karne ke liye"}],
+       "answer": 0,
+       "hints": [{"en": "Different starting centroids can give different final clusters.", "ru": "Mukhtalif shuruati centroids se mukhtalif aakhri clusters ban sakte hain."}],
+       "explanation": {"en": "Each run converges, but possibly to a different local optimum; keeping the lowest-inertia run helps.", "ru": "Har run converge hota hai lekin mukhtalif local optimum par; sab se kam inertia wala run rakhna madad karta hai."}},
+      {"type": "short", "kind": "application", "q": {"en": "How does the elbow method help choose k?", "ru": "Elbow method k chunne mein kaise madad karta hai?"},
+       "answer": "Plot inertia for several values of k; inertia always falls as k increases, so choose the k at the bend (elbow) after which adding clusters gives only a small improvement.",
+       "keywords": ["inertia", "plot", "bend", "small improvement"],
+       "hints": [{"en": "Look at a graph of inertia versus k.", "ru": "k ke muqable inertia ka graph dekhein."}],
+       "explanation": {"en": "The elbow is where the curve flattens: more clusters stop paying off.", "ru": "Elbow wahan hai jahan graph sapaat hone lagta hai: mazeed clusters ka faida kam ho jata hai."}}
+    ]
+  },
+  {
+    "id": "gradient_descent",
+    "title": {"en": "Gradient Descent", "ru": "Gradient Descent"},
+    "subject": "Machine Learning",
+    "category": "ml_algorithm",
+    "aliases": ["gradient descent", "stochastic gradient descent", "sgd", "learning rate", "optimization", "optimisation"],
+    "search_query": "gradient descent learning rate loss",
+    "playground": "gradient_descent",
+    "math_tool": "gradient_descent",
+    "intro": {
+      "en": "Gradient descent is the optimisation method behind most of machine learning: it trains linear and logistic regression, neural networks and more by walking downhill on the loss function.",
+      "ru": "Gradient descent zyada tar machine learning ke peeche ka optimisation method hai: yeh loss function par neeche ki taraf chal kar linear aur logistic regression, neural networks waghera train karta hai."
+    },
+    "definition": {
+      "en": "Gradient descent minimises a function by repeatedly moving the parameters a small step in the direction opposite to the gradient: theta := theta - alpha x gradient, where alpha is the learning rate.",
+      "ru": "Gradient descent kisi function ko kam karta hai: baar baar parameters ko gradient ki ulti taraf ek chhota qadam le ja kar: theta := theta - alpha x gradient, jahan alpha learning rate hai."
+    },
+    "explanation": {
+      "en": "The gradient points in the direction of steepest increase, so the negative gradient points downhill. Each update reduces the loss if the learning rate is small enough. A learning rate that is too large overshoots and can diverge; one that is too small makes training slow. Batch gradient descent uses all data per step; stochastic gradient descent (SGD) uses one example and mini-batch uses a small group, which is faster and noisier. For convex losses (linear regression MSE) gradient descent reaches the global minimum; for non-convex losses (neural networks) it can stop in a local minimum or saddle point. Feature scaling makes the loss surface rounder and speeds up convergence.",
+      "ru": "Gradient sab se tez barhne ki simt batata hai, is liye manfi (negative) gradient neeche ki taraf hota hai. Learning rate kaafi chhota ho to har update loss kam karta hai. Bohat bara learning rate minimum se aage nikal jata hai aur diverge ho sakta hai; bohat chhota training ko dheema kar deta hai. Batch gradient descent har qadam par saara data, stochastic gradient descent (SGD) ek example, aur mini-batch chhota group istemal karta hai, jo tez lekin zyada noisy hai. Convex loss (linear regression ka MSE) par gradient descent global minimum tak pohanchta hai; non-convex (neural networks) par local minimum ya saddle point par ruk sakta hai. Feature scaling loss surface ko gol bana kar convergence tez karti hai."
+    },
+    "example": {
+      "en": "Minimise f(x) = x^2 starting at x = 4 with learning rate 0.1. Gradient f'(x) = 2x. Step 1: x = 4 - 0.1 x 8 = 3.2. Step 2: x = 3.2 - 0.1 x 6.4 = 2.56. Step 3: x = 2.048. Each step multiplies x by 0.8, so x moves steadily towards the minimum at 0. With learning rate 1.1 the factor becomes 1 - 2.2 = -1.2, so |x| grows and the method diverges.",
+      "ru": "f(x) = x^2 ko x = 4 se learning rate 0.1 ke saath kam karein. Gradient f'(x) = 2x. Step 1: x = 4 - 0.1 x 8 = 3.2. Step 2: x = 3.2 - 0.1 x 6.4 = 2.56. Step 3: x = 2.048. Har step x ko 0.8 se zarab karta hai, is liye x minimum (0) ki taraf barhta hai. Learning rate 1.1 par factor 1 - 2.2 = -1.2 ho jata hai, |x| barhta hai aur method diverge ho jata hai."
+    },
+    "key_concepts": [
+      {"term": "Gradient", "en": "Vector of partial derivatives; direction of steepest increase.", "ru": "Partial derivatives ka vector; sab se tez izafe ki simt."},
+      {"term": "Learning rate", "en": "Step size alpha; too large diverges, too small is slow.", "ru": "Qadam ka size alpha; bohat bara diverge, bohat chhota dheema."},
+      {"term": "Batch / SGD / mini-batch", "en": "How many examples are used to estimate the gradient per step.", "ru": "Har qadam par gradient ke liye kitne examples istemal hon."},
+      {"term": "Convergence", "en": "When updates become tiny and the loss stops decreasing.", "ru": "Jab updates bohat chhote ho jayein aur loss kam hona band ho."}
+    ],
+    "formulas": [
+      {"latex": "\\theta_{t+1} = \\theta_t - \\alpha \\nabla_\\theta J(\\theta_t)", "en": "Update rule.", "ru": "Update ka qaida."},
+      {"latex": "\\frac{\\partial MSE}{\\partial w} = -\\frac{2}{n}\\sum x_i (y_i - \\hat{y}_i), \\quad \\frac{\\partial MSE}{\\partial b} = -\\frac{2}{n}\\sum (y_i - \\hat{y}_i)", "en": "Gradients of MSE for linear regression.", "ru": "Linear regression ke MSE ke gradients."}
+    ],
+    "workflow": [
+      {"en": "Initialise the parameters (e.g. zeros) and choose a learning rate.", "ru": "Parameters shuru karein (maslan zero) aur learning rate chunein."},
+      {"en": "Compute the loss and its gradient at the current parameters.", "ru": "Mojooda parameters par loss aur us ka gradient nikalein."},
+      {"en": "Update: parameters minus learning rate times gradient.", "ru": "Update: parameters - learning rate x gradient."},
+      {"en": "Repeat until the loss stops improving or a maximum number of steps is reached.", "ru": "Loss behtar hona band ho ya steps ki had aa jaye tab tak dohrayein."}
+    ],
+    "code": [
+      "import numpy as np",
+      "",
+      "x = np.array([1, 2, 3, 4], dtype=float)",
+      "y = np.array([2, 4, 5, 8], dtype=float)",
+      "w, b, lr = 0.0, 0.0, 0.05",
+      "",
+      "for step in range(2000):",
+      "    y_hat = w * x + b",
+      "    error = y - y_hat",
+      "    grad_w = -2 * np.mean(x * error)",
+      "    grad_b = -2 * np.mean(error)",
+      "    w -= lr * grad_w",
+      "    b -= lr * grad_b",
+      "    if step % 500 == 0:",
+      "        print(step, 'loss', round(np.mean(error ** 2), 4))",
+      "",
+      "print('w', round(w, 3), 'b', round(b, 3))  # close to the least-squares answer 1.9 and 0"
+    ],
+    "code_explanation": [
+      {"en": "We start from w = b = 0 and a learning rate of 0.05.", "ru": "Hum w = b = 0 aur learning rate 0.05 se shuru karte hain."},
+      {"en": "grad_w and grad_b are exactly the MSE gradient formulas.", "ru": "grad_w aur grad_b bilkul MSE ke gradient formulas hain."},
+      {"en": "Each loop moves w and b against the gradient; the printed loss keeps going down.", "ru": "Har loop w aur b ko gradient ke khilaf le jata hai; print hone wala loss kam hota jata hai."},
+      {"en": "The result matches the closed-form least-squares solution of linear regression.", "ru": "Natija linear regression ke least squares formula se milta hai."}
+    ],
+    "applications": [
+      {"en": "Training neural networks (with variants like Adam).", "ru": "Neural networks ki training (Adam jaise variants ke saath)."},
+      {"en": "Fitting linear and logistic regression on large datasets.", "ru": "Bare datasets par linear aur logistic regression fit karna."},
+      {"en": "Any optimisation problem with a differentiable objective.", "ru": "Har woh optimisation masla jis ka objective differentiable ho."}
+    ],
+    "exam_points": [
+      {"en": "Write the update rule and perform 2-3 updates by hand.", "ru": "Update rule likhein aur haath se 2-3 updates karein."},
+      {"en": "Explain the effect of the learning rate (overshoot vs slow).", "ru": "Learning rate ka asar samjhayein (aage nikal jana vs dheema)."},
+      {"en": "Compare batch, stochastic and mini-batch gradient descent.", "ru": "Batch, stochastic aur mini-batch gradient descent ka muqabla karein."}
+    ],
+    "common_mistakes": [
+      {"en": "Adding the gradient instead of subtracting it (that climbs uphill).", "ru": "Gradient minus karne ki jagah jama karna (is se upar chadhte hain)."},
+      {"en": "Using a learning rate that is too large and getting an exploding loss.", "ru": "Bohat bara learning rate rakhna aur loss ka phat jana."},
+      {"en": "Not scaling features, which makes convergence very slow.", "ru": "Features scale na karna, jis se convergence bohat dheemi hoti hai."}
+    ],
+    "questions": [
+      {"type": "numerical", "kind": "problem", "q": {"en": "f(x) = x^2, x = 4, learning rate 0.1. What is x after ONE gradient descent step?", "ru": "f(x) = x^2, x = 4, learning rate 0.1. Gradient descent ke EK step ke baad x kya hoga?"},
+       "answer": 3.2, "tolerance": 0.001,
+       "hints": [{"en": "The gradient is f'(x) = 2x = 8.", "ru": "Gradient f'(x) = 2x = 8 hai."}, {"en": "x_new = x - 0.1 x 8.", "ru": "x_new = x - 0.1 x 8."}],
+       "explanation": {"en": "4 - 0.1 x 8 = 3.2.", "ru": "4 - 0.1 x 8 = 3.2."}},
+      {"type": "mcq", "kind": "conceptual", "q": {"en": "What happens if the learning rate is much too large?", "ru": "Agar learning rate bohat zyada bara ho to kya hota hai?"},
+       "options": [{"en": "The updates overshoot and the loss may diverge", "ru": "Updates aage nikal jate hain aur loss diverge ho sakta hai"}, {"en": "Training becomes very slow but stable", "ru": "Training bohat dheemi lekin mustahkam hoti hai"}, {"en": "The gradient becomes zero", "ru": "Gradient zero ho jata hai"}, {"en": "Nothing changes", "ru": "Kuch nahi badalta"}],
+       "answer": 0,
+       "hints": [{"en": "Think of the x^2 example with learning rate 1.1.", "ru": "Learning rate 1.1 wali x^2 misaal sochein."}],
+       "explanation": {"en": "Steps jump past the minimum to points with even higher loss, so the values blow up.", "ru": "Qadam minimum se aage aise points par chale jate hain jahan loss aur zyada ho, values phat jati hain."}},
+      {"type": "mcq", "kind": "basic", "q": {"en": "Stochastic gradient descent (SGD) estimates the gradient using:", "ru": "Stochastic gradient descent (SGD) gradient kis se nikalta hai?"},
+       "options": [{"en": "One training example (or a tiny batch) per step", "ru": "Har step par ek training example (ya bohat chhota batch)"}, {"en": "All training examples per step", "ru": "Har step par saare training examples"}, {"en": "No examples at all", "ru": "Koi example nahi"}, {"en": "Only the test set", "ru": "Sirf test set"}],
+       "answer": 0,
+       "hints": [{"en": "Stochastic means random sampling.", "ru": "Stochastic ka matlab random sampling hai."}],
+       "explanation": {"en": "SGD uses one random example per update, which is fast but noisy.", "ru": "SGD har update par ek random example leta hai, jo tez lekin noisy hai."}},
+      {"type": "short", "kind": "exam", "q": {"en": "Why do we move in the direction of the negative gradient?", "ru": "Hum negative gradient ki taraf kyun chalte hain?"},
+       "answer": "Because the gradient points in the direction of the steepest increase of the loss, so the negative gradient is the direction of steepest decrease, which lowers the loss.",
+       "keywords": ["steepest", "increase", "decrease", "loss"],
+       "hints": [{"en": "What does the gradient itself point towards?", "ru": "Gradient khud kis taraf ishara karta hai?"}],
+       "explanation": {"en": "The gradient is the uphill direction; the opposite direction is downhill, reducing the loss.", "ru": "Gradient upar ki taraf hai; us ki ulti simt neeche ki taraf hai, jo loss kam karti hai."}}
+    ]
+  }
+]

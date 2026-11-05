@@ -21,3 +21,6 @@ Thumbs.db
 legacy/**/node_modules/
 legacy/**/chroma_db/
 legacy/**/data/
+
+# Local learning progress (personal, per computer)
+data/user/

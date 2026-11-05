@@ -13,7 +13,8 @@ from pathlib import Path
 # --------------------------------------------------------------------------
 ROOT_DIR = Path(__file__).resolve().parent.parent
 CONFIG_DIR = ROOT_DIR / "config"
-DATA_DIR = ROOT_DIR / "data"
+# CLIPSAGE_DATA_DIR lets you keep several datasets (or a demo) side by side.
+DATA_DIR = Path(os.environ.get("CLIPSAGE_DATA_DIR", ROOT_DIR / "data"))
 
 RAW_DIR = DATA_DIR / "raw"
 TRANSCRIPT_DIR = RAW_DIR / "transcripts"          # one JSON per video
@@ -26,7 +27,9 @@ SEGMENTS_FILE = PROCESSED_DIR / "segments.jsonl"    # 30-60 s overlapping segmen
 SEGMENTS_CSV = PROCESSED_DIR / "segments.csv"       # same, CSV copy for inspection
 
 INDEX_DIR = DATA_DIR / "index"
+USER_DIR = DATA_DIR / "user"                       # local learning progress
 REPORTS_DIR = ROOT_DIR / "reports"
+KNOWLEDGE_DIR = ROOT_DIR / "knowledge"             # hand-written bilingual lessons
 
 SOURCES_FILE = CONFIG_DIR / "sources.json"
 TOPICS_FILE = CONFIG_DIR / "topics.json"

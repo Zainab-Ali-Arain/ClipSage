@@ -1,0 +1,14 @@
+# ClipSage light blue theme (light mode only)
+[theme]
+base = "light"
+primaryColor = "#4A90E2"
+backgroundColor = "#F5F9FF"
+secondaryBackgroundColor = "#EAF4FF"
+textColor = "#243447"
+font = "sans serif"
+
+[browser]
+gatherUsageStats = false
+
+[client]
+toolbarMode = "minimal"

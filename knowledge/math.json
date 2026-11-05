@@ -1,0 +1,332 @@
+[
+  {
+    "id": "matrices",
+    "title": {"en": "Matrices and Matrix Operations", "ru": "Matrices aur Matrix Operations"},
+    "subject": "Mathematics",
+    "category": "math",
+    "aliases": ["matrix", "matrices", "matrix multiplication", "determinant", "inverse matrix", "transpose", "linear algebra", "eigenvalues"],
+    "search_query": "matrix multiplication linear algebra",
+    "math_tool": "matrix",
+    "intro": {
+      "en": "Matrices are tables of numbers. In machine learning a whole dataset is a matrix (rows = examples, columns = features) and most computations - from linear regression to neural networks - are matrix operations.",
+      "ru": "Matrices numbers ke tables hain. Machine learning mein poora dataset ek matrix hota hai (rows = examples, columns = features) aur zyada tar hisaab - linear regression se neural networks tak - matrix operations hi hain."
+    },
+    "definition": {
+      "en": "A matrix is a rectangular array of numbers with m rows and n columns (an m x n matrix). Matrices can be added (same size), multiplied (inner sizes must match), transposed, and - if square and non-singular - inverted.",
+      "ru": "Matrix numbers ki m rows aur n columns wali mustateel (rectangular) tarteeb hai (m x n matrix). Matrices jama ho sakti hain (ek hi size), zarab ho sakti hain (andar wale sizes barabar hon), transpose ho sakti hain, aur agar square aur non-singular hon to un ka inverse nikal sakta hai."
+    },
+    "explanation": {
+      "en": "To multiply A (m x n) by B (n x p), each entry of the result C (m x p) is the dot product of a row of A with a column of B: C[i][j] = sum over k of A[i][k] x B[k][j]. Matrix multiplication is not commutative: AB is usually different from BA. The transpose flips rows and columns. The determinant of a 2 x 2 matrix [[a, b], [c, d]] is ad - bc; if it is 0 the matrix has no inverse (it is singular). The inverse of a 2 x 2 matrix is (1/det) [[d, -b], [-c, a]], and A times its inverse gives the identity matrix. In ML, the normal equation of linear regression w = (X^T X)^-1 X^T y uses exactly these operations.",
+      "ru": "A (m x n) ko B (n x p) se zarab karne par natije C (m x p) ka har element A ki ek row aur B ke ek column ka dot product hota hai: C[i][j] = sum (k par) A[i][k] x B[k][j]. Matrix multiplication commutative nahi: AB aam taur par BA se mukhtalif hota hai. Transpose rows aur columns ko palat deta hai. 2 x 2 matrix [[a, b], [c, d]] ka determinant ad - bc hai; agar yeh 0 ho to inverse nahi hota (singular). 2 x 2 ka inverse (1/det) [[d, -b], [-c, a]] hai, aur A ko us ke inverse se zarab karne par identity matrix aati hai. ML mein linear regression ki normal equation w = (X^T X)^-1 X^T y bilkul yahi operations istemal karti hai."
+    },
+    "example": {
+      "en": "A = [[1, 2], [3, 4]], B = [[5, 6], [7, 8]]. AB: C11 = 1x5 + 2x7 = 19, C12 = 1x6 + 2x8 = 22, C21 = 3x5 + 4x7 = 43, C22 = 3x6 + 4x8 = 50, so AB = [[19, 22], [43, 50]]. det(A) = 1x4 - 2x3 = -2, so A^-1 = (1/-2) [[4, -2], [-3, 1]] = [[-2, 1], [1.5, -0.5]].",
+      "ru": "A = [[1, 2], [3, 4]], B = [[5, 6], [7, 8]]. AB: C11 = 1x5 + 2x7 = 19, C12 = 1x6 + 2x8 = 22, C21 = 3x5 + 4x7 = 43, C22 = 3x6 + 4x8 = 50, yaani AB = [[19, 22], [43, 50]]. det(A) = 1x4 - 2x3 = -2, to A^-1 = (1/-2) [[4, -2], [-3, 1]] = [[-2, 1], [1.5, -0.5]]."
+    },
+    "key_concepts": [
+      {"term": "Dimensions", "en": "m x n means m rows and n columns.", "ru": "m x n ka matlab m rows aur n columns."},
+      {"term": "Matrix product", "en": "Row-by-column dot products; inner dimensions must match.", "ru": "Row aur column ke dot products; andar wali dimensions barabar hon."},
+      {"term": "Determinant", "en": "A number that is 0 exactly when the matrix is not invertible.", "ru": "Aisa number jo tab hi 0 hota hai jab matrix ka inverse na ho."},
+      {"term": "Identity and inverse", "en": "I has 1s on the diagonal; A A^-1 = I.", "ru": "I ke diagonal par 1 hote hain; A A^-1 = I."}
+    ],
+    "formulas": [
+      {"latex": "C_{ij} = \\sum_{k} A_{ik} B_{kj}", "en": "Matrix multiplication.", "ru": "Matrix multiplication."},
+      {"latex": "\\det \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix} = ad - bc", "en": "2 x 2 determinant.", "ru": "2 x 2 determinant."},
+      {"latex": "A^{-1} = \\frac{1}{ad - bc} \\begin{pmatrix} d & -b \\\\ -c & a \\end{pmatrix}", "en": "2 x 2 inverse.", "ru": "2 x 2 inverse."}
+    ],
+    "code": [
+      "import numpy as np",
+      "",
+      "A = np.array([[1, 2], [3, 4]])",
+      "B = np.array([[5, 6], [7, 8]])",
+      "print('A @ B =', (A @ B).tolist())",
+      "print('B @ A =', (B @ A).tolist(), '(different: not commutative)')",
+      "print('det(A) =', round(np.linalg.det(A), 3))",
+      "A_inv = np.linalg.inv(A)",
+      "print('inverse =', A_inv.round(3).tolist())",
+      "print('A @ A_inv =', np.round(A @ A_inv, 10).tolist())"
+    ],
+    "code_explanation": [
+      {"en": "@ is matrix multiplication in NumPy.", "ru": "NumPy mein @ matrix multiplication hai."},
+      {"en": "np.linalg.det and np.linalg.inv compute the determinant and inverse.", "ru": "np.linalg.det aur np.linalg.inv determinant aur inverse nikalte hain."},
+      {"en": "Multiplying A by its inverse gives the identity matrix (rounded to hide tiny float errors).", "ru": "A ko us ke inverse se zarab karne par identity matrix aati hai (float ki chhoti ghaltiyan chhupane ke liye round kiya)."}
+    ],
+    "applications": [
+      {"en": "Representing datasets and model weights in ML.", "ru": "ML mein datasets aur model weights ko dikhana."},
+      {"en": "Solving systems of linear equations.", "ru": "Linear equations ke systems hal karna."},
+      {"en": "Image transformations (rotation, scaling) in graphics.", "ru": "Graphics mein images ko ghumana aur bara chhota karna."}
+    ],
+    "exam_points": [
+      {"en": "Check dimension compatibility before multiplying.", "ru": "Zarab se pehle dimensions ka milna check karein."},
+      {"en": "Compute 2 x 2 and 3 x 3 determinants and a 2 x 2 inverse.", "ru": "2 x 2 aur 3 x 3 determinant aur 2 x 2 inverse nikalein."},
+      {"en": "AB is not equal to BA in general; (AB)^T = B^T A^T.", "ru": "Aam taur par AB, BA ke barabar nahi; (AB)^T = B^T A^T."}
+    ],
+    "common_mistakes": [
+      {"en": "Multiplying element by element instead of row-by-column.", "ru": "Row-by-column ki jagah element by element zarab karna."},
+      {"en": "Assuming AB = BA.", "ru": "AB = BA samajh lena."},
+      {"en": "Trying to invert a matrix whose determinant is 0.", "ru": "Jis matrix ka determinant 0 ho us ka inverse nikalne ki koshish."}
+    ],
+    "questions": [
+      {"type": "numerical", "kind": "problem", "q": {"en": "What is the determinant of [[2, 3], [1, 4]]?", "ru": "[[2, 3], [1, 4]] ka determinant kya hai?"},
+       "answer": 5, "tolerance": 0.001,
+       "hints": [{"en": "ad - bc.", "ru": "ad - bc."}],
+       "explanation": {"en": "2 x 4 - 3 x 1 = 8 - 3 = 5.", "ru": "2 x 4 - 3 x 1 = 5."}},
+      {"type": "numerical", "kind": "problem", "q": {"en": "For A = [[1, 2], [3, 4]] and B = [[5, 6], [7, 8]], what is entry (1,1) (top-left) of AB?", "ru": "A = [[1, 2], [3, 4]] aur B = [[5, 6], [7, 8]] ke liye AB ka (1,1) (upar baayan) element kya hai?"},
+       "answer": 19, "tolerance": 0.001,
+       "hints": [{"en": "Row 1 of A times column 1 of B.", "ru": "A ki row 1 zarab B ka column 1."}],
+       "explanation": {"en": "1 x 5 + 2 x 7 = 19.", "ru": "1 x 5 + 2 x 7 = 19."}},
+      {"type": "mcq", "kind": "conceptual", "q": {"en": "A is 3 x 2 and B is 2 x 4. What is the size of AB?", "ru": "A 3 x 2 aur B 2 x 4 hai. AB ka size kya hoga?"},
+       "options": [{"en": "3 x 4", "ru": "3 x 4"}, {"en": "2 x 2", "ru": "2 x 2"}, {"en": "4 x 3", "ru": "4 x 3"}, {"en": "Not defined", "ru": "Mumkin nahi"}],
+       "answer": 0,
+       "hints": [{"en": "Outer dimensions give the result size.", "ru": "Bahar wali dimensions natije ka size deti hain."}],
+       "explanation": {"en": "(3 x 2)(2 x 4): inner 2s match, result is 3 x 4.", "ru": "(3 x 2)(2 x 4): andar ke 2 milte hain, natija 3 x 4."}}
+    ]
+  },
+  {
+    "id": "probability_bayes",
+    "title": {"en": "Probability and Bayes' Theorem", "ru": "Probability aur Bayes' Theorem"},
+    "subject": "Mathematics",
+    "category": "math",
+    "aliases": ["probability", "bayes theorem", "bayes", "conditional probability", "binomial", "bayes rule"],
+    "search_query": "conditional probability bayes theorem",
+    "math_tool": "probability",
+    "intro": {
+      "en": "Probability is the language of uncertainty, and many ML models (Naive Bayes, logistic regression) output probabilities. Bayes' theorem tells us how to update a belief when we see new evidence.",
+      "ru": "Probability ghair yaqeeni ki zubaan hai, aur kai ML models (Naive Bayes, logistic regression) probabilities dete hain. Bayes' theorem batata hai ke naya saboot milne par apna andaza kaise badlein."
+    },
+    "definition": {
+      "en": "The conditional probability P(A | B) is the probability of A given that B happened: P(A and B) / P(B). Bayes' theorem reverses the condition: P(A | B) = P(B | A) P(A) / P(B).",
+      "ru": "Conditional probability P(A | B) yeh hai ke B ho chuka ho to A ka imkan: P(A aur B) / P(B). Bayes' theorem condition ko palat deta hai: P(A | B) = P(B | A) P(A) / P(B)."
+    },
+    "explanation": {
+      "en": "Probabilities lie between 0 and 1 and the probabilities of all outcomes add up to 1. For independent events P(A and B) = P(A) P(B). The total probability rule computes P(B) by summing over cases: P(B) = P(B | A) P(A) + P(B | not A) P(not A). In Bayes' theorem P(A) is the prior, P(B | A) the likelihood and P(A | B) the posterior. A famous lesson: even an accurate medical test gives many false alarms for a rare disease, because the prior is small. The binomial formula gives the probability of exactly k successes in n independent trials: C(n, k) p^k (1-p)^(n-k).",
+      "ru": "Probabilities 0 aur 1 ke darmiyan hoti hain aur tamam mumkin natijon ki probabilities ka sum 1 hota hai. Azad (independent) events ke liye P(A aur B) = P(A) P(B). Total probability ka qaida P(B) ko sab soorton ka sum kar ke nikalta hai: P(B) = P(B | A) P(A) + P(B | A nahi) P(A nahi). Bayes' theorem mein P(A) prior, P(B | A) likelihood aur P(A | B) posterior hai. Mashhoor sabaq: kisi nayab bimari ke liye durust test bhi bohat se ghalat alarm deta hai, kyunki prior chhota hota hai. Binomial formula n azad koshishon mein bilkul k kamyabiyon ki probability deta hai: C(n, k) p^k (1-p)^(n-k)."
+    },
+    "example": {
+      "en": "A disease affects 1% of people. A test detects it 99% of the time (P(+ | D) = 0.99) and gives a false positive 5% of the time (P(+ | not D) = 0.05). P(+) = 0.99 x 0.01 + 0.05 x 0.99 = 0.0099 + 0.0495 = 0.0594. P(D | +) = 0.0099 / 0.0594 = 0.167. So a positive result means only about a 16.7% chance of having the disease.",
+      "ru": "Ek bimari 1% logon ko hoti hai. Test 99% dafa pakar leta hai (P(+ | D) = 0.99) aur 5% dafa ghalat positive deta hai (P(+ | D nahi) = 0.05). P(+) = 0.99 x 0.01 + 0.05 x 0.99 = 0.0594. P(D | +) = 0.0099 / 0.0594 = 0.167. Yaani positive result ka matlab sirf takreeban 16.7% imkan hai ke bimari ho."
+    },
+    "key_concepts": [
+      {"term": "Conditional probability", "en": "Probability of an event given another event.", "ru": "Ek event ho chuka ho to doosre event ki probability."},
+      {"term": "Prior / likelihood / posterior", "en": "Belief before evidence / probability of evidence / belief after evidence.", "ru": "Saboot se pehle andaza / saboot ki probability / saboot ke baad andaza."},
+      {"term": "Independence", "en": "P(A and B) = P(A) P(B).", "ru": "P(A aur B) = P(A) P(B)."},
+      {"term": "Binomial distribution", "en": "Number of successes in n independent yes/no trials.", "ru": "n azad haan/nahi koshishon mein kamyabiyon ki tadaad."}
+    ],
+    "formulas": [
+      {"latex": "P(A \\mid B) = \\frac{P(B \\mid A) P(A)}{P(B)}", "en": "Bayes' theorem.", "ru": "Bayes' theorem."},
+      {"latex": "P(B) = P(B \\mid A)P(A) + P(B \\mid \\neg A)P(\\neg A)", "en": "Law of total probability.", "ru": "Total probability ka qanoon."},
+      {"latex": "P(X = k) = \\binom{n}{k} p^k (1-p)^{n-k}", "en": "Binomial probability.", "ru": "Binomial probability."}
+    ],
+    "code": [
+      "from math import comb",
+      "",
+      "prior, sensitivity, false_pos = 0.01, 0.99, 0.05",
+      "evidence = sensitivity * prior + false_pos * (1 - prior)",
+      "posterior = sensitivity * prior / evidence",
+      "print('P(+) =', round(evidence, 4))",
+      "print('P(disease | +) =', round(posterior, 3))",
+      "",
+      "# binomial: exactly 3 heads in 5 fair coin flips",
+      "print('P(3 heads) =', comb(5, 3) * 0.5 ** 3 * 0.5 ** 2)"
+    ],
+    "code_explanation": [
+      {"en": "evidence is P(+) from the law of total probability.", "ru": "evidence total probability ke qanoon se P(+) hai."},
+      {"en": "posterior applies Bayes' theorem.", "ru": "posterior Bayes' theorem lagata hai."},
+      {"en": "comb(5, 3) = 10 ways to choose which 3 flips are heads.", "ru": "comb(5, 3) = 10 tareeqe ke kaunse 3 flips heads hon."}
+    ],
+    "applications": [
+      {"en": "Naive Bayes spam filters.", "ru": "Naive Bayes spam filters."},
+      {"en": "Medical test interpretation.", "ru": "Medical tests ke natije samajhna."},
+      {"en": "A/B testing and risk estimation.", "ru": "A/B testing aur khatre ka andaza."}
+    ],
+    "exam_points": [
+      {"en": "Apply Bayes' theorem with the total probability rule in the denominator.", "ru": "Denominator mein total probability ke saath Bayes' theorem lagayein."},
+      {"en": "Distinguish P(A | B) from P(B | A).", "ru": "P(A | B) aur P(B | A) mein farq karein."},
+      {"en": "Use the binomial formula for repeated independent trials.", "ru": "Dohrayi jane wali azad koshishon ke liye binomial formula."}
+    ],
+    "common_mistakes": [
+      {"en": "Confusing P(disease | positive) with P(positive | disease).", "ru": "P(bimari | positive) ko P(positive | bimari) samajhna."},
+      {"en": "Ignoring the prior (base rate).", "ru": "Prior (base rate) ko nazar andaz karna."},
+      {"en": "Multiplying probabilities of events that are not independent.", "ru": "Jo events azad nahi un ki probabilities zarab karna."}
+    ],
+    "questions": [
+      {"type": "numerical", "kind": "problem", "q": {"en": "Prevalence 1%, P(+ | D) = 0.99, P(+ | not D) = 0.05. What is P(D | +)? (3 decimals)", "ru": "Prevalence 1%, P(+ | D) = 0.99, P(+ | D nahi) = 0.05. P(D | +) kya hai? (3 decimal)"},
+       "answer": 0.167, "tolerance": 0.002,
+       "hints": [{"en": "P(+) = 0.99 x 0.01 + 0.05 x 0.99.", "ru": "P(+) = 0.99 x 0.01 + 0.05 x 0.99."}, {"en": "Then divide 0.0099 by P(+).", "ru": "Phir 0.0099 ko P(+) se taqseem karein."}],
+       "explanation": {"en": "0.0099 / 0.0594 = 0.167.", "ru": "0.0099 / 0.0594 = 0.167."}},
+      {"type": "numerical", "kind": "problem", "q": {"en": "What is the probability of exactly 3 heads in 5 fair coin flips?", "ru": "5 dafa insaaf wala sikka uchhalne par bilkul 3 heads ki probability kya hai?"},
+       "answer": 0.3125, "tolerance": 0.001,
+       "hints": [{"en": "C(5, 3) = 10.", "ru": "C(5, 3) = 10."}, {"en": "10 x 0.5^5.", "ru": "10 x 0.5^5."}],
+       "explanation": {"en": "10 x (1/32) = 0.3125.", "ru": "10 x (1/32) = 0.3125."}},
+      {"type": "short", "kind": "conceptual", "q": {"en": "Why can a 99%-accurate test still give mostly false positives for a rare disease?", "ru": "99% durust test bhi nayab bimari ke liye zyada tar ghalat positive kyun de sakta hai?"},
+       "answer": "Because the disease is rare the prior is very small, so the many healthy people produce more false positives than the few sick people produce true positives; the posterior P(disease | positive) stays low.",
+       "keywords": ["rare", "prior", "false positives", "healthy"],
+       "hints": [{"en": "Count how many healthy vs sick people test positive out of 10,000.", "ru": "10,000 mein se kitne sehatmand aur kitne bimar positive aate hain, ginein."}],
+       "explanation": {"en": "Out of 10,000 people: 99 true positives but 495 false positives, so most positives are false.", "ru": "10,000 mein: 99 sahi positive lekin 495 ghalat positive, yaani zyada tar positive ghalat hain."}}
+    ]
+  },
+  {
+    "id": "derivatives",
+    "title": {"en": "Derivatives and Optimisation", "ru": "Derivatives aur Optimisation"},
+    "subject": "Mathematics",
+    "category": "math",
+    "aliases": ["derivative", "derivatives", "calculus", "differentiation", "partial derivative", "chain rule", "minimum", "maxima minima", "optimization", "integration", "integral"],
+    "search_query": "derivatives calculus chain rule",
+    "math_tool": "calculus",
+    "intro": {
+      "en": "Derivatives measure how fast a function changes. Training an ML model means finding the parameters where the loss is lowest, and derivatives (gradients) show the way.",
+      "ru": "Derivatives batate hain ke function kitni tezi se badalta hai. ML model ki training ka matlab woh parameters dhoondna hai jahan loss sab se kam ho, aur derivatives (gradients) rasta dikhate hain."
+    },
+    "definition": {
+      "en": "The derivative f'(x) is the instantaneous rate of change (the slope of the tangent line) of f at x. At a minimum or maximum of a smooth function the derivative is 0.",
+      "ru": "Derivative f'(x) x par f ki fori tabdeeli ki raftaar (tangent line ka slope) hai. Hamwar function ke minimum ya maximum par derivative 0 hota hai."
+    },
+    "explanation": {
+      "en": "Basic rules: the power rule d/dx x^n = n x^(n-1); the derivative of a constant is 0; derivatives of sums are sums of derivatives; the chain rule d/dx f(g(x)) = f'(g(x)) g'(x); and d/dx e^x = e^x, d/dx ln x = 1/x. To find a minimum, solve f'(x) = 0 and check the second derivative: f''(x) > 0 means a minimum, f''(x) < 0 a maximum. A function of several variables has a partial derivative for each variable; together they form the gradient vector, which gradient descent follows downhill. Integration is the reverse of differentiation and gives the area under a curve.",
+      "ru": "Buniyadi qaide: power rule d/dx x^n = n x^(n-1); constant ka derivative 0; sum ka derivative derivatives ka sum; chain rule d/dx f(g(x)) = f'(g(x)) g'(x); aur d/dx e^x = e^x, d/dx ln x = 1/x. Minimum dhoondne ke liye f'(x) = 0 hal karein aur second derivative dekhein: f''(x) > 0 matlab minimum, f''(x) < 0 maximum. Kai variables wale function ka har variable ke liye partial derivative hota hai; mil kar yeh gradient vector banate hain, jis ke ulat gradient descent neeche jata hai. Integration differentiation ka ulat hai aur curve ke neeche ka area deta hai."
+    },
+    "example": {
+      "en": "f(x) = x^2 - 6x + 10. f'(x) = 2x - 6. Setting 2x - 6 = 0 gives x = 3. f''(x) = 2 > 0, so x = 3 is a minimum, with f(3) = 9 - 18 + 10 = 1.",
+      "ru": "f(x) = x^2 - 6x + 10. f'(x) = 2x - 6. 2x - 6 = 0 se x = 3. f''(x) = 2 > 0, yaani x = 3 minimum hai, aur f(3) = 9 - 18 + 10 = 1."
+    },
+    "key_concepts": [
+      {"term": "Power rule", "en": "d/dx x^n = n x^(n-1).", "ru": "d/dx x^n = n x^(n-1)."},
+      {"term": "Chain rule", "en": "Derivative of a composition: outer derivative times inner derivative (the basis of backpropagation).", "ru": "Function ke andar function ka derivative: bahar ka derivative x andar ka derivative (backpropagation ki buniyad)."},
+      {"term": "Critical point", "en": "Where f'(x) = 0; candidate minimum or maximum.", "ru": "Jahan f'(x) = 0; mumkin minimum ya maximum."},
+      {"term": "Gradient", "en": "Vector of partial derivatives.", "ru": "Partial derivatives ka vector."}
+    ],
+    "formulas": [
+      {"latex": "\\frac{d}{dx} x^n = n x^{n-1}", "en": "Power rule.", "ru": "Power rule."},
+      {"latex": "\\frac{d}{dx} f(g(x)) = f'(g(x))\\, g'(x)", "en": "Chain rule.", "ru": "Chain rule."},
+      {"latex": "f'(x^*) = 0, \\; f''(x^*) > 0 \\Rightarrow \\text{minimum}", "en": "Second-derivative test.", "ru": "Second derivative test."}
+    ],
+    "code": [
+      "import sympy as sp",
+      "",
+      "x = sp.symbols('x')",
+      "f = x**2 - 6*x + 10",
+      "df = sp.diff(f, x)",
+      "critical = sp.solve(sp.Eq(df, 0), x)",
+      "print('f\\'(x) =', df)",
+      "print('critical points:', critical)",
+      "print('f\\'\\'(x) =', sp.diff(f, x, 2))",
+      "print('minimum value:', f.subs(x, critical[0]))",
+      "print('chain rule example d/dx sin(x^2) =', sp.diff(sp.sin(x**2), x))"
+    ],
+    "code_explanation": [
+      {"en": "SymPy works with exact symbolic expressions instead of numbers.", "ru": "SymPy numbers ki jagah exact symbolic expressions par kaam karta hai."},
+      {"en": "sp.diff differentiates; sp.solve finds where the derivative is zero.", "ru": "sp.diff derivative leta hai; sp.solve dhoondta hai derivative kahan zero hai."},
+      {"en": "The second derivative 2 is positive, confirming a minimum.", "ru": "Second derivative 2 positive hai, jo minimum ki tasdeeq karta hai."}
+    ],
+    "applications": [
+      {"en": "Gradient descent and backpropagation in neural networks.", "ru": "Neural networks mein gradient descent aur backpropagation."},
+      {"en": "Finding optimal prices, quantities or designs.", "ru": "Behtareen qeemat, miqdaar ya design dhoondna."},
+      {"en": "Physics: velocity and acceleration.", "ru": "Physics: raftaar aur acceleration."}
+    ],
+    "exam_points": [
+      {"en": "Differentiate polynomials, exponentials and compositions (chain rule).", "ru": "Polynomials, exponentials aur compositions (chain rule) ka derivative."},
+      {"en": "Find and classify critical points with the second-derivative test.", "ru": "Critical points dhoond kar second derivative test se pehchanein."},
+      {"en": "Compute partial derivatives of MSE for linear regression.", "ru": "Linear regression ke MSE ke partial derivatives nikalein."}
+    ],
+    "common_mistakes": [
+      {"en": "Forgetting the inner derivative in the chain rule.", "ru": "Chain rule mein andar wala derivative bhool jana."},
+      {"en": "Assuming every critical point is a minimum.", "ru": "Har critical point ko minimum samajhna."},
+      {"en": "Dropping the constant of integration in indefinite integrals.", "ru": "Indefinite integrals mein integration ka constant chhor dena."}
+    ],
+    "questions": [
+      {"type": "numerical", "kind": "problem", "q": {"en": "f(x) = 3x^2 + 2x. What is f'(2)?", "ru": "f(x) = 3x^2 + 2x. f'(2) kya hai?"},
+       "answer": 14, "tolerance": 0.001,
+       "hints": [{"en": "f'(x) = 6x + 2.", "ru": "f'(x) = 6x + 2."}],
+       "explanation": {"en": "6 x 2 + 2 = 14.", "ru": "6 x 2 + 2 = 14."}},
+      {"type": "numerical", "kind": "problem", "q": {"en": "At which x does f(x) = x^2 - 6x + 10 have its minimum?", "ru": "f(x) = x^2 - 6x + 10 ka minimum kis x par hai?"},
+       "answer": 3, "tolerance": 0.001,
+       "hints": [{"en": "Solve f'(x) = 2x - 6 = 0.", "ru": "f'(x) = 2x - 6 = 0 hal karein."}],
+       "explanation": {"en": "2x - 6 = 0 gives x = 3, and f'' = 2 > 0 confirms a minimum.", "ru": "2x - 6 = 0 se x = 3, aur f'' = 2 > 0 minimum ki tasdeeq karta hai."}},
+      {"type": "mcq", "kind": "conceptual", "q": {"en": "Which rule is the basis of backpropagation in neural networks?", "ru": "Neural networks mein backpropagation kis qaide par mabni hai?"},
+       "options": [{"en": "Chain rule", "ru": "Chain rule"}, {"en": "Power rule only", "ru": "Sirf power rule"}, {"en": "Integration by parts", "ru": "Integration by parts"}, {"en": "L'Hopital's rule", "ru": "L'Hopital ka qaida"}],
+       "answer": 0,
+       "hints": [{"en": "A network is a composition of many functions.", "ru": "Network bohat se functions ka silsila hai."}],
+       "explanation": {"en": "Backpropagation applies the chain rule layer by layer.", "ru": "Backpropagation layer dar layer chain rule lagata hai."}}
+    ]
+  },
+  {
+    "id": "statistics_basics",
+    "title": {"en": "Mean, Variance and Standard Deviation", "ru": "Mean, Variance aur Standard Deviation"},
+    "subject": "Mathematics",
+    "category": "math",
+    "aliases": ["statistics", "mean", "variance", "standard deviation", "median", "descriptive statistics", "normal distribution", "z-score", "standardization"],
+    "search_query": "mean variance standard deviation statistics",
+    "math_tool": "statistics",
+    "intro": {
+      "en": "Descriptive statistics summarise data with a few numbers. They appear everywhere in ML: feature scaling uses the mean and standard deviation, and Gaussian Naive Bayes models each feature with them.",
+      "ru": "Descriptive statistics data ko chand numbers mein samet leti hain. Yeh ML mein har jagah hain: feature scaling mean aur standard deviation istemal karti hai, aur Gaussian Naive Bayes har feature ko inhi se model karta hai."
+    },
+    "definition": {
+      "en": "The mean is the average value; the variance is the average squared distance from the mean; the standard deviation is the square root of the variance and is measured in the same units as the data.",
+      "ru": "Mean average value hai; variance mean se squared faaslon ka average hai; standard deviation variance ka square root hai aur data ki units mein hi hota hai."
+    },
+    "explanation": {
+      "en": "The population variance divides by n; the sample variance divides by n - 1 (Bessel's correction) because the sample mean is itself estimated from the data. The median is the middle value and is robust to outliers, unlike the mean. A z-score (x - mean) / std tells how many standard deviations a value is from the mean; standardising every feature this way gives mean 0 and standard deviation 1, which is what feature scaling for KNN, SVM and gradient descent does. For a normal distribution about 68% of values lie within 1 standard deviation of the mean and about 95% within 2.",
+      "ru": "Population variance n se taqseem karti hai; sample variance n - 1 se (Bessel ki correction), kyunki sample mean khud data se andaza lagaya gaya hai. Median beech wali value hai aur mean ke baraks outliers se kam mutasir hoti hai. z-score (x - mean) / std batata hai ke value mean se kitne standard deviations door hai; har feature ko is tarah standardise karne se mean 0 aur standard deviation 1 ho jata hai, KNN, SVM aur gradient descent ke liye feature scaling yahi karti hai. Normal distribution mein takreeban 68% values mean se 1 standard deviation ke andar aur takreeban 95% 2 ke andar hoti hain."
+    },
+    "example": {
+      "en": "Data: 2, 4, 4, 4, 5, 5, 7, 9. Mean = 40 / 8 = 5. Squared deviations: 9, 1, 1, 1, 0, 0, 4, 16, sum = 32. Population variance = 32 / 8 = 4, standard deviation = 2. Sample variance = 32 / 7 = 4.571, sample standard deviation = 2.138. The z-score of 9 is (9 - 5) / 2 = 2.",
+      "ru": "Data: 2, 4, 4, 4, 5, 5, 7, 9. Mean = 40 / 8 = 5. Squared farq: 9, 1, 1, 1, 0, 0, 4, 16, sum = 32. Population variance = 32 / 8 = 4, standard deviation = 2. Sample variance = 32 / 7 = 4.571, sample standard deviation = 2.138. 9 ka z-score (9 - 5) / 2 = 2."
+    },
+    "key_concepts": [
+      {"term": "Mean vs median", "en": "The median is robust to outliers; the mean is not.", "ru": "Median outliers se kam mutasir hota hai; mean ho jata hai."},
+      {"term": "Population vs sample variance", "en": "Divide by n vs n - 1.", "ru": "n se taqseem vs n - 1 se."},
+      {"term": "z-score", "en": "(x - mean) / std.", "ru": "(x - mean) / std."},
+      {"term": "68-95 rule", "en": "Share of a normal distribution within 1 and 2 standard deviations.", "ru": "Normal distribution ka 1 aur 2 standard deviations ke andar hissa."}
+    ],
+    "formulas": [
+      {"latex": "\\bar{x} = \\frac{1}{n}\\sum_i x_i", "en": "Mean.", "ru": "Mean."},
+      {"latex": "\\sigma^2 = \\frac{1}{n}\\sum_i (x_i - \\bar{x})^2, \\quad s^2 = \\frac{1}{n-1}\\sum_i (x_i - \\bar{x})^2", "en": "Population and sample variance.", "ru": "Population aur sample variance."},
+      {"latex": "z = \\frac{x - \\bar{x}}{\\sigma}", "en": "z-score.", "ru": "z-score."}
+    ],
+    "code": [
+      "import numpy as np",
+      "",
+      "data = np.array([2, 4, 4, 4, 5, 5, 7, 9])",
+      "print('mean', data.mean(), 'median', np.median(data))",
+      "print('population var', data.var(), 'std', data.std())",
+      "print('sample var', round(data.var(ddof=1), 3), 'std', round(data.std(ddof=1), 3))",
+      "print('z-scores', ((data - data.mean()) / data.std()).round(2))"
+    ],
+    "code_explanation": [
+      {"en": "NumPy's var and std use the population formula (ddof=0) by default.", "ru": "NumPy ke var aur std default mein population formula (ddof=0) istemal karte hain."},
+      {"en": "ddof=1 switches to the sample formula (divide by n - 1).", "ru": "ddof=1 sample formula (n - 1 se taqseem) par le jata hai."},
+      {"en": "The z-scores of standardised data have mean 0 and standard deviation 1.", "ru": "Standardise kiye data ke z-scores ka mean 0 aur standard deviation 1 hota hai."}
+    ],
+    "applications": [
+      {"en": "Feature standardisation before KNN, SVM and gradient descent.", "ru": "KNN, SVM aur gradient descent se pehle feature standardisation."},
+      {"en": "Detecting outliers with z-scores.", "ru": "z-scores se outliers pakarna."},
+      {"en": "Summarising experiment results (mean plus or minus std).", "ru": "Experiment ke natije bayan karna (mean +/- std)."}
+    ],
+    "exam_points": [
+      {"en": "Compute mean, variance and standard deviation by hand.", "ru": "Mean, variance aur standard deviation haath se nikalein."},
+      {"en": "Know when to use n vs n - 1.", "ru": "n aur n - 1 kab istemal karna hai."},
+      {"en": "Explain standardisation and why ML algorithms need it.", "ru": "Standardisation aur ML algorithms ko is ki zaroorat samjhayein."}
+    ],
+    "common_mistakes": [
+      {"en": "Forgetting to square the deviations.", "ru": "Farq ko square karna bhool jana."},
+      {"en": "Mixing up variance and standard deviation units.", "ru": "Variance aur standard deviation ki units gadmad karna."},
+      {"en": "Standardising the test set with its own mean instead of the training mean.", "ru": "Test set ko training mean ki jagah us ke apne mean se standardise karna."}
+    ],
+    "questions": [
+      {"type": "numerical", "kind": "problem", "q": {"en": "Population standard deviation of 2, 4, 4, 4, 5, 5, 7, 9?", "ru": "2, 4, 4, 4, 5, 5, 7, 9 ka population standard deviation?"},
+       "answer": 2, "tolerance": 0.001,
+       "hints": [{"en": "Mean = 5; sum of squared deviations = 32.", "ru": "Mean = 5; squared farq ka sum = 32."}, {"en": "Variance = 32 / 8.", "ru": "Variance = 32 / 8."}],
+       "explanation": {"en": "Variance = 4, standard deviation = sqrt(4) = 2.", "ru": "Variance = 4, standard deviation = 2."}},
+      {"type": "numerical", "kind": "problem", "q": {"en": "Mean 70, standard deviation 10. What is the z-score of 85?", "ru": "Mean 70, standard deviation 10. 85 ka z-score kya hai?"},
+       "answer": 1.5, "tolerance": 0.001,
+       "hints": [{"en": "(85 - 70) / 10.", "ru": "(85 - 70) / 10."}],
+       "explanation": {"en": "15 / 10 = 1.5 standard deviations above the mean.", "ru": "15 / 10 = mean se 1.5 standard deviation upar."}},
+      {"type": "mcq", "kind": "conceptual", "q": {"en": "Which measure is least affected by one extreme outlier?", "ru": "Ek bohat bare outlier se kaunsa measure sab se kam mutasir hota hai?"},
+       "options": [{"en": "Median", "ru": "Median"}, {"en": "Mean", "ru": "Mean"}, {"en": "Variance", "ru": "Variance"}, {"en": "Standard deviation", "ru": "Standard deviation"}],
+       "answer": 0,
+       "hints": [{"en": "Which one only looks at the middle position?", "ru": "Kaunsa sirf beech ki jagah dekhta hai?"}],
+       "explanation": {"en": "The median depends on order, not on how extreme the largest value is.", "ru": "Median tarteeb par munhasir hai, sab se bari value kitni bari hai is par nahi."}}
+    ]
+  }
+]

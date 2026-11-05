@@ -108,3 +108,18 @@ All tools listed in the proposal are used except these:
 | Topic not in dataset | "not covered" message plus related topics (`retrieve.suggest_topics`) |
 | Not enough time | abstractive summary and clustering are optional and switchable |
 | Team member unavailable | one module per stage, docstrings, tests, this mapping |
+
+## Version 2: study features
+
+| Feature | Where | Data source |
+|---|---|---|
+| References with thumbnail, segment start–end, link, excerpt, concepts, why useful | `lectures.segment_references`, `ui/learn.py` | Transcripts and metadata. Reasons are computed from similarity, definitions found and mentions |
+| Structured lessons (intro, definition, Roman Urdu, example, concepts, formulas, applications, exam points, mistakes) | `knowledge/*.json`, `ui/learn.py` | Hand-written notes, labelled as such |
+| English / Roman Urdu / both | `i18n.py`, `ui/common.py` | Hand-written; no machine translation |
+| Practice questions with hints, retries and scores | `quiz.py`, `progress.py`, `ui/learn.py` | Question banks and fill-in-the-blank questions built from lecture sentences |
+| Lecture navigation and "what is taught between A and B" | `lectures.video_timeline`, `explain_range`, `ask_lecture`, `ui/videos.py` | Transcripts only |
+| Mathematics problem solving | `mathsolve.py`, `ui/math_page.py` | Computed with SymPy, NumPy and SciPy |
+| ML algorithm playground and visualisations | `playground.py`, `ui/ml_page.py` | Computed by the algorithms on sample or uploaded data |
+| Light-blue dashboard with 10 sections | `app.py`, `ui/`, `.streamlit/config.toml` | - |
+
+**Limitation:** ClipSage has no large language model. Roman Urdu is therefore available for the written lessons and the interface. For lecture excerpts, ClipSage fills a Roman Urdu template with the segment's real time range and key terms, and keeps the transcript itself in English. An optional LLM could later translate excerpts, but its output would have to be labelled as machine-generated.
