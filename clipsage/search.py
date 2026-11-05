@@ -23,7 +23,14 @@ from typing import Dict, List, Optional
 import numpy as np
 
 from .knowledge import load_topics
-from .langdetect import RU_MARKERS, detect_with_details, tokens
+from .langdetect import RU_MARKERS, detect_with_details
+from .langdetect import tokens as _word_tokens
+
+
+def tokens(text: str) -> List[str]:
+    """Words of a query, keeping digits so 'LL(1)', 'LL1' and '2NF' stay one token."""
+    text = re.sub(r"\((\d)\)", r"\1", (text or "").lower())
+    return [w for w in re.findall(r"[a-z0-9]+", text.replace("'", ""))] or _word_tokens(text)
 from .subjects import load_subjects
 from .text import STOP_WORDS
 

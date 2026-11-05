@@ -7,74 +7,39 @@ from ..keywords import KEYWORD_LABELS
 from ..library import library_stats
 from ..lessons import index_available, sbert_available
 from ..retrieve import METHOD_LABELS
-from ..subjects import load_subjects, topics_of
+from ..subjects import load_subjects
 from ..summarize import SUMMARIZER_LABELS
-from .common import (LANG_NAMES, activity, badges, chips, esc, get_lesson, lang_badge, open_topic, run_search,
+from .common import (LANG_NAMES, badges, chips, esc, get_lesson, lang_badge, open_subject, open_topic,
                      search_box, store)
 from .topic_view import render_lecture_explanation, render_topic
 
 
+SECTION_MODES = {"Algorithm Practice": "algorithms", "Saved": "saved", "Overview": "overview"}
+
+
 def _open_section(name: str, section: str) -> None:
-    st.session_state["subject"] = name
-    st.session_state["subject_section"] = section
-    st.session_state["_goto"] = "subject"
+    open_subject(name, SECTION_MODES.get(section, "chat"))
 
 
-def _pick_subject(name: str) -> None:
-    _open_section(name, "Overview")
+def _space_chosen() -> None:
+    name = st.session_state.get("study_space")
+    st.session_state["study_space"] = None
+    if name:
+        open_subject(name, "chat")
 
 
 # ---------------------------------------------------------------------------
 def dashboard_page() -> None:
-    st.markdown("<div class='cs-hero'><h1>ClipSage</h1><p>Study six Computer Science subjects with explanations, real lecture "
-                "moments, quizzes and hands-on practice. Ask in English or Roman Urdu - the answer follows your language.</p></div>",
-                unsafe_allow_html=True)
-    search_box("dash_search")
-    stats = library_stats()
-    act = activity()
-    if not index_available():
-        st.info("The video library has not been built yet. Lessons, quizzes and practice tools work now; run "
-                "run_pipeline.bat to collect videos and timestamps.")
-    st.markdown("### Subjects")
-    subjects = load_subjects()
-    for row in range(0, len(subjects), 3):
-        cols = st.columns(3)
-        for col, s in zip(cols, subjects[row:row + 3]):
-            topics = topics_of(s["name"])
-            saved = store(s["name"]).counts()
-            summary = act.subject_summary(s["name"])
-            n_questions = sum(len(t["questions"]) for t in topics)
-            facts = [f"{len(topics)} topics", f"{n_questions} questions",
-                     f"{stats['per_subject'].get(s['name'], 0)} videos", f"{sum(saved.values())} saved"]
-            with col:
-                st.markdown(f"<div class='cs-subject'><h3>{esc(s['name'])}</h3><p class='cs-muted'>{esc(s['tagline'])}</p>"
-                            f"{chips(facts)}</div>", unsafe_allow_html=True)
-                if summary["answered"]:
-                    st.progress(summary["correct"] / summary["answered"],
-                                text=f"This session: {summary['correct']}/{summary['answered']} correct")
-                st.button(f"Open {s['name']}", key=f"dash_{s['id']}", on_click=_pick_subject, args=(s["name"],),
-                          type="primary", width="stretch")
+    """Only a search bar and the Study Spaces dropdown - everything else lives inside each subject."""
     st.write("")
-    c1, c2 = st.columns(2)
-    with c1:
-        st.markdown("### Recent searches (this session)")
-        if act.searches:
-            for i, s in enumerate(act.searches[:8]):
-                st.button(f"{s['q']}  -  {LANG_NAMES[s['lang']]}", key=f"recent_{i}", on_click=run_search, args=(s["q"],),
-                          width="stretch")
-        else:
-            st.caption("No searches yet. Searches are not saved.")
-    with c2:
-        st.markdown("### Recently viewed lectures (this session)")
-        if act.viewed:
-            for v in act.viewed[:5]:
-                st.markdown(f"- [{esc(v['title'])}](https://www.youtube.com/watch?v={v['video_id']}) "
-                            f"<span class='cs-muted'>{esc(v['subject'] or '')}</span>", unsafe_allow_html=True)
-        else:
-            st.caption("Nothing viewed yet.")
-    c3, c4 = st.columns(2)
-    c3.page_link(st.session_state["pages"]["math"], label="Mathematics Playground", icon=":material/calculate:")
-    c4.page_link(st.session_state["pages"]["ml"], label="ML Algorithm Playground", icon=":material/science:")
+    st.write("")
+    _, mid, _ = st.columns([1, 3, 1])
+    with mid:
+        st.markdown("<div class='cs-hero cs-center'><h1>ClipSage</h1><p>Ask anything from six Computer Science subjects "
+                    "in English or Roman Urdu - every answer comes with a lecture video.</p></div>", unsafe_allow_html=True)
+        search_box("dash_search", placeholder="Ask a question - e.g. 'paging kya hai' or 'explain round robin scheduling'")
+        st.selectbox("Study Spaces", [s["name"] for s in load_subjects()], index=None, key="study_space",
+                     on_change=_space_chosen, placeholder="Choose a subject to open its study space")
 
 
 # ---------------------------------------------------------------------------

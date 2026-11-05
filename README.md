@@ -16,12 +16,14 @@ ClipSage covers **exactly six subjects**: Operating Systems, Machine Learning, L
 
 | Page | What it does |
 |---|---|
-| **Dashboard** | Search box, the six subject cards (topics, questions, videos, saved items, session score), recent searches and lectures of this session |
-| **Subject** (pick one in the sidebar) | Its own environment with Overview (statistics, topic graph, progress), Topics & Theory, Examples, Video References, Quiz, Algorithm Practice, Numerical Practice, Saved and a search limited to that subject |
-| **Search** | Shows your exact query, the detected subject, topic and language, then a two-column result: the explanation on the left, the matching lecture video (embedded, title, timestamps of the sub-topics, YouTube link) on the right, plus related topics, questions and practice |
+| **Dashboard** | Only a search bar and the **Study Spaces** dropdown with the six subjects. A question typed in the search bar opens the matching subject's chat with the answer |
+| **Study space** (one per subject) | A **chat**: ask anything about the subject in English or Roman Urdu. Each answer shows the explanation on the left and the lecture video with caption timestamps on the right, plus *Full lesson*, *Practice quiz* and *Save Topic* buttons and related topics |
+| **⋮ menu** in each study space | **Practice Quiz** (built from the topics you discussed in the chat, with generated numerical problems), Topics & Lessons, Algorithm Practice, Numerical Practice, Video References, Overview & Progress, Saved, Clear chat |
 | **Video Library** | Every collected lecture by subject and topic, timeline of sections, jump-to-time, *"What is taught between 10:20 and 15:30?"* and questions about a lecture |
 | **Mathematics / ML Algorithm Playground** | Step-by-step maths (verified with SymPy/NumPy/SciPy) and ML algorithms with intermediate calculations and plots |
 | **Saved Data / Settings** | Per-subject saved items (view and delete), response language and retrieval settings |
+
+The sidebar (hidden by default, open it with the arrow at the top left) links to the Video Library, both playgrounds, Saved Data and Settings. The chat history is kept only in the browser session.
 
 Practice tools per subject (all answers are computed, never typed in): CPU scheduling (FCFS, SJF, SRTF, Priority, Round Robin), page replacement (FIFO, LRU, OPT), paging address translation, Banker's algorithm; two's complement, IEEE 754, cache simulator, 5-stage pipeline with hazards, CPI and Amdahl's law; lexer, FIRST/FOLLOW and LL(1) table, SLR(1) shift-reduce parser, three-address code; Gaussian elimination and matrix tools; a live HTML/CSS/JS editor and an HTTP request builder; the ML playground. Quizzes have MCQ, true/false, conceptual short-answer and numerical questions with easy/medium/hard levels.
 
@@ -114,7 +116,7 @@ streamlit run app.py
 
 Then open http://localhost:8501.
 
-The app has a light-blue dashboard. Choose a subject from the sidebar dropdown and use *Back to dashboard* to return. Lessons, quizzes and all practice tools work even before you collect any data. Video references and timestamps need the library built by `run_pipeline.bat`.
+The dashboard shows a search bar and the Study Spaces dropdown. Choose a subject to open its chat; the *Dashboard* button returns. Lessons, quizzes and all practice tools work even before you collect any data. Video references and timestamps need the library built by `run_pipeline.bat`.
 
 You can also query from the command line:
 
@@ -152,7 +154,7 @@ The reference summaries for ROUGE are in `evaluation/reference_summaries.json`. 
 pytest -q
 ```
 
-The 168 tests use a small **synthetic** corpus with fake video IDs and a stand-in embedder, so they need neither the API key nor the SBERT download. They cover:
+The 178 tests use a small **synthetic** corpus with fake video IDs and a stand-in embedder, so they need neither the API key nor the SBERT download. They cover:
 
 - every pipeline stage
 - every lesson's Python code (it is executed)
@@ -161,6 +163,7 @@ The 168 tests use a small **synthetic** corpus with fake video IDs and a stand-i
 - every playground algorithm, checked against scikit-learn
 - lecture navigation and time-range explanations
 - language detection, query analysis and the six subjects
+- subject chat replies and the practice quiz built from the discussed topics
 - every OS, architecture, compiler and linear algebra simulator, and the numerical practice generators
 - the video library (relevance filter, cache, no unrelated videos in the video panel)
 - explicit per-subject saving (no file is written before Save)
@@ -191,6 +194,7 @@ clipsage/
   subjects.py              the six subjects (config/subjects.json) and their topics
   langdetect.py            English / Roman Urdu detection (lexicon + char n-gram Naive Bayes)
   search.py                query analysis: topic, subject, language
+  chat.py                  subject chat replies, practice quiz from the discussed topics
   library.py               topic video library, video panel, caption timestamps of sub-topics
   simulators.py            OS, architecture, compiler and linear algebra algorithms
   practice_gen.py          numerical practice problems per subject

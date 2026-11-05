@@ -9,7 +9,6 @@ from pathlib import Path
 
 import streamlit as st
 
-from clipsage.subjects import load_subjects
 from clipsage.ui.common import handle_pending_navigation, init_state, inject_css
 from clipsage.ui.home import dashboard_page, saved_page, search_page, settings_page
 from clipsage.ui.math_page import math_page
@@ -17,7 +16,7 @@ from clipsage.ui.ml_page import ml_page
 from clipsage.ui.subject_page import subject_page
 from clipsage.ui.videos import videos_page
 
-st.set_page_config(page_title="ClipSage", page_icon="\U0001F393", layout="wide", initial_sidebar_state="expanded")
+st.set_page_config(page_title="ClipSage", page_icon="\U0001F393", layout="wide", initial_sidebar_state="collapsed")
 init_state()
 inject_css()
 
@@ -33,32 +32,19 @@ pages = {
 }
 st.session_state["pages"] = pages
 
-SUBJECT_NAMES = [s["name"] for s in load_subjects()]
-
-
-def _subject_changed() -> None:
-    choice = st.session_state["subject_select"]
-    if choice in SUBJECT_NAMES:
-        st.session_state["subject"] = choice
-        st.session_state["subject_section"] = "Overview"
-        st.session_state["_goto"] = "subject"
-    else:
-        st.session_state["_goto"] = "dashboard"
-
-
 st.logo(str(Path(__file__).parent / "clipsage" / "ui" / "logo.svg"), size="large")
+nav = st.navigation(list(pages.values()), position="hidden")   # menu is drawn below; Subject and Search open from the dashboard
 with st.sidebar:
+    st.page_link(pages["dashboard"], label="Dashboard", icon=":material/home:")
     current = st.session_state.get("subject")
-    st.session_state["subject_select"] = current if current in SUBJECT_NAMES else "All subjects (Dashboard)"
-    st.selectbox("Subject", ["All subjects (Dashboard)"] + SUBJECT_NAMES, key="subject_select", on_change=_subject_changed)
-    if current in SUBJECT_NAMES:
-        st.page_link(pages["subject"], label=f"Open {current}", icon=":material/arrow_forward:")
-    st.page_link(pages["dashboard"], label="Back to dashboard", icon=":material/home:")
-
-nav = st.navigation({
-    "Learn": [pages["dashboard"], pages["subject"], pages["search"], pages["videos"]],
-    "Practice": [pages["math"], pages["ml"]],
-    "You": [pages["saved"], pages["settings"]],
-})
+    if current:
+        st.page_link(pages["subject"], label=f"Back to {current}", icon=":material/school:")
+    st.caption("Practice")
+    st.page_link(pages["videos"], label="Video Library", icon=":material/smart_display:")
+    st.page_link(pages["math"], label="Mathematics Playground", icon=":material/calculate:")
+    st.page_link(pages["ml"], label="ML Algorithm Playground", icon=":material/science:")
+    st.caption("You")
+    st.page_link(pages["saved"], label="Saved Data", icon=":material/bookmark:")
+    st.page_link(pages["settings"], label="Settings", icon=":material/settings:")
 handle_pending_navigation()
 nav.run()

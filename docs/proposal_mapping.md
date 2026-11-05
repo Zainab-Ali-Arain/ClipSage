@@ -136,3 +136,11 @@ All tools listed in the proposal are used except these:
 | Quizzes: MCQ, true/false, conceptual, numerical, difficulty levels | `knowledge/*.json`, `quiz.py`, `ui/topic_view.py` |
 | Video library of real videos with timestamps and no duplicates | `collect.py` (`collect_library`, `_relevant`), `preprocess.py` (`topic_id`), `ui/videos.py` |
 | Nothing saved automatically; saved data per subject | `progress.py` (`SessionActivity`, `SubjectStore`), Save buttons in the UI |
+
+## Version 4: subject chat
+
+| Requirement | Where |
+|---|---|
+| Dashboard with only a search bar and a subject dropdown (Study Spaces) | `ui/home.py` (`dashboard_page`), `app.py` |
+| Chat inside each subject, answers with a reference video | `chat.py` (`respond`), `ui/subject_page.py` (`chat_view`, `render_reply`) |
+| Three-dots menu with a practice quiz on the topics discussed | `ui/subject_page.py` (`MODES`, `practice_quiz_view`), `chat.py` (`discussed_topics`, `practice_quiz`) |

@@ -34,6 +34,8 @@ CSS = f"""
   .cs-hero {{ background: {LIGHT}; border: 1px solid #CFE3FA; border-radius: 18px; padding: 24px 28px; margin-bottom: 16px; }}
   .cs-hero h1 {{ margin: 0; font-size: 2rem; }}
   .cs-hero p {{ margin: 6px 0 0 0; font-size: 1.05rem; color: #3D5A78; }}
+  .cs-center {{ text-align: center; }}
+  .cs-center h1 {{ font-size: 2.6rem; }}
   .cs-muted {{ color: #5B7590; font-size: 0.92rem; }}
   .cs-badge {{ display: inline-block; font-size: 0.75rem; font-weight: 600; padding: 3px 10px; border-radius: 999px;
                margin: 0 6px 6px 0; border: 1px solid transparent; }}
@@ -117,7 +119,8 @@ def content(text) -> str:
 
 
 def esc(text) -> str:
-    return html.escape(str(text))
+    """HTML-escape; '$' becomes an entity so Streamlit does not read '$ ... $' as LaTeX."""
+    return html.escape(str(text)).replace("$", "&#36;")
 
 
 def content_html(text, cls: str = "") -> str:
@@ -229,28 +232,56 @@ def handle_pending_navigation() -> None:
         st.switch_page(st.session_state["pages"][target])
 
 
+def open_subject(subject: str, mode: str = "chat") -> None:
+    """Callback: open a subject's study space (chat by default, or another section of its menu)."""
+    st.session_state["subject"] = subject
+    st.session_state["subject_mode"] = mode
+    st.session_state["_goto"] = "subject"
+
+
+def chat_messages(subject: str) -> list:
+    """Chat history of one subject - kept only in this browser session."""
+    return st.session_state.setdefault("chats", {}).setdefault(subject, [])
+
+
+def ask_in_subject(subject: str, query: str) -> None:
+    """Add a question and ClipSage's reply to the subject chat (callback-safe)."""
+    from ..chat import respond
+
+    query = (query or "").strip()
+    if not query:
+        return
+    reply = respond(query, subject)
+    msgs = chat_messages(subject)
+    msgs.append({"role": "user", "text": query, "lang": reply["lang"]})
+    msgs.append({"role": "assistant", "reply": reply})
+    st.session_state["resp_lang"] = reply["lang"]
+    activity().add_search(query, reply["lang"], subject)
+
+
 def run_search(query: str, subject: Optional[str] = None) -> None:
-    """Analyse a query, set the response language from it and open the results page."""
+    """Dashboard search: a question about one of the six subjects opens that subject's chat with the answer;
+    anything else opens the search results page."""
     from ..search import analyze_query
 
     query = (query or "").strip()
     if not query:
         return
     analysis = analyze_query(query, subject)
-    st.session_state["search"] = analysis
     st.session_state["resp_lang"] = analysis["lang"]
     if analysis["subject"]:
-        st.session_state["subject"] = analysis["subject"]
-    activity().add_search(query, analysis["lang"], analysis["subject"])
+        ask_in_subject(analysis["subject"], query)
+        open_subject(analysis["subject"], "chat")
+        return
+    st.session_state["search"] = analysis
+    activity().add_search(query, analysis["lang"], None)
     st.session_state["_goto"] = "search"
 
 
 def open_topic(topic_id: str, subject: str) -> None:
-    """Callback: open a lesson inside its subject environment."""
+    """Callback: open a full lesson inside its subject's study space."""
     st.session_state["topic_id"] = topic_id
-    st.session_state["subject"] = subject
-    st.session_state["subject_section"] = "Topics & Theory"
-    st.session_state["_goto"] = "subject"
+    open_subject(subject, "topics")
 
 
 def search_box(key: str, subject: Optional[str] = None, placeholder: Optional[str] = None) -> None:
