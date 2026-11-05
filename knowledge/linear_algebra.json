@@ -1,0 +1,1537 @@
+[
+  {
+    "id": "vectors",
+    "title": {
+      "en": "Vectors and the Dot Product",
+      "ru": "Vectors aur Dot Product"
+    },
+    "subject": "Linear Algebra",
+    "category": "foundations",
+    "aliases": [
+      "vector",
+      "vectors",
+      "dot product",
+      "norm",
+      "unit vector",
+      "vector addition",
+      "scalar multiplication",
+      "orthogonal",
+      "projection"
+    ],
+    "search_query": "vectors dot product norm linear algebra",
+    "video_queries": [
+      "vectors what even are they essence of linear algebra",
+      "dot product and duality linear algebra"
+    ],
+    "subtopics": [
+      {
+        "name": "Vector addition",
+        "terms": [
+          "vector addition",
+          "adding vectors"
+        ]
+      },
+      {
+        "name": "Scalar multiplication",
+        "terms": [
+          "scalar",
+          "scaling"
+        ]
+      },
+      {
+        "name": "Dot product",
+        "terms": [
+          "dot product"
+        ]
+      }
+    ],
+    "math_tool": "vectors",
+    "intro": {
+      "en": "Vectors are lists of numbers that describe a direction and a size. In machine learning every data point and every word embedding is a vector, so vectors are the starting point of linear algebra.",
+      "ru": "Vectors numbers ki list hain jo simt aur size batati hain. Machine learning mein har data point aur har word embedding ek vector hai, is liye linear algebra vectors se shuru hota hai."
+    },
+    "definition": {
+      "en": "A vector in R^n is an ordered list of n real numbers. Vectors can be added component-wise and scaled by numbers\\; the dot product u . v = sum of u_i v_i measures how much two vectors point in the same direction.",
+      "ru": "R^n mein vector n real numbers ki tarteeb wali list hai. Vectors ko component by component jama kiya ja sakta hai aur numbers se scale kiya ja sakta hai\\; dot product u . v = u_i v_i ka sum batata hai ke do vectors kitna ek hi simt mein hain."
+    },
+    "explanation": {
+      "en": "Geometrically a vector is an arrow from the origin. Adding vectors places arrows tip to tail\\; multiplying by a scalar stretches or flips the arrow. The length (norm) of v is sqrt(v . v). The dot product also equals ||u|| ||v|| cos(theta), so it is positive when the angle is less than 90 degrees, zero when the vectors are perpendicular (orthogonal) and negative when they point apart. Dividing a vector by its length gives a unit vector in the same direction. The projection of u onto v, (u . v / v . v) v, is the shadow of u on the line of v. A linear combination a u + b v combines vectors with scalar weights - the idea behind span and basis.",
+      "ru": "Geometry mein vector origin se nikalta hua teer hai. Vectors jama karne mein teer ek ke sire par doosra rakhte hain\\; scalar se zarab teer ko lamba ya ulta karta hai. v ki length (norm) sqrt(v . v) hai. Dot product ||u|| ||v|| cos(theta) ke barabar bhi hai, is liye angle 90 degree se kam ho to positive, perpendicular (orthogonal) hon to zero aur mukhalif simt mein hon to manfi hota hai. Vector ko us ki length se taqseem karne se usi simt ka unit vector milta hai. u ka v par projection, (u . v / v . v) v, v ki line par u ka saya hai. Linear combination a u + b v vectors ko scalar weights ke saath jorta hai - span aur basis ka idea yahi hai."
+    },
+    "example": {
+      "en": "u = (3, 4), v = (4, -3). u + v = (7, 1)\\; 2u = (6, 8)\\; ||u|| = sqrt(9 + 16) = 5\\; u . v = 12 - 12 = 0, so u and v are orthogonal. The unit vector of u is (0.6, 0.8).",
+      "ru": "u = (3, 4), v = (4, -3). u + v = (7, 1)\\; 2u = (6, 8)\\; ||u|| = sqrt(9 + 16) = 5\\; u . v = 12 - 12 = 0, yaani u aur v orthogonal hain. u ka unit vector (0.6, 0.8) hai."
+    },
+    "key_concepts": [
+      {
+        "term": "Norm",
+        "en": "Length of a vector, sqrt of the sum of squares.",
+        "ru": "Vector ki length, squares ke sum ka square root."
+      },
+      {
+        "term": "Orthogonal",
+        "en": "Dot product equals zero (90 degrees).",
+        "ru": "Dot product zero (90 degree)."
+      },
+      {
+        "term": "Linear combination",
+        "en": "Sum of scaled vectors a u + b v.",
+        "ru": "Scale kiye vectors ka sum a u + b v."
+      }
+    ],
+    "formulas": [
+      {
+        "latex": "u \\cdot v = \\sum_i u_i v_i = \\lVert u \\rVert \\lVert v \\rVert \\cos\\theta",
+        "en": "Dot product.",
+        "ru": "Dot product."
+      },
+      {
+        "latex": "\\lVert v \\rVert = \\sqrt{v \\cdot v}, \\quad \\text{proj}_v u = \\frac{u \\cdot v}{v \\cdot v} v",
+        "en": "Norm and projection.",
+        "ru": "Norm aur projection."
+      }
+    ],
+    "code": [
+      "import numpy as np",
+      "u, v = np.array([3, 4]), np.array([4, -3])",
+      "print('u + v =', u + v, ' 2u =', 2 * u)",
+      "print('norm(u) =', np.linalg.norm(u))",
+      "print('u . v =', u @ v, '-> orthogonal' if u @ v == 0 else '')",
+      "print('unit vector of u =', u / np.linalg.norm(u))"
+    ],
+    "code_explanation": [
+      {
+        "en": "NumPy arrays add and scale element-wise.",
+        "ru": "NumPy arrays element by element jama aur scale hoti hain."
+      },
+      {
+        "en": "@ computes the dot product\\; a zero result means the vectors are orthogonal.",
+        "ru": "@ dot product nikalta hai\\; zero ka matlab vectors orthogonal hain."
+      }
+    ],
+    "applications": [
+      {
+        "en": "Feature vectors and embeddings in machine learning.",
+        "ru": "Machine learning mein feature vectors aur embeddings."
+      },
+      {
+        "en": "Forces and velocities in physics and games.",
+        "ru": "Physics aur games mein forces aur velocities."
+      },
+      {
+        "en": "Cosine similarity for search (ClipSage retrieval).",
+        "ru": "Search ke liye cosine similarity (ClipSage retrieval)."
+      }
+    ],
+    "exam_points": [
+      {
+        "en": "Compute sums, scalar multiples, norms and dot products.",
+        "ru": "Sum, scalar multiples, norms aur dot products nikalein."
+      },
+      {
+        "en": "Use the dot product to test orthogonality and find angles.",
+        "ru": "Dot product se orthogonality check karein aur angles nikalein."
+      },
+      {
+        "en": "Compute a projection of one vector on another.",
+        "ru": "Ek vector ka doosre par projection nikalein."
+      }
+    ],
+    "common_mistakes": [
+      {
+        "en": "Adding vectors of different dimensions.",
+        "ru": "Mukhtalif dimensions ke vectors jama karna."
+      },
+      {
+        "en": "Forgetting the square root when computing the norm.",
+        "ru": "Norm nikalte waqt square root bhool jana."
+      },
+      {
+        "en": "Thinking the dot product is a vector (it is a scalar).",
+        "ru": "Dot product ko vector samajhna (yeh scalar hai)."
+      }
+    ],
+    "questions": [
+      {
+        "type": "numerical",
+        "kind": "problem",
+        "difficulty": "easy",
+        "q": {
+          "en": "What is the dot product of (2, -1, 3) and (4, 0, -2)?",
+          "ru": "(2, -1, 3) aur (4, 0, -2) ka dot product kya hai?"
+        },
+        "answer": 2,
+        "tolerance": 0,
+        "hints": [
+          {
+            "en": "2x4 + (-1)x0 + 3x(-2).",
+            "ru": "2x4 + (-1)x0 + 3x(-2)."
+          }
+        ],
+        "explanation": {
+          "en": "8 + 0 - 6 = 2.",
+          "ru": "8 + 0 - 6 = 2."
+        }
+      },
+      {
+        "type": "numerical",
+        "kind": "problem",
+        "difficulty": "easy",
+        "q": {
+          "en": "What is the norm of (6, 8)?",
+          "ru": "(6, 8) ka norm kya hai?"
+        },
+        "answer": 10,
+        "tolerance": 0,
+        "hints": [
+          {
+            "en": "sqrt(36 + 64).",
+            "ru": "sqrt(36 + 64)."
+          }
+        ],
+        "explanation": {
+          "en": "sqrt(100) = 10.",
+          "ru": "sqrt(100) = 10."
+        }
+      },
+      {
+        "type": "tf",
+        "kind": "conceptual",
+        "difficulty": "easy",
+        "q": {
+          "en": "If the dot product of two non-zero vectors is 0, they are perpendicular.",
+          "ru": "Agar do non-zero vectors ka dot product 0 ho to woh perpendicular hain."
+        },
+        "answer": true,
+        "hints": [
+          {
+            "en": "cos(90 degrees) = 0.",
+            "ru": "cos(90 degree) = 0."
+          }
+        ],
+        "explanation": {
+          "en": "True: u . v = |u||v|cos(theta) = 0 means theta = 90 degrees.",
+          "ru": "Sahi: u . v = |u||v|cos(theta) = 0 ka matlab theta = 90 degree."
+        }
+      },
+      {
+        "type": "mcq",
+        "kind": "conceptual",
+        "difficulty": "medium",
+        "q": {
+          "en": "The dot product of two vectors is negative. The angle between them is:",
+          "ru": "Do vectors ka dot product manfi hai. Un ke darmiyan angle kaisa hai?"
+        },
+        "options": [
+          {
+            "en": "More than 90 degrees",
+            "ru": "90 degree se zyada"
+          },
+          {
+            "en": "Less than 90 degrees",
+            "ru": "90 degree se kam"
+          },
+          {
+            "en": "Exactly 90 degrees",
+            "ru": "Bilkul 90 degree"
+          },
+          {
+            "en": "Exactly 0 degrees",
+            "ru": "Bilkul 0 degree"
+          }
+        ],
+        "answer": 0,
+        "hints": [
+          {
+            "en": "cos is negative for obtuse angles.",
+            "ru": "Obtuse angles ke liye cos manfi hota hai."
+          }
+        ],
+        "explanation": {
+          "en": "Negative cosine means an obtuse angle (> 90 degrees).",
+          "ru": "Manfi cosine ka matlab obtuse angle (> 90 degree)."
+        }
+      }
+    ]
+  },
+  {
+    "id": "matrices",
+    "title": {
+      "en": "Matrices and Matrix Operations",
+      "ru": "Matrices aur Matrix Operations"
+    },
+    "subject": "Linear Algebra",
+    "category": "computation",
+    "aliases": [
+      "matrix",
+      "matrices",
+      "matrix multiplication",
+      "determinant",
+      "inverse matrix",
+      "transpose",
+      "linear algebra"
+    ],
+    "search_query": "matrix multiplication linear algebra",
+    "math_tool": "matrix",
+    "intro": {
+      "en": "Matrices are tables of numbers. In machine learning a whole dataset is a matrix (rows = examples, columns = features) and most computations - from linear regression to neural networks - are matrix operations.",
+      "ru": "Matrices numbers ke tables hain. Machine learning mein poora dataset ek matrix hota hai (rows = examples, columns = features) aur zyada tar hisaab - linear regression se neural networks tak - matrix operations hi hain."
+    },
+    "definition": {
+      "en": "A matrix is a rectangular array of numbers with m rows and n columns (an m x n matrix). Matrices can be added (same size), multiplied (inner sizes must match), transposed, and - if square and non-singular - inverted.",
+      "ru": "Matrix numbers ki m rows aur n columns wali mustateel (rectangular) tarteeb hai (m x n matrix). Matrices jama ho sakti hain (ek hi size), zarab ho sakti hain (andar wale sizes barabar hon), transpose ho sakti hain, aur agar square aur non-singular hon to un ka inverse nikal sakta hai."
+    },
+    "explanation": {
+      "en": "To multiply A (m x n) by B (n x p), each entry of the result C (m x p) is the dot product of a row of A with a column of B: C[i][j] = sum over k of A[i][k] x B[k][j]. Matrix multiplication is not commutative: AB is usually different from BA. The transpose flips rows and columns. The determinant of a 2 x 2 matrix [[a, b], [c, d]] is ad - bc; if it is 0 the matrix has no inverse (it is singular). The inverse of a 2 x 2 matrix is (1/det) [[d, -b], [-c, a]], and A times its inverse gives the identity matrix. In ML, the normal equation of linear regression w = (X^T X)^-1 X^T y uses exactly these operations.",
+      "ru": "A (m x n) ko B (n x p) se zarab karne par natije C (m x p) ka har element A ki ek row aur B ke ek column ka dot product hota hai: C[i][j] = sum (k par) A[i][k] x B[k][j]. Matrix multiplication commutative nahi: AB aam taur par BA se mukhtalif hota hai. Transpose rows aur columns ko palat deta hai. 2 x 2 matrix [[a, b], [c, d]] ka determinant ad - bc hai; agar yeh 0 ho to inverse nahi hota (singular). 2 x 2 ka inverse (1/det) [[d, -b], [-c, a]] hai, aur A ko us ke inverse se zarab karne par identity matrix aati hai. ML mein linear regression ki normal equation w = (X^T X)^-1 X^T y bilkul yahi operations istemal karti hai."
+    },
+    "example": {
+      "en": "A = [[1, 2], [3, 4]], B = [[5, 6], [7, 8]]. AB: C11 = 1x5 + 2x7 = 19, C12 = 1x6 + 2x8 = 22, C21 = 3x5 + 4x7 = 43, C22 = 3x6 + 4x8 = 50, so AB = [[19, 22], [43, 50]]. det(A) = 1x4 - 2x3 = -2, so A^-1 = (1/-2) [[4, -2], [-3, 1]] = [[-2, 1], [1.5, -0.5]].",
+      "ru": "A = [[1, 2], [3, 4]], B = [[5, 6], [7, 8]]. AB: C11 = 1x5 + 2x7 = 19, C12 = 1x6 + 2x8 = 22, C21 = 3x5 + 4x7 = 43, C22 = 3x6 + 4x8 = 50, yaani AB = [[19, 22], [43, 50]]. det(A) = 1x4 - 2x3 = -2, to A^-1 = (1/-2) [[4, -2], [-3, 1]] = [[-2, 1], [1.5, -0.5]]."
+    },
+    "key_concepts": [
+      {
+        "term": "Dimensions",
+        "en": "m x n means m rows and n columns.",
+        "ru": "m x n ka matlab m rows aur n columns."
+      },
+      {
+        "term": "Matrix product",
+        "en": "Row-by-column dot products; inner dimensions must match.",
+        "ru": "Row aur column ke dot products; andar wali dimensions barabar hon."
+      },
+      {
+        "term": "Determinant",
+        "en": "A number that is 0 exactly when the matrix is not invertible.",
+        "ru": "Aisa number jo tab hi 0 hota hai jab matrix ka inverse na ho."
+      },
+      {
+        "term": "Identity and inverse",
+        "en": "I has 1s on the diagonal; A A^-1 = I.",
+        "ru": "I ke diagonal par 1 hote hain; A A^-1 = I."
+      }
+    ],
+    "formulas": [
+      {
+        "latex": "C_{ij} = \\sum_{k} A_{ik} B_{kj}",
+        "en": "Matrix multiplication.",
+        "ru": "Matrix multiplication."
+      },
+      {
+        "latex": "\\det \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix} = ad - bc",
+        "en": "2 x 2 determinant.",
+        "ru": "2 x 2 determinant."
+      },
+      {
+        "latex": "A^{-1} = \\frac{1}{ad - bc} \\begin{pmatrix} d & -b \\\\ -c & a \\end{pmatrix}",
+        "en": "2 x 2 inverse.",
+        "ru": "2 x 2 inverse."
+      }
+    ],
+    "code": [
+      "import numpy as np",
+      "",
+      "A = np.array([[1, 2], [3, 4]])",
+      "B = np.array([[5, 6], [7, 8]])",
+      "print('A @ B =', (A @ B).tolist())",
+      "print('B @ A =', (B @ A).tolist(), '(different: not commutative)')",
+      "print('det(A) =', round(np.linalg.det(A), 3))",
+      "A_inv = np.linalg.inv(A)",
+      "print('inverse =', A_inv.round(3).tolist())",
+      "print('A @ A_inv =', np.round(A @ A_inv, 10).tolist())"
+    ],
+    "code_explanation": [
+      {
+        "en": "@ is matrix multiplication in NumPy.",
+        "ru": "NumPy mein @ matrix multiplication hai."
+      },
+      {
+        "en": "np.linalg.det and np.linalg.inv compute the determinant and inverse.",
+        "ru": "np.linalg.det aur np.linalg.inv determinant aur inverse nikalte hain."
+      },
+      {
+        "en": "Multiplying A by its inverse gives the identity matrix (rounded to hide tiny float errors).",
+        "ru": "A ko us ke inverse se zarab karne par identity matrix aati hai (float ki chhoti ghaltiyan chhupane ke liye round kiya)."
+      }
+    ],
+    "applications": [
+      {
+        "en": "Representing datasets and model weights in ML.",
+        "ru": "ML mein datasets aur model weights ko dikhana."
+      },
+      {
+        "en": "Solving systems of linear equations.",
+        "ru": "Linear equations ke systems hal karna."
+      },
+      {
+        "en": "Image transformations (rotation, scaling) in graphics.",
+        "ru": "Graphics mein images ko ghumana aur bara chhota karna."
+      }
+    ],
+    "exam_points": [
+      {
+        "en": "Check dimension compatibility before multiplying.",
+        "ru": "Zarab se pehle dimensions ka milna check karein."
+      },
+      {
+        "en": "Compute 2 x 2 and 3 x 3 determinants and a 2 x 2 inverse.",
+        "ru": "2 x 2 aur 3 x 3 determinant aur 2 x 2 inverse nikalein."
+      },
+      {
+        "en": "AB is not equal to BA in general; (AB)^T = B^T A^T.",
+        "ru": "Aam taur par AB, BA ke barabar nahi; (AB)^T = B^T A^T."
+      }
+    ],
+    "common_mistakes": [
+      {
+        "en": "Multiplying element by element instead of row-by-column.",
+        "ru": "Row-by-column ki jagah element by element zarab karna."
+      },
+      {
+        "en": "Assuming AB = BA.",
+        "ru": "AB = BA samajh lena."
+      },
+      {
+        "en": "Trying to invert a matrix whose determinant is 0.",
+        "ru": "Jis matrix ka determinant 0 ho us ka inverse nikalne ki koshish."
+      }
+    ],
+    "questions": [
+      {
+        "type": "numerical",
+        "kind": "problem",
+        "q": {
+          "en": "What is the determinant of [[2, 3], [1, 4]]?",
+          "ru": "[[2, 3], [1, 4]] ka determinant kya hai?"
+        },
+        "answer": 5,
+        "tolerance": 0.001,
+        "hints": [
+          {
+            "en": "ad - bc.",
+            "ru": "ad - bc."
+          }
+        ],
+        "explanation": {
+          "en": "2 x 4 - 3 x 1 = 8 - 3 = 5.",
+          "ru": "2 x 4 - 3 x 1 = 5."
+        },
+        "difficulty": "medium"
+      },
+      {
+        "type": "numerical",
+        "kind": "problem",
+        "q": {
+          "en": "For A = [[1, 2], [3, 4]] and B = [[5, 6], [7, 8]], what is entry (1,1) (top-left) of AB?",
+          "ru": "A = [[1, 2], [3, 4]] aur B = [[5, 6], [7, 8]] ke liye AB ka (1,1) (upar baayan) element kya hai?"
+        },
+        "answer": 19,
+        "tolerance": 0.001,
+        "hints": [
+          {
+            "en": "Row 1 of A times column 1 of B.",
+            "ru": "A ki row 1 zarab B ka column 1."
+          }
+        ],
+        "explanation": {
+          "en": "1 x 5 + 2 x 7 = 19.",
+          "ru": "1 x 5 + 2 x 7 = 19."
+        },
+        "difficulty": "medium"
+      },
+      {
+        "type": "mcq",
+        "kind": "conceptual",
+        "q": {
+          "en": "A is 3 x 2 and B is 2 x 4. What is the size of AB?",
+          "ru": "A 3 x 2 aur B 2 x 4 hai. AB ka size kya hoga?"
+        },
+        "options": [
+          {
+            "en": "3 x 4",
+            "ru": "3 x 4"
+          },
+          {
+            "en": "2 x 2",
+            "ru": "2 x 2"
+          },
+          {
+            "en": "4 x 3",
+            "ru": "4 x 3"
+          },
+          {
+            "en": "Not defined",
+            "ru": "Mumkin nahi"
+          }
+        ],
+        "answer": 0,
+        "hints": [
+          {
+            "en": "Outer dimensions give the result size.",
+            "ru": "Bahar wali dimensions natije ka size deti hain."
+          }
+        ],
+        "explanation": {
+          "en": "(3 x 2)(2 x 4): inner 2s match, result is 3 x 4.",
+          "ru": "(3 x 2)(2 x 4): andar ke 2 milte hain, natija 3 x 4."
+        },
+        "difficulty": "medium"
+      }
+    ],
+    "video_queries": [
+      "matrix multiplication determinant inverse linear algebra lecture",
+      "the determinant essence of linear algebra"
+    ],
+    "subtopics": [
+      {
+        "name": "Matrix multiplication",
+        "terms": [
+          "matrix multiplication",
+          "multiply"
+        ]
+      },
+      {
+        "name": "Determinant",
+        "terms": [
+          "determinant"
+        ]
+      },
+      {
+        "name": "Inverse",
+        "terms": [
+          "inverse"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "systems_of_equations",
+    "title": {
+      "en": "Systems of Linear Equations and Gaussian Elimination",
+      "ru": "Linear Equations ke Systems aur Gaussian Elimination"
+    },
+    "subject": "Linear Algebra",
+    "category": "computation",
+    "aliases": [
+      "gaussian elimination",
+      "system of linear equations",
+      "linear equations",
+      "row reduction",
+      "rref",
+      "row echelon form",
+      "augmented matrix",
+      "gauss jordan"
+    ],
+    "search_query": "gaussian elimination row echelon form system of linear equations",
+    "video_queries": [
+      "gaussian elimination row echelon form linear algebra lecture",
+      "solving systems of linear equations augmented matrix"
+    ],
+    "subtopics": [
+      {
+        "name": "Augmented matrix",
+        "terms": [
+          "augmented matrix"
+        ]
+      },
+      {
+        "name": "Row operations",
+        "terms": [
+          "row operation",
+          "elementary row"
+        ]
+      },
+      {
+        "name": "Echelon form",
+        "terms": [
+          "echelon form",
+          "row echelon",
+          "reduced row"
+        ]
+      },
+      {
+        "name": "Back substitution",
+        "terms": [
+          "back substitution"
+        ]
+      }
+    ],
+    "math_tool": "gaussian_elimination",
+    "intro": {
+      "en": "Many problems - from circuits to fitting a regression line - end in several linear equations that must hold at once. Gaussian elimination is the systematic way to solve them.",
+      "ru": "Bohat se masail - circuits se le kar regression line fit karne tak - kai linear equations par khatam hote hain jo ek saath sahi honi chahiyein. Gaussian elimination inhein hal karne ka munazzam tareeqa hai."
+    },
+    "definition": {
+      "en": "Gaussian elimination solves Ax = b by applying elementary row operations to the augmented matrix [A | b] until it is in row echelon form, then using back substitution. Gauss-Jordan elimination continues to reduced row echelon form (RREF), where the solution can be read directly.",
+      "ru": "Gaussian elimination Ax = b ko augmented matrix [A | b] par elementary row operations laga kar hal karta hai jab tak woh row echelon form mein na aa jaye, phir back substitution. Gauss-Jordan elimination reduced row echelon form (RREF) tak jata hai, jahan hal seedha parha ja sakta hai."
+    },
+    "explanation": {
+      "en": "The three elementary row operations - swap two rows, multiply a row by a non-zero number, add a multiple of one row to another - do not change the solution set. In echelon form each leading entry (pivot) is to the right of the one above and below it there are only zeros. A system can have exactly one solution (a pivot in every variable column), infinitely many (free variables) or none (a row like [0 0 0 | 5]). For a square A, exactly one solution exists if and only if det(A) is not 0. The number of pivots is the rank of A.",
+      "ru": "Teen elementary row operations - do rows ki jagah badalna, ek row ko non-zero number se zarab karna, ek row ka multiple doosri mein jama karna - hal ka set nahi badaltin. Echelon form mein har leading entry (pivot) upar wale pivot se daayen hoti hai aur us ke neeche sirf zero hote hain. System ka bilkul ek hal ho sakta hai (har variable column mein pivot), be-shumar hal (free variables) ya koi hal nahi ([0 0 0 | 5] jaisi row). Square A ke liye bilkul ek hal tabhi hai jab det(A) zero na ho. Pivots ki tadaad A ka rank hai."
+    },
+    "example": {
+      "en": "x + y = 3 and 2x - y = 0. Augmented [[1, 1 | 3], [2, -1 | 0]]. R2 = R2 - 2R1 gives [0, -3 | -6], so y = 2. Back substitution: x = 3 - 2 = 1. Solution (x, y) = (1, 2).",
+      "ru": "x + y = 3 aur 2x - y = 0. Augmented [[1, 1 | 3], [2, -1 | 0]]. R2 = R2 - 2R1 se [0, -3 | -6], yaani y = 2. Back substitution: x = 3 - 2 = 1. Hal (x, y) = (1, 2)."
+    },
+    "key_concepts": [
+      {
+        "term": "Row operations",
+        "en": "Swap, scale, add a multiple of another row.",
+        "ru": "Jagah badalna, scale karna, doosri row ka multiple jama karna."
+      },
+      {
+        "term": "Pivot",
+        "en": "First non-zero entry of a row in echelon form.",
+        "ru": "Echelon form mein row ka pehla non-zero element."
+      },
+      {
+        "term": "Consistency",
+        "en": "No row of the form [0 ... 0 | non-zero].",
+        "ru": "[0 ... 0 | non-zero] jaisi koi row na ho."
+      }
+    ],
+    "formulas": [
+      {
+        "latex": "A x = b \\; \\Rightarrow \\; [A \\mid b] \\xrightarrow{\\text{row ops}} [U \\mid c]",
+        "en": "Elimination turns the system into an upper-triangular one.",
+        "ru": "Elimination system ko upper-triangular bana deta hai."
+      }
+    ],
+    "code": [
+      "import numpy as np",
+      "import sympy as sp",
+      "",
+      "A = sp.Matrix([[1, 1], [2, -1]])",
+      "b = sp.Matrix([3, 0])",
+      "rref, pivots = A.row_join(b).rref()",
+      "print('RREF:', rref.tolist(), 'pivots:', pivots)",
+      "print('NumPy solve:', np.linalg.solve(np.array([[1, 1], [2, -1]], float), [3, 0]))"
+    ],
+    "code_explanation": [
+      {
+        "en": "row_join builds the augmented matrix\\; rref() performs Gauss-Jordan elimination exactly.",
+        "ru": "row_join augmented matrix banata hai\\; rref() Gauss-Jordan elimination bilkul durust karta hai."
+      },
+      {
+        "en": "np.linalg.solve gives the same solution numerically.",
+        "ru": "np.linalg.solve wahi hal numerically deta hai."
+      }
+    ],
+    "applications": [
+      {
+        "en": "Solving the normal equations of linear regression.",
+        "ru": "Linear regression ki normal equations hal karna."
+      },
+      {
+        "en": "Electric circuit analysis (Kirchhoff's laws).",
+        "ru": "Electric circuits ka tajziya (Kirchhoff ke qawaneen)."
+      },
+      {
+        "en": "Balancing chemical equations and network flows.",
+        "ru": "Chemical equations aur network flows ka tawazun."
+      }
+    ],
+    "exam_points": [
+      {
+        "en": "Reduce an augmented matrix step by step, naming each row operation.",
+        "ru": "Har row operation ka naam le kar augmented matrix ko step by step reduce karein."
+      },
+      {
+        "en": "Decide whether a system has one, infinitely many or no solutions.",
+        "ru": "Faisla karein ke system ka ek, be-shumar ya koi hal nahi."
+      },
+      {
+        "en": "Find the rank from the echelon form.",
+        "ru": "Echelon form se rank nikalein."
+      }
+    ],
+    "common_mistakes": [
+      {
+        "en": "Applying an operation to the coefficients but not to the right-hand side.",
+        "ru": "Operation coefficients par lagana lekin right-hand side par nahi."
+      },
+      {
+        "en": "Multiplying a row by zero (not allowed).",
+        "ru": "Row ko zero se zarab karna (ijazat nahi)."
+      },
+      {
+        "en": "Stopping before checking for an inconsistent row.",
+        "ru": "Inconsistent row check kiye baghair ruk jana."
+      }
+    ],
+    "questions": [
+      {
+        "type": "numerical",
+        "kind": "problem",
+        "difficulty": "easy",
+        "q": {
+          "en": "Solve x + y = 3, 2x - y = 0. What is y?",
+          "ru": "x + y = 3, 2x - y = 0 hal karein. y kya hai?"
+        },
+        "answer": 2,
+        "tolerance": 1e-09,
+        "hints": [
+          {
+            "en": "Add the equations to eliminate y, or R2 - 2R1.",
+            "ru": "y khatam karne ke liye equations jama karein, ya R2 - 2R1."
+          }
+        ],
+        "explanation": {
+          "en": "Adding gives 3x = 3, x = 1, so y = 2.",
+          "ru": "Jama karne se 3x = 3, x = 1, to y = 2."
+        }
+      },
+      {
+        "type": "mcq",
+        "kind": "conceptual",
+        "difficulty": "medium",
+        "q": {
+          "en": "During elimination you get the row [0 0 0 | 4]. The system has:",
+          "ru": "Elimination ke dauran row [0 0 0 | 4] aati hai. System ka:"
+        },
+        "options": [
+          {
+            "en": "No solution",
+            "ru": "Koi hal nahi"
+          },
+          {
+            "en": "Exactly one solution",
+            "ru": "Bilkul ek hal"
+          },
+          {
+            "en": "Infinitely many solutions",
+            "ru": "Be-shumar hal"
+          },
+          {
+            "en": "The solution x = 4",
+            "ru": "Hal x = 4"
+          }
+        ],
+        "answer": 0,
+        "hints": [
+          {
+            "en": "The row says 0 = 4.",
+            "ru": "Row kehti hai 0 = 4."
+          }
+        ],
+        "explanation": {
+          "en": "0 = 4 is impossible, so the system is inconsistent.",
+          "ru": "0 = 4 namumkin hai, is liye system inconsistent hai."
+        }
+      },
+      {
+        "type": "tf",
+        "kind": "conceptual",
+        "difficulty": "medium",
+        "q": {
+          "en": "Adding a multiple of one row to another row does not change the solution of the system.",
+          "ru": "Ek row ka multiple doosri row mein jama karne se system ka hal nahi badalta."
+        },
+        "answer": true,
+        "hints": [
+          {
+            "en": "It is one of the elementary row operations.",
+            "ru": "Yeh elementary row operations mein se hai."
+          }
+        ],
+        "explanation": {
+          "en": "True: elementary row operations preserve the solution set.",
+          "ru": "Sahi: elementary row operations hal ka set qaim rakhti hain."
+        }
+      },
+      {
+        "type": "numerical",
+        "kind": "exam",
+        "difficulty": "hard",
+        "q": {
+          "en": "What is the rank of [[1, 2, 3], [2, 4, 6], [1, 0, 1]]?",
+          "ru": "[[1, 2, 3], [2, 4, 6], [1, 0, 1]] ka rank kya hai?"
+        },
+        "answer": 2,
+        "tolerance": 0,
+        "hints": [
+          {
+            "en": "Row 2 is twice row 1.",
+            "ru": "Row 2, row 1 ka do guna hai."
+          }
+        ],
+        "explanation": {
+          "en": "R2 - 2R1 becomes a zero row\\; the other two rows are independent, so rank = 2.",
+          "ru": "R2 - 2R1 zero row ban jati hai\\; baqi do rows independent hain, is liye rank = 2."
+        }
+      }
+    ]
+  },
+  {
+    "id": "vector_spaces",
+    "title": {
+      "en": "Span, Basis, Rank and Linear Independence",
+      "ru": "Span, Basis, Rank aur Linear Independence"
+    },
+    "subject": "Linear Algebra",
+    "category": "foundations",
+    "aliases": [
+      "span",
+      "basis",
+      "linear independence",
+      "linearly independent",
+      "rank",
+      "vector space",
+      "subspace",
+      "null space",
+      "dimension",
+      "column space"
+    ],
+    "search_query": "span basis linear independence rank vector space",
+    "video_queries": [
+      "linear combinations span and basis vectors essence of linear algebra",
+      "linear independence rank null space lecture"
+    ],
+    "subtopics": [
+      {
+        "name": "Span",
+        "terms": [
+          "span"
+        ]
+      },
+      {
+        "name": "Linear independence",
+        "terms": [
+          "linearly independent",
+          "linear independence",
+          "linearly dependent"
+        ]
+      },
+      {
+        "name": "Basis",
+        "terms": [
+          "basis"
+        ]
+      },
+      {
+        "name": "Rank",
+        "terms": [
+          "rank"
+        ]
+      }
+    ],
+    "math_tool": "gaussian_elimination",
+    "intro": {
+      "en": "Which vectors can we build from a given set, and how many of them do we really need? Span, basis and rank answer these questions and describe the 'size' of a vector space.",
+      "ru": "Diye gaye vectors se kaun se vectors ban sakte hain, aur waqai kitne zaroori hain? Span, basis aur rank in sawalon ke jawab dete hain aur vector space ka 'size' batate hain."
+    },
+    "definition": {
+      "en": "The span of a set of vectors is the set of all their linear combinations. Vectors are linearly independent if none of them is a combination of the others. A basis is an independent set that spans the space\\; the number of basis vectors is the dimension, and the rank of a matrix is the dimension of its column space.",
+      "ru": "Vectors ke set ka span un ke tamam linear combinations ka set hai. Vectors linearly independent hain agar koi bhi baqi ka combination na ho. Basis aisa independent set hai jo poori space span kare\\; basis vectors ki tadaad dimension hai, aur matrix ka rank us ki column space ki dimension hai."
+    },
+    "explanation": {
+      "en": "Two non-parallel vectors in R^2 span the whole plane\\; two parallel vectors only span a line. To test independence, put the vectors as columns of a matrix and row reduce: they are independent exactly when every column has a pivot. The rank equals the number of pivots. The rank-nullity theorem says rank + nullity = number of columns, where nullity is the dimension of the null space (solutions of A x = 0). A square n x n matrix is invertible exactly when its rank is n, its columns are independent and its determinant is non-zero - these are equivalent statements.",
+      "ru": "R^2 mein do ghair-mutawazi (non-parallel) vectors poora plane span karte hain\\; do mutawazi vectors sirf ek line. Independence check karne ke liye vectors ko matrix ke columns bana kar row reduce karein: woh tabhi independent hain jab har column mein pivot ho. Rank pivots ki tadaad ke barabar hai. Rank-nullity theorem kehta hai rank + nullity = columns ki tadaad, jahan nullity null space (A x = 0 ke hal) ki dimension hai. Square n x n matrix tabhi invertible hai jab us ka rank n ho, columns independent hon aur determinant non-zero ho - yeh sab ek hi baat hain."
+    },
+    "example": {
+      "en": "Vectors (1, 2), (2, 4) are dependent because (2, 4) = 2 (1, 2)\\; they span only a line. Vectors (1, 0), (1, 1) are independent and form a basis of R^2: any (a, b) = (a - b)(1, 0) + b (1, 1).",
+      "ru": "Vectors (1, 2), (2, 4) dependent hain kyunki (2, 4) = 2 (1, 2)\\; yeh sirf ek line span karte hain. Vectors (1, 0), (1, 1) independent hain aur R^2 ka basis hain: har (a, b) = (a - b)(1, 0) + b (1, 1)."
+    },
+    "key_concepts": [
+      {
+        "term": "Span",
+        "en": "All linear combinations.",
+        "ru": "Tamam linear combinations."
+      },
+      {
+        "term": "Independence test",
+        "en": "Pivot in every column after row reduction.",
+        "ru": "Row reduction ke baad har column mein pivot."
+      },
+      {
+        "term": "Rank-nullity",
+        "en": "rank + nullity = number of columns.",
+        "ru": "rank + nullity = columns ki tadaad."
+      }
+    ],
+    "formulas": [
+      {
+        "latex": "\\text{rank}(A) + \\text{nullity}(A) = n",
+        "en": "Rank-nullity theorem for an m x n matrix.",
+        "ru": "m x n matrix ke liye rank-nullity theorem."
+      }
+    ],
+    "code": [
+      "import numpy as np",
+      "import sympy as sp",
+      "",
+      "A = sp.Matrix([[1, 2, 1], [2, 4, 0], [3, 6, 1]])",
+      "print('rank =', A.rank())",
+      "print('null space basis =', [list(v) for v in A.nullspace()])",
+      "print('NumPy rank =', np.linalg.matrix_rank(np.array(A.tolist(), float)))"
+    ],
+    "code_explanation": [
+      {
+        "en": "Column 2 is twice column 1, so the columns are dependent and the rank is 2.",
+        "ru": "Column 2, column 1 ka do guna hai, is liye columns dependent hain aur rank 2 hai."
+      },
+      {
+        "en": "rank + nullity = 2 + 1 = 3 columns, as the theorem says.",
+        "ru": "rank + nullity = 2 + 1 = 3 columns, jaisa theorem kehta hai."
+      }
+    ],
+    "applications": [
+      {
+        "en": "Detecting redundant (collinear) features in a dataset.",
+        "ru": "Dataset mein faltu (collinear) features pakarna."
+      },
+      {
+        "en": "Deciding whether a system of equations has a unique solution.",
+        "ru": "Faisla karna ke equations ke system ka ek hi hal hai ya nahi."
+      },
+      {
+        "en": "Dimensionality and low-rank approximation in data compression.",
+        "ru": "Data compression mein dimensionality aur low-rank approximation."
+      }
+    ],
+    "exam_points": [
+      {
+        "en": "Test a set of vectors for independence by row reduction.",
+        "ru": "Row reduction se vectors ki independence check karein."
+      },
+      {
+        "en": "Find a basis and the dimension of a column space and null space.",
+        "ru": "Column space aur null space ka basis aur dimension nikalein."
+      },
+      {
+        "en": "State and apply the rank-nullity theorem.",
+        "ru": "Rank-nullity theorem likhein aur lagayein."
+      }
+    ],
+    "common_mistakes": [
+      {
+        "en": "Thinking more vectors always means a bigger span.",
+        "ru": "Yeh samajhna ke zyada vectors ka matlab hamesha bara span."
+      },
+      {
+        "en": "Taking basis vectors from the reduced matrix instead of the original columns for the column space.",
+        "ru": "Column space ke liye asal columns ki jagah reduced matrix se basis vectors lena."
+      },
+      {
+        "en": "Believing n vectors in R^m with n > m can be independent.",
+        "ru": "Yeh maanna ke R^m mein n > m vectors independent ho sakte hain."
+      }
+    ],
+    "questions": [
+      {
+        "type": "numerical",
+        "kind": "problem",
+        "difficulty": "medium",
+        "q": {
+          "en": "A 4 x 6 matrix has rank 3. What is the dimension of its null space?",
+          "ru": "4 x 6 matrix ka rank 3 hai. Us ki null space ki dimension kya hai?"
+        },
+        "answer": 3,
+        "tolerance": 0,
+        "hints": [
+          {
+            "en": "rank + nullity = number of columns.",
+            "ru": "rank + nullity = columns ki tadaad."
+          }
+        ],
+        "explanation": {
+          "en": "6 - 3 = 3.",
+          "ru": "6 - 3 = 3."
+        }
+      },
+      {
+        "type": "tf",
+        "kind": "conceptual",
+        "difficulty": "easy",
+        "q": {
+          "en": "Three vectors in R^2 can be linearly independent.",
+          "ru": "R^2 mein teen vectors linearly independent ho sakte hain."
+        },
+        "answer": false,
+        "hints": [
+          {
+            "en": "The dimension of R^2 is 2.",
+            "ru": "R^2 ki dimension 2 hai."
+          }
+        ],
+        "explanation": {
+          "en": "False: at most 2 independent vectors fit in a 2-dimensional space.",
+          "ru": "Ghalat: 2-dimensional space mein zyada se zyada 2 independent vectors aate hain."
+        }
+      },
+      {
+        "type": "mcq",
+        "kind": "conceptual",
+        "difficulty": "medium",
+        "q": {
+          "en": "Which statement is equivalent to 'the n x n matrix A is invertible'?",
+          "ru": "Kaunsa bayan 'n x n matrix A invertible hai' ke barabar hai?"
+        },
+        "options": [
+          {
+            "en": "rank(A) = n",
+            "ru": "rank(A) = n"
+          },
+          {
+            "en": "A has a zero row",
+            "ru": "A mein zero row hai"
+          },
+          {
+            "en": "det(A) = 0",
+            "ru": "det(A) = 0"
+          },
+          {
+            "en": "The columns of A are dependent",
+            "ru": "A ke columns dependent hain"
+          }
+        ],
+        "answer": 0,
+        "hints": [
+          {
+            "en": "Full rank means a pivot in every column.",
+            "ru": "Full rank ka matlab har column mein pivot."
+          }
+        ],
+        "explanation": {
+          "en": "Invertible = full rank = independent columns = non-zero determinant.",
+          "ru": "Invertible = full rank = independent columns = non-zero determinant."
+        }
+      },
+      {
+        "type": "short",
+        "kind": "exam",
+        "difficulty": "hard",
+        "q": {
+          "en": "What is a basis of a vector space?",
+          "ru": "Vector space ka basis kya hai?"
+        },
+        "answer": "A basis is a set of linearly independent vectors that spans the whole space, so every vector can be written uniquely as a linear combination of the basis vectors\\; the number of basis vectors is the dimension.",
+        "keywords": [
+          "independent",
+          "span",
+          "linear combination",
+          "dimension"
+        ],
+        "min_keywords": 2,
+        "hints": [
+          {
+            "en": "Two conditions: independent and ...",
+            "ru": "Do shartein: independent aur ..."
+          }
+        ],
+        "explanation": {
+          "en": "Independent + spanning = basis\\; its size is the dimension.",
+          "ru": "Independent + span = basis\\; is ka size dimension hai."
+        }
+      }
+    ]
+  },
+  {
+    "id": "linear_transformations",
+    "title": {
+      "en": "Linear Transformations",
+      "ru": "Linear Transformations"
+    },
+    "subject": "Linear Algebra",
+    "category": "advanced",
+    "aliases": [
+      "linear transformation",
+      "linear transformations",
+      "linear map",
+      "rotation matrix",
+      "matrix transformation",
+      "shear",
+      "scaling matrix",
+      "composition"
+    ],
+    "search_query": "linear transformations and matrices rotation scaling",
+    "video_queries": [
+      "linear transformations and matrices essence of linear algebra",
+      "matrix multiplication as composition linear transformations"
+    ],
+    "subtopics": [
+      {
+        "name": "Basis vectors i and j",
+        "terms": [
+          "i hat",
+          "j hat",
+          "basis vector"
+        ]
+      },
+      {
+        "name": "Rotation",
+        "terms": [
+          "rotation",
+          "rotate"
+        ]
+      },
+      {
+        "name": "Shear",
+        "terms": [
+          "shear"
+        ]
+      },
+      {
+        "name": "Composition",
+        "terms": [
+          "composition"
+        ]
+      }
+    ],
+    "math_tool": "matrix_multiply",
+    "intro": {
+      "en": "Every matrix is a machine that moves vectors: it can rotate, stretch, shear or flip space. Seeing matrices as transformations makes matrix multiplication and determinants intuitive.",
+      "ru": "Har matrix vectors ko hilane wali machine hai: yeh space ko ghuma, khench, tedha (shear) ya ulta kar sakti hai. Matrices ko transformations ke taur par dekhne se matrix multiplication aur determinant aasan samajh aate hain."
+    },
+    "definition": {
+      "en": "A transformation T is linear if T(u + v) = T(u) + T(v) and T(c u) = c T(u). Every linear transformation of R^n can be written as multiplication by a matrix whose columns are the images of the basis vectors.",
+      "ru": "Transformation T linear hai agar T(u + v) = T(u) + T(v) aur T(c u) = c T(u). R^n ki har linear transformation ek matrix se zarab ke taur par likhi ja sakti hai jis ke columns basis vectors ki images hain."
+    },
+    "explanation": {
+      "en": "In 2-D, a matrix [[a, b], [c, d]] sends the basis vector i = (1, 0) to its first column (a, c) and j = (0, 1) to its second column (b, d)\\; every other vector follows because of linearity. A rotation by angle theta is [[cos, -sin], [sin, cos]]\\; a scaling is a diagonal matrix\\; a shear is [[1, k], [0, 1]]. Applying transformation B and then A equals multiplying by A B, which is why matrix multiplication is not commutative (rotating then shearing differs from shearing then rotating). The absolute determinant is the factor by which areas are scaled\\; a negative determinant means orientation is flipped, and determinant 0 means space is squashed onto a line or point.",
+      "ru": "2-D mein matrix [[a, b], [c, d]] basis vector i = (1, 0) ko apne pehle column (a, c) aur j = (0, 1) ko doosre column (b, d) par bhejti hai\\; baqi har vector linearity ki wajah se peeche chalta hai. Angle theta ki rotation [[cos, -sin], [sin, cos]] hai\\; scaling diagonal matrix hai\\; shear [[1, k], [0, 1]] hai. Pehle B aur phir A lagana A B se zarab ke barabar hai, isi liye matrix multiplication commutative nahi (pehle ghumana phir shear karna, pehle shear phir ghumane se mukhtalif hai). Determinant ki absolute value batati hai areas kitne guna hote hain\\; manfi determinant ka matlab orientation ulat gayi, aur determinant 0 ka matlab space ek line ya point par dab gayi."
+    },
+    "example": {
+      "en": "Rotate (1, 0) by 90 degrees: the matrix [[0, -1], [1, 0]] gives (0, 1). Shear [[1, 1], [0, 1]] sends (0, 1) to (1, 1) but keeps (1, 0) fixed. Its determinant is 1, so areas are unchanged.",
+      "ru": "(1, 0) ko 90 degree ghumayein: matrix [[0, -1], [1, 0]] se (0, 1) milta hai. Shear [[1, 1], [0, 1]] (0, 1) ko (1, 1) par bhejta hai lekin (1, 0) ko wahin rakhta hai. Is ka determinant 1 hai, is liye areas nahi badalte."
+    },
+    "key_concepts": [
+      {
+        "term": "Columns = images of basis vectors",
+        "en": "Read the transformation from the columns.",
+        "ru": "Transformation columns se parhein."
+      },
+      {
+        "term": "Composition",
+        "en": "Doing B then A = matrix A B.",
+        "ru": "Pehle B phir A = matrix A B."
+      },
+      {
+        "term": "Determinant as area factor",
+        "en": "How much the transformation scales areas.",
+        "ru": "Transformation areas ko kitna barhati hai."
+      }
+    ],
+    "formulas": [
+      {
+        "latex": "R_\\theta = \\begin{pmatrix} \\cos\\theta & -\\sin\\theta \\\\ \\sin\\theta & \\cos\\theta \\end{pmatrix}",
+        "en": "Rotation matrix.",
+        "ru": "Rotation matrix."
+      },
+      {
+        "latex": "T(x) = A x, \\quad (A \\circ B)(x) = A (B x) = (A B) x",
+        "en": "Matrix form and composition.",
+        "ru": "Matrix form aur composition."
+      }
+    ],
+    "code": [
+      "import numpy as np",
+      "theta = np.pi / 2",
+      "R = np.array([[np.cos(theta), -np.sin(theta)], [np.sin(theta), np.cos(theta)]])",
+      "S = np.array([[1, 1], [0, 1]])  # shear",
+      "x = np.array([1, 0])",
+      "print('rotate:', (R @ x).round(3))",
+      "print('rotate then shear:', (S @ R @ x).round(3))",
+      "print('shear then rotate:', (R @ S @ x).round(3))",
+      "print('det(shear) =', np.linalg.det(S))"
+    ],
+    "code_explanation": [
+      {
+        "en": "S @ R @ x applies R first, then S.",
+        "ru": "S @ R @ x pehle R lagata hai, phir S."
+      },
+      {
+        "en": "The two orders give different vectors: composition is not commutative.",
+        "ru": "Do tarteebein mukhtalif vectors deti hain: composition commutative nahi."
+      }
+    ],
+    "applications": [
+      {
+        "en": "Computer graphics: rotating, scaling and projecting 3-D models.",
+        "ru": "Computer graphics: 3-D models ko ghumana, scale aur project karna."
+      },
+      {
+        "en": "Each layer of a neural network applies a linear transformation (then a non-linearity).",
+        "ru": "Neural network ki har layer linear transformation lagati hai (phir non-linearity)."
+      },
+      {
+        "en": "Image processing and robotics coordinate frames.",
+        "ru": "Image processing aur robotics ke coordinate frames."
+      }
+    ],
+    "exam_points": [
+      {
+        "en": "Write the matrix of a transformation from the images of i and j.",
+        "ru": "i aur j ki images se transformation ki matrix likhein."
+      },
+      {
+        "en": "Check whether a given map is linear.",
+        "ru": "Check karein ke diya gaya map linear hai ya nahi."
+      },
+      {
+        "en": "Interpret the determinant geometrically.",
+        "ru": "Determinant ka geometric matlab batayein."
+      }
+    ],
+    "common_mistakes": [
+      {
+        "en": "Putting the images of basis vectors in rows instead of columns.",
+        "ru": "Basis vectors ki images columns ki jagah rows mein rakhna."
+      },
+      {
+        "en": "Applying composed transformations in the wrong order.",
+        "ru": "Jore hue transformations ghalat tarteeb mein lagana."
+      },
+      {
+        "en": "Calling a translation (x + b) linear - it moves the origin.",
+        "ru": "Translation (x + b) ko linear kehna - yeh origin ko hila deti hai."
+      }
+    ],
+    "questions": [
+      {
+        "type": "mcq",
+        "kind": "conceptual",
+        "difficulty": "easy",
+        "q": {
+          "en": "A matrix sends (1, 0) to (2, 0) and (0, 1) to (0, 3). Which matrix is it?",
+          "ru": "Matrix (1, 0) ko (2, 0) aur (0, 1) ko (0, 3) par bhejti hai. Kaunsi matrix hai?"
+        },
+        "options": [
+          {
+            "en": "[[2, 0], [0, 3]]",
+            "ru": "[[2, 0], [0, 3]]"
+          },
+          {
+            "en": "[[0, 2], [3, 0]]",
+            "ru": "[[0, 2], [3, 0]]"
+          },
+          {
+            "en": "[[2, 3], [0, 0]]",
+            "ru": "[[2, 3], [0, 0]]"
+          },
+          {
+            "en": "[[3, 0], [0, 2]]",
+            "ru": "[[3, 0], [0, 2]]"
+          }
+        ],
+        "answer": 0,
+        "hints": [
+          {
+            "en": "The images are the columns.",
+            "ru": "Images columns hain."
+          }
+        ],
+        "explanation": {
+          "en": "Columns (2, 0) and (0, 3) give [[2, 0], [0, 3]], a scaling.",
+          "ru": "Columns (2, 0) aur (0, 3) se [[2, 0], [0, 3]], yaani scaling."
+        }
+      },
+      {
+        "type": "numerical",
+        "kind": "problem",
+        "difficulty": "medium",
+        "q": {
+          "en": "A transformation has matrix [[3, 1], [1, 2]]. By what factor does it scale areas?",
+          "ru": "Transformation ki matrix [[3, 1], [1, 2]] hai. Yeh areas ko kitne guna karti hai?"
+        },
+        "answer": 5,
+        "tolerance": 1e-09,
+        "hints": [
+          {
+            "en": "The area factor is |det|.",
+            "ru": "Area factor |det| hai."
+          }
+        ],
+        "explanation": {
+          "en": "det = 3 x 2 - 1 x 1 = 5.",
+          "ru": "det = 3 x 2 - 1 x 1 = 5."
+        }
+      },
+      {
+        "type": "tf",
+        "kind": "conceptual",
+        "difficulty": "medium",
+        "q": {
+          "en": "T(x) = x + (1, 0) is a linear transformation.",
+          "ru": "T(x) = x + (1, 0) linear transformation hai."
+        },
+        "answer": false,
+        "hints": [
+          {
+            "en": "Where does T send the zero vector?",
+            "ru": "T zero vector ko kahan bhejta hai?"
+          }
+        ],
+        "explanation": {
+          "en": "False: a linear map must send 0 to 0, but T(0) = (1, 0).",
+          "ru": "Ghalat: linear map 0 ko 0 par bhejta hai, lekin T(0) = (1, 0)."
+        }
+      }
+    ]
+  },
+  {
+    "id": "eigenvalues",
+    "title": {
+      "en": "Eigenvalues and Eigenvectors",
+      "ru": "Eigenvalues aur Eigenvectors"
+    },
+    "subject": "Linear Algebra",
+    "category": "advanced",
+    "aliases": [
+      "eigenvalue",
+      "eigenvalues",
+      "eigenvector",
+      "eigenvectors",
+      "characteristic equation",
+      "characteristic polynomial",
+      "diagonalization",
+      "diagonalisation"
+    ],
+    "search_query": "eigenvalues eigenvectors characteristic equation",
+    "video_queries": [
+      "eigenvectors and eigenvalues essence of linear algebra",
+      "how to find eigenvalues and eigenvectors 2x2 matrix example"
+    ],
+    "subtopics": [
+      {
+        "name": "Eigenvector",
+        "terms": [
+          "eigenvector"
+        ]
+      },
+      {
+        "name": "Characteristic equation",
+        "terms": [
+          "characteristic equation",
+          "characteristic polynomial",
+          "determinant of a minus lambda"
+        ]
+      },
+      {
+        "name": "Diagonalization",
+        "terms": [
+          "diagonal"
+        ]
+      }
+    ],
+    "math_tool": "eigen",
+    "intro": {
+      "en": "Most vectors change direction when a matrix acts on them. Eigenvectors are the special directions that are only stretched. They power PCA, PageRank and the analysis of dynamic systems.",
+      "ru": "Zyada tar vectors matrix lagne par apni simt badal lete hain. Eigenvectors woh khaas simtein hain jo sirf khenchti hain. PCA, PageRank aur dynamic systems ka tajziya inhi par chalta hai."
+    },
+    "definition": {
+      "en": "A non-zero vector v is an eigenvector of a square matrix A with eigenvalue lambda if A v = lambda v. Eigenvalues are the roots of the characteristic equation det(A - lambda I) = 0.",
+      "ru": "Non-zero vector v square matrix A ka eigenvector hai jis ki eigenvalue lambda hai agar A v = lambda v. Eigenvalues characteristic equation det(A - lambda I) = 0 ke roots hain."
+    },
+    "explanation": {
+      "en": "To find them: form A - lambda I, set its determinant to zero, solve for lambda, then for each lambda solve (A - lambda I) v = 0 for the eigenvectors. For a 2 x 2 matrix the characteristic equation is lambda^2 - trace(A) lambda + det(A) = 0, so the eigenvalues add up to the trace and multiply to the determinant. If an n x n matrix has n independent eigenvectors it can be diagonalised: A = P D P^-1, where D holds the eigenvalues\\; powers become easy (A^k = P D^k P^-1). Symmetric matrices have real eigenvalues and orthogonal eigenvectors - the basis of PCA, where the eigenvectors of the covariance matrix are the principal directions.",
+      "ru": "Nikalne ke liye: A - lambda I banayein, us ka determinant zero rakhein, lambda hal karein, phir har lambda ke liye (A - lambda I) v = 0 se eigenvectors nikalein. 2 x 2 matrix ke liye characteristic equation lambda^2 - trace(A) lambda + det(A) = 0 hai, is liye eigenvalues ka sum trace aur zarab determinant ke barabar hai. Agar n x n matrix ke n independent eigenvectors hon to use diagonalise kiya ja sakta hai: A = P D P^-1, jahan D mein eigenvalues hain\\; powers aasan ho jati hain (A^k = P D^k P^-1). Symmetric matrices ki eigenvalues real aur eigenvectors orthogonal hote hain - yahi PCA ki buniyad hai, jahan covariance matrix ke eigenvectors principal simtein hain."
+    },
+    "example": {
+      "en": "A = [[2, 1], [1, 2]]. trace = 4, det = 3, so lambda^2 - 4 lambda + 3 = 0 and lambda = 1 or 3. For lambda = 3: (A - 3I) = [[-1, 1], [1, -1]], so v = (1, 1). For lambda = 1: v = (1, -1). Check: A (1, 1) = (3, 3) = 3 (1, 1).",
+      "ru": "A = [[2, 1], [1, 2]]. trace = 4, det = 3, to lambda^2 - 4 lambda + 3 = 0 aur lambda = 1 ya 3. lambda = 3 ke liye: (A - 3I) = [[-1, 1], [1, -1]], to v = (1, 1). lambda = 1 ke liye v = (1, -1). Check: A (1, 1) = (3, 3) = 3 (1, 1)."
+    },
+    "key_concepts": [
+      {
+        "term": "A v = lambda v",
+        "en": "The defining equation.",
+        "ru": "Tareef wali equation."
+      },
+      {
+        "term": "Trace and determinant",
+        "en": "Sum and product of the eigenvalues.",
+        "ru": "Eigenvalues ka sum aur zarab."
+      },
+      {
+        "term": "Diagonalisation",
+        "en": "A = P D P^-1 with eigenvectors in P.",
+        "ru": "A = P D P^-1, P mein eigenvectors."
+      }
+    ],
+    "formulas": [
+      {
+        "latex": "\\det(A - \\lambda I) = 0",
+        "en": "Characteristic equation.",
+        "ru": "Characteristic equation."
+      },
+      {
+        "latex": "\\lambda_1 + \\lambda_2 = \\text{tr}(A), \\quad \\lambda_1 \\lambda_2 = \\det(A)",
+        "en": "2 x 2 checks.",
+        "ru": "2 x 2 ke checks."
+      }
+    ],
+    "code": [
+      "import numpy as np",
+      "A = np.array([[2, 1], [1, 2]])",
+      "values, vectors = np.linalg.eig(A)",
+      "print('eigenvalues:', values)",
+      "print('eigenvectors (columns):', vectors.round(3))",
+      "v = vectors[:, 0]",
+      "print('A v =', (A @ v).round(3), ' lambda v =', (values[0] * v).round(3))"
+    ],
+    "code_explanation": [
+      {
+        "en": "np.linalg.eig returns eigenvalues and unit eigenvectors as columns.",
+        "ru": "np.linalg.eig eigenvalues aur columns mein unit eigenvectors deta hai."
+      },
+      {
+        "en": "The last line checks A v = lambda v numerically.",
+        "ru": "Aakhri line A v = lambda v ko numerically check karti hai."
+      }
+    ],
+    "applications": [
+      {
+        "en": "Principal Component Analysis (PCA) in machine learning.",
+        "ru": "Machine learning mein Principal Component Analysis (PCA)."
+      },
+      {
+        "en": "Google's PageRank (dominant eigenvector of the link matrix).",
+        "ru": "Google ka PageRank (link matrix ka bara eigenvector)."
+      },
+      {
+        "en": "Stability of systems and vibration modes in engineering.",
+        "ru": "Engineering mein systems ka istehkam aur vibration modes."
+      }
+    ],
+    "exam_points": [
+      {
+        "en": "Find eigenvalues of a 2 x 2 / 3 x 3 matrix from the characteristic equation.",
+        "ru": "Characteristic equation se 2 x 2 / 3 x 3 matrix ki eigenvalues nikalein."
+      },
+      {
+        "en": "Find eigenvectors by solving (A - lambda I) v = 0.",
+        "ru": "(A - lambda I) v = 0 hal kar ke eigenvectors nikalein."
+      },
+      {
+        "en": "Use trace/determinant to check answers.",
+        "ru": "Jawab check karne ke liye trace/determinant istemal karein."
+      }
+    ],
+    "common_mistakes": [
+      {
+        "en": "Giving the zero vector as an eigenvector.",
+        "ru": "Zero vector ko eigenvector batana."
+      },
+      {
+        "en": "Subtracting lambda from every entry instead of only the diagonal.",
+        "ru": "Lambda sirf diagonal ki jagah har element se minus karna."
+      },
+      {
+        "en": "Forgetting that any non-zero multiple of an eigenvector is also an eigenvector.",
+        "ru": "Bhool jana ke eigenvector ka har non-zero multiple bhi eigenvector hai."
+      }
+    ],
+    "questions": [
+      {
+        "type": "numerical",
+        "kind": "problem",
+        "difficulty": "medium",
+        "q": {
+          "en": "What is the largest eigenvalue of [[4, 1], [2, 3]]?",
+          "ru": "[[4, 1], [2, 3]] ki sab se bari eigenvalue kya hai?"
+        },
+        "answer": 5,
+        "tolerance": 1e-06,
+        "hints": [
+          {
+            "en": "trace = 7, det = 10.",
+            "ru": "trace = 7, det = 10."
+          },
+          {
+            "en": "Solve lambda^2 - 7 lambda + 10 = 0.",
+            "ru": "lambda^2 - 7 lambda + 10 = 0 hal karein."
+          }
+        ],
+        "explanation": {
+          "en": "Roots are 2 and 5\\; the largest is 5.",
+          "ru": "Roots 2 aur 5 hain\\; sab se bari 5."
+        }
+      },
+      {
+        "type": "tf",
+        "kind": "conceptual",
+        "difficulty": "easy",
+        "q": {
+          "en": "The zero vector can be an eigenvector.",
+          "ru": "Zero vector eigenvector ho sakta hai."
+        },
+        "answer": false,
+        "hints": [
+          {
+            "en": "A 0 = lambda 0 holds for every lambda.",
+            "ru": "A 0 = lambda 0 har lambda ke liye sahi hai."
+          }
+        ],
+        "explanation": {
+          "en": "False: eigenvectors are non-zero by definition.",
+          "ru": "Ghalat: tareef ke mutabiq eigenvectors non-zero hote hain."
+        }
+      },
+      {
+        "type": "mcq",
+        "kind": "conceptual",
+        "difficulty": "medium",
+        "q": {
+          "en": "The eigenvalues of a triangular matrix are:",
+          "ru": "Triangular matrix ki eigenvalues kya hoti hain?"
+        },
+        "options": [
+          {
+            "en": "Its diagonal entries",
+            "ru": "Us ke diagonal elements"
+          },
+          {
+            "en": "Always 0 and 1",
+            "ru": "Hamesha 0 aur 1"
+          },
+          {
+            "en": "Its first row",
+            "ru": "Us ki pehli row"
+          },
+          {
+            "en": "Impossible to tell",
+            "ru": "Batana namumkin"
+          }
+        ],
+        "answer": 0,
+        "hints": [
+          {
+            "en": "det of a triangular matrix = product of the diagonal.",
+            "ru": "Triangular matrix ka det = diagonal ka zarab."
+          }
+        ],
+        "explanation": {
+          "en": "det(A - lambda I) is the product of (a_ii - lambda), so the roots are the diagonal entries.",
+          "ru": "det(A - lambda I) = (a_ii - lambda) ka zarab, to roots diagonal elements hain."
+        }
+      },
+      {
+        "type": "short",
+        "kind": "application",
+        "difficulty": "hard",
+        "q": {
+          "en": "How are eigenvectors used in PCA?",
+          "ru": "PCA mein eigenvectors kaise istemal hote hain?"
+        },
+        "answer": "PCA computes the covariance matrix of the data\\; its eigenvectors are the principal component directions and the eigenvalues give the variance along them, so projecting onto the top eigenvectors reduces dimensions while keeping most variance.",
+        "keywords": [
+          "covariance",
+          "principal",
+          "variance",
+          "project"
+        ],
+        "min_keywords": 2,
+        "hints": [
+          {
+            "en": "Which matrix of the data is decomposed?",
+            "ru": "Data ki kaunsi matrix decompose hoti hai?"
+          }
+        ],
+        "explanation": {
+          "en": "Eigenvectors of the covariance matrix = principal directions\\; eigenvalues = variance explained.",
+          "ru": "Covariance matrix ke eigenvectors = principal simtein\\; eigenvalues = samjhai gayi variance."
+        }
+      }
+    ]
+  }
+]

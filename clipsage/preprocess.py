@@ -152,6 +152,7 @@ def process_video(video: dict, transcript: dict) -> List[dict]:
             "title": video.get("title", ""),
             "channel_title": video.get("channel_title", ""),
             "subject": video.get("subject", ""),
+            "topic_id": video.get("topic_id", "") or "",
             "transcript_kind": transcript.get("kind", ""),
             "start": window[0]["start"],
             "end": window[-1]["end"],

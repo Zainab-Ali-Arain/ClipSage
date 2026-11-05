@@ -8,7 +8,6 @@ from clipsage.knowledge import find_topic, load_topics
 from clipsage.lectures import (ask_lecture, explain_range, parse_time_range, segment_references,
                                video_timeline)
 from clipsage.lessons import build_lesson
-from clipsage.progress import ProgressStore
 from clipsage.quiz import cloze_from_lectures, grade, parse_number
 from clipsage.retrieve import get_engine
 
@@ -37,7 +36,9 @@ def test_roman_urdu_uses_latin_letters_only():
             assert all(ord(c) < 0x0600 or ord(c) > 0x06FF for c in t[field]["ru"]), t["id"]
 
 
-@pytest.mark.parametrize("tid", [t for t, v in load_topics().items() if not v.get("code_needs_model")])
+@pytest.mark.parametrize("tid", [t for t, v in load_topics().items()
+                                 if v.get("code") and not v.get("code_needs_model")
+                                 and v.get("code_language", "python") == "python"])
 def test_lesson_code_runs(tid):
     code = load_topics()[tid]["code"]
     with contextlib.redirect_stdout(io.StringIO()):
@@ -75,21 +76,6 @@ def test_grading():
     bad = grade(short, "the learning rate is too high")
     assert good["status"] in ("correct", "partial") and good["score"] > bad["score"]
     assert bad["status"] == "incorrect"
-
-
-def test_progress_store(tmp_path):
-    store = ProgressStore(tmp_path / "p.json")
-    store.add_search("overfitting")
-    store.add_search("kmeans")
-    store.add_search("overfitting")
-    assert [s["q"] for s in store.data["searches"]] == ["overfitting", "kmeans"]
-    assert store.toggle_saved("svm", "SVM") and store.is_saved("svm")
-    store.record_answer("svm", "q1", False)
-    store.record_answer("svm", "q1", True)
-    store.record_answer("svm", "q2", False)
-    summary = ProgressStore(tmp_path / "p.json").summary()  # reload from disk
-    assert summary["questions_answered"] == 2 and summary["questions_correct"] == 1
-    assert not store.toggle_saved("svm", "SVM")
 
 
 # --------------------------------------------------------------------------- lectures

@@ -8,12 +8,13 @@ import streamlit as st
 from .. import mathsolve as M
 from ..i18n import UI
 from ..knowledge import load_topics
-from .common import S, T, TL, badges, bi_html, esc, get_progress, open_topic, show
+from .common import activity, badges, en as S, esc, open_topic, ui as T, ui as TL
+from .common import content_html as bi_html, show_content as show
 
 LAYOUT = dict(template="plotly_white", paper_bgcolor="#FFFFFF", plot_bgcolor="#F5F9FF", height=380,
               margin=dict(l=40, r=20, t=40, b=40), font=dict(color="#243447"))
-RELATED_TOPIC = {"matrix_multiply": "matrices", "determinant": "matrices", "inverse": "matrices", "eigen": "matrices",
-                 "vectors": "cosine_similarity", "statistics": "statistics_basics", "bayes": "probability_bayes",
+RELATED_TOPIC = {"gaussian_elimination": "systems_of_equations", "matrix_multiply": "matrices", "determinant": "matrices", "inverse": "matrices", "eigen": "eigenvalues",
+                 "vectors": "vectors", "statistics": "statistics_basics", "bayes": "probability_bayes",
                  "binomial": "probability_bayes", "derivative": "derivatives", "integral": "derivatives",
                  "optimize": "derivatives", "equation": "derivatives", "gradient_descent": "gradient_descent"}
 
@@ -118,7 +119,7 @@ def show_solution(res: dict) -> None:
     topics = load_topics()
     if tid in topics:
         st.button(f"\U0001F4D8 {S(topics[tid]['title'])}", key=f"math_lesson_{res['kind']}",
-                  on_click=open_topic, args=(topics[tid]["title"]["en"],))
+                  on_click=open_topic, args=(tid, topics[tid]["subject"]))
 
 
 def _form_inputs(kind: str):
@@ -127,6 +128,10 @@ def _form_inputs(kind: str):
         a = st.text_area("A (rows separated by ;)", "1 2; 3 4", key="m_a")
         b = st.text_area("B", "5 6; 7 8", key="m_b")
         return lambda: M.matrix_multiply(M.parse_matrix(a), M.parse_matrix(b))
+    if kind == "gaussian_elimination":
+        a = st.text_area("Augmented matrix [A | b] (rows separated by ;, last column = b)",
+                         "2 1 -1 8; -3 -1 2 -11; -2 1 2 -3", key="m_gauss")
+        return lambda: M.gaussian_elimination(M.parse_matrix(a))
     if kind in ("determinant", "inverse", "eigen"):
         a = st.text_area("A (rows separated by ;)", "2 1; 1 3" if kind != "determinant" else "2 0 1; 1 3 2; 1 1 1",
                          key=f"m_{kind}")
@@ -179,8 +184,8 @@ def _form_inputs(kind: str):
 
 def math_page() -> None:
     st.title(TL("nav_math"))
-    show({"en": "Every answer here is calculated and double-checked with SymPy / NumPy / SciPy, and explained step by step.",
-          "ru": "Yahan har jawab SymPy / NumPy / SciPy se nikala aur dobara check kiya jata hai, aur step by step samjhaya jata hai."})
+    st.caption("Every answer is calculated and double-checked with SymPy / NumPy / SciPy and explained step by step "
+               "in your response language.")
     tab_solve, tab_free, tab_practice = st.tabs([TL("solve"), "⌨️ " + S({"en": "Type a question", "ru": "Sawal likhein"}),
                                                  "\U0001F3AF " + TL("practice_problem")])
     with tab_solve:
@@ -197,7 +202,7 @@ def math_page() -> None:
             show_solution(res)
 
     with tab_free:
-        show(UI["free_text_math"])
+        st.caption(UI["free_text_math"]["en"])
         text = st.text_input("question", "derivative of x^3 + 2x at x = 2", label_visibility="collapsed", key="math_free")
         if st.button(TL("solve"), key="math_free_btn", type="primary"):
             try:
@@ -222,7 +227,8 @@ def math_page() -> None:
             res = M.check_practice(prob, ans)
             state["tries"] += 1
             state["solved"] = res["status"] == "correct"
-            get_progress().record_math(state["solved"])
+            activity().add_practice(st.session_state.get("subject") or "Linear Algebra", "maths", prob["q"]["en"],
+                                    state["solved"])
             state["last"] = res["status"]
         if c2.button(TL("hint"), key="pr_hint"):
             state["hint"] = True

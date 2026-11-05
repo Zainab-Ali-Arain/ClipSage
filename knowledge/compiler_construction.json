@@ -1,0 +1,462 @@
+[
+  {
+    "id": "compiler_phases",
+    "title": {"en": "Phases of a Compiler", "ru": "Compiler ke Phases"},
+    "subject": "Compiler Construction",
+    "category": "foundations",
+    "aliases": ["phases of compiler", "compiler phases", "compiler", "front end", "back end", "analysis and synthesis", "symbol table", "compiler vs interpreter"],
+    "search_query": "phases of a compiler lexical syntax semantic analysis code generation",
+    "video_queries": ["phases of compiler compiler design lecture", "compiler vs interpreter phases of compilation"],
+    "subtopics": [{"name": "Lexical analysis", "terms": ["lexical analysis", "lexical analyzer", "scanner"]}, {"name": "Syntax analysis", "terms": ["syntax analysis", "parser", "parse tree"]}, {"name": "Semantic analysis", "terms": ["semantic analysis", "type checking"]}, {"name": "Code generation", "terms": ["code generation", "intermediate code", "code optimization"]}, {"name": "Symbol table", "terms": ["symbol table"]}],
+    "practice": ["cc_lexer", "cc_tac"],
+    "intro": {"en": "A compiler translates a program written in a high-level language into machine code. It does this in a pipeline of phases, each with one clear job.",
+              "ru": "Compiler high-level zubaan mein likhe program ko machine code mein tarjuma karta hai. Yeh kaam phases ki ek pipeline mein hota hai, har phase ka ek wazeh kaam hota hai."},
+    "definition": {"en": "The phases of a compiler are lexical analysis, syntax analysis, semantic analysis, intermediate code generation, code optimization and target code generation, supported throughout by the symbol table and the error handler. The first three form the analysis (front end) and the rest the synthesis (back end).",
+                   "ru": "Compiler ke phases yeh hain: lexical analysis, syntax analysis, semantic analysis, intermediate code generation, code optimization aur target code generation; poore amal mein symbol table aur error handler madad karte hain. Pehle teen analysis (front end) aur baqi synthesis (back end) kehlate hain."},
+    "explanation": {"en": "Lexical analysis (the scanner) reads characters and groups them into tokens such as identifiers, keywords, numbers and operators, removing spaces and comments. Syntax analysis (the parser) checks that the token sequence follows the grammar and builds a parse tree or abstract syntax tree. Semantic analysis checks meaning: declared variables, matching types, correct number of arguments. Intermediate code generation produces a machine-independent form such as three-address code. Code optimization improves it (constant folding, removing dead code, common sub-expressions). Code generation maps it to the target machine's instructions and registers. The symbol table stores information about identifiers (name, type, scope) for all phases. An interpreter executes the program directly instead of producing a separate machine-code file.",
+                    "ru": "Lexical analysis (scanner) characters parh kar unhein tokens mein jorta hai jaise identifiers, keywords, numbers aur operators, aur spaces aur comments hata deta hai. Syntax analysis (parser) check karta hai ke tokens ki tarteeb grammar ke mutabiq hai aur parse tree ya abstract syntax tree banata hai. Semantic analysis maani check karta hai: variables declare hue, types milti hain, arguments ki sahi tadaad. Intermediate code generation machine se azad shakal banati hai jaise three-address code. Code optimization use behtar karti hai (constant folding, dead code hatana, common sub-expressions). Code generation use target machine ki instructions aur registers par map karti hai. Symbol table har phase ke liye identifiers ki maloomat (naam, type, scope) rakhti hai. Interpreter alag machine-code file banaye baghair program seedha chalata hai."},
+    "example": {"en": "Statement: position = initial + rate * 60. Lexer: id(position) = id(initial) + id(rate) * num(60). Parser: tree with = at the root and * below +. Semantic: 60 is converted to a float because rate is float. Intermediate code: t1 = rate * 60.0; t2 = initial + t1; position = t2. Optimizer: t1 = rate * 60.0; position = initial + t1. Code generator: MUL R2, 60.0 ... STORE position.",
+                "ru": "Statement: position = initial + rate * 60. Lexer: id(position) = id(initial) + id(rate) * num(60). Parser: tree jis ki root par = aur + ke neeche * hai. Semantic: rate float hai is liye 60 float mein badla jata hai. Intermediate code: t1 = rate * 60.0; t2 = initial + t1; position = t2. Optimizer: t1 = rate * 60.0; position = initial + t1. Code generator: MUL R2, 60.0 ... STORE position."},
+    "key_concepts": [
+      {"term": "Front end vs back end", "en": "Analysis (language-specific) vs synthesis (machine-specific).", "ru": "Analysis (zubaan se mutaliq) vs synthesis (machine se mutaliq)."},
+      {"term": "Token", "en": "A meaningful unit such as an identifier, keyword or operator.", "ru": "Maani wali unit jaise identifier, keyword ya operator."},
+      {"term": "Symbol table", "en": "Shared data structure with information about identifiers.", "ru": "Identifiers ki maloomat wala mushtarik data structure."}
+    ],
+    "formulas": [],
+    "code": [
+      "import ast",
+      "",
+      "source = 'position = initial + rate * 60'",
+      "tree = ast.parse(source)          # lexical + syntax analysis",
+      "print(ast.dump(tree.body[0], indent=1))",
+      "code = compile(tree, '<demo>', 'exec')",
+      "import dis",
+      "dis.dis(code)                     # the instructions Python generates"
+    ],
+    "code_explanation": [
+      {"en": "Python's own compiler is used: ast.parse runs the scanner and parser and returns the syntax tree.", "ru": "Python ka apna compiler istemal hua: ast.parse scanner aur parser chala kar syntax tree deta hai."},
+      {"en": "dis shows the generated bytecode instructions (Python's target code).", "ru": "dis bani hui bytecode instructions (Python ka target code) dikhata hai."}
+    ],
+    "applications": [
+      {"en": "Compilers for C, Java, Rust; interpreters and JIT compilers for Python and JavaScript.", "ru": "C, Java, Rust ke compilers; Python aur JavaScript ke interpreters aur JIT compilers."},
+      {"en": "IDE features such as syntax highlighting and error underlining reuse the front end.", "ru": "IDE ki syntax highlighting aur errors ki nishandahi front end istemal karti hai."},
+      {"en": "SQL query engines and template languages.", "ru": "SQL query engines aur template languages."}
+    ],
+    "exam_points": [
+      {"en": "List the phases in order with the output of each phase for a sample statement.", "ru": "Misali statement ke liye har phase ka output ke saath phases tarteeb se likhein."},
+      {"en": "Explain the role of the symbol table and error handler.", "ru": "Symbol table aur error handler ka kirdar samjhayein."},
+      {"en": "Compare compiler and interpreter.", "ru": "Compiler aur interpreter ka muqabla karein."}
+    ],
+    "common_mistakes": [
+      {"en": "Saying the lexer checks grammar - it only forms tokens.", "ru": "Yeh kehna ke lexer grammar check karta hai - yeh sirf tokens banata hai."},
+      {"en": "Mixing up syntax errors (missing semicolon) and semantic errors (type mismatch).", "ru": "Syntax errors (semicolon ghayab) aur semantic errors (type mismatch) ko gadmad karna."},
+      {"en": "Forgetting intermediate code and optimization in the phase list.", "ru": "Phases ki list mein intermediate code aur optimization bhool jana."}
+    ],
+    "questions": [
+      {"type": "mcq", "kind": "basic", "difficulty": "easy", "q": {"en": "Which phase detects an undeclared variable?", "ru": "Kaunsa phase undeclared variable pakarta hai?"},
+       "options": [{"en": "Semantic analysis", "ru": "Semantic analysis"}, {"en": "Lexical analysis", "ru": "Lexical analysis"}, {"en": "Code generation", "ru": "Code generation"}, {"en": "Code optimization", "ru": "Code optimization"}],
+       "answer": 0, "hints": [{"en": "It is about meaning, not form.", "ru": "Yeh maani ke baare mein hai, shakal ke nahi."}],
+       "explanation": {"en": "Declarations and types are checked in semantic analysis using the symbol table.", "ru": "Declarations aur types symbol table se semantic analysis mein check hote hain."}},
+      {"type": "mcq", "kind": "conceptual", "difficulty": "medium", "q": {"en": "A missing closing parenthesis is detected by:", "ru": "Band hone wala bracket ghayab ho to kaun pakarta hai?"},
+       "options": [{"en": "The parser (syntax analysis)", "ru": "Parser (syntax analysis)"}, {"en": "The lexer", "ru": "Lexer"}, {"en": "The optimizer", "ru": "Optimizer"}, {"en": "The linker", "ru": "Linker"}],
+       "answer": 0, "hints": [{"en": "Each token is valid; the structure is not.", "ru": "Har token sahi hai; dhancha ghalat hai."}],
+       "explanation": {"en": "Bracket matching is part of the grammar, so the parser reports it.", "ru": "Brackets ka milna grammar ka hissa hai, is liye parser batata hai."}},
+      {"type": "tf", "kind": "conceptual", "difficulty": "easy", "q": {"en": "The symbol table is used by only one phase of the compiler.", "ru": "Symbol table compiler ka sirf ek phase istemal karta hai."},
+       "answer": false, "hints": [{"en": "Who needs variable types and addresses?", "ru": "Variables ki types aur addresses kis ko chahiye?"}],
+       "explanation": {"en": "False: it is filled by the front end and used by all later phases.", "ru": "Ghalat: front end ise bharta hai aur baad ke tamam phases istemal karte hain."}},
+      {"type": "short", "kind": "exam", "difficulty": "medium", "q": {"en": "What is the difference between a compiler and an interpreter?", "ru": "Compiler aur interpreter mein kya farq hai?"},
+       "answer": "A compiler translates the whole program into target machine code before it runs, while an interpreter executes the program statement by statement without producing a separate machine code file.",
+       "keywords": ["whole program", "machine code", "statement by statement", "execute"], "min_keywords": 2,
+       "hints": [{"en": "Think about when the translation happens.", "ru": "Sochein tarjuma kab hota hai."}],
+       "explanation": {"en": "Compile once then run vs translate-and-run line by line.", "ru": "Ek dafa compile phir chalana vs line by line tarjuma aur chalana."}}
+    ]
+  },
+  {
+    "id": "lexical_analysis",
+    "title": {"en": "Lexical Analysis, Regular Expressions and Finite Automata", "ru": "Lexical Analysis, Regular Expressions aur Finite Automata"},
+    "subject": "Compiler Construction",
+    "category": "front_end",
+    "aliases": ["lexical analysis", "lexer", "scanner", "tokens", "lexeme", "regular expression", "finite automata", "dfa", "nfa", "tokenization", "lex"],
+    "search_query": "lexical analysis tokens regular expressions finite automata",
+    "video_queries": ["lexical analysis tokens lexemes compiler design", "regular expression to NFA to DFA compiler design"],
+    "subtopics": [{"name": "Tokens and lexemes", "terms": ["token", "lexeme"]}, {"name": "Regular expressions", "terms": ["regular expression"]}, {"name": "NFA to DFA", "terms": ["nfa", "dfa", "subset construction"]}],
+    "practice": ["cc_lexer"],
+    "intro": {"en": "Before a compiler can understand a program it must split the stream of characters into words. That is the job of the lexical analyser, which is built from regular expressions and finite automata.",
+              "ru": "Program samajhne se pehle compiler ko characters ki dhaar ko alfaaz mein todna hota hai. Yeh lexical analyser ka kaam hai, jo regular expressions aur finite automata se banta hai."},
+    "definition": {"en": "Lexical analysis converts the source text into a sequence of tokens. Each token class (identifier, number, keyword, operator) is described by a regular expression, and the scanner recognises them with a deterministic finite automaton (DFA).",
+                   "ru": "Lexical analysis source text ko tokens ki tarteeb mein badalta hai. Har token class (identifier, number, keyword, operator) ek regular expression se bayan hoti hai, aur scanner unhein deterministic finite automaton (DFA) se pehchanta hai."},
+    "explanation": {"en": "A lexeme is the actual text (for example 'count'), the token is its class (IDENTIFIER) and the pattern is the rule that describes the class (letter followed by letters or digits). Regular expressions combine characters with union (a|b), concatenation (ab) and Kleene star (a*). Thompson's construction turns a regular expression into an NFA; subset construction turns the NFA into a DFA, which reads each character once and is very fast. When several patterns match, the scanner uses the longest match ('<=' rather than '<') and, for equal length, the rule listed first (keywords before identifiers). The lexer also skips whitespace and comments, records line numbers for error messages and enters identifiers into the symbol table.",
+                    "ru": "Lexeme asal text hai (maslan 'count'), token us ki class hai (IDENTIFIER) aur pattern woh qaida hai jo class bayan karta hai (letter ke baad letters ya digits). Regular expressions characters ko union (a|b), concatenation (ab) aur Kleene star (a*) se jorti hain. Thompson's construction regular expression ko NFA banati hai; subset construction NFA ko DFA mein badalti hai, jo har character ek dafa parhta hai aur bohat tez hai. Jab kai patterns milein to scanner sab se lamba match leta hai ('<' ki jagah '<=') aur barabar length par pehle likha qaida (keywords identifiers se pehle). Lexer whitespace aur comments chhor deta hai, error messages ke liye line numbers yaad rakhta hai aur identifiers ko symbol table mein dalta hai."},
+    "example": {"en": "Input: if (count <= 10) total = total + 1; Tokens: KEYWORD(if), LPAREN, ID(count), RELOP(<=), NUM(10), RPAREN, ID(total), ASSIGN, ID(total), PLUS, NUM(1), SEMICOLON - 12 tokens. Try it in the lexer simulator.",
+                "ru": "Input: if (count <= 10) total = total + 1; Tokens: KEYWORD(if), LPAREN, ID(count), RELOP(<=), NUM(10), RPAREN, ID(total), ASSIGN, ID(total), PLUS, NUM(1), SEMICOLON - 12 tokens. Lexer simulator mein khud try karein."},
+    "key_concepts": [
+      {"term": "Token / lexeme / pattern", "en": "Class / actual text / rule.", "ru": "Class / asal text / qaida."},
+      {"term": "Longest match", "en": "Prefer the longest lexeme that matches a pattern.", "ru": "Pattern se milne wala sab se lamba lexeme lein."},
+      {"term": "NFA to DFA", "en": "Subset construction makes scanning deterministic and fast.", "ru": "Subset construction scanning ko deterministic aur tez banati hai."}
+    ],
+    "formulas": [{"latex": "\\text{id} = \\text{letter}(\\text{letter} \\mid \\text{digit})^*", "en": "Regular definition of an identifier.", "ru": "Identifier ki regular definition."}],
+    "code": [
+      "import re",
+      "",
+      "TOKEN_SPEC = [('NUM', r'\\d+(\\.\\d+)?'), ('KEYWORD', r'\\b(if|else|while|return)\\b'),",
+      "              ('ID', r'[A-Za-z_]\\w*'), ('RELOP', r'<=|>=|==|!=|<|>'), ('ASSIGN', r'='),",
+      "              ('OP', r'[+\\-*/]'), ('LPAREN', r'\\('), ('RPAREN', r'\\)'), ('SEMI', r';'), ('SKIP', r'\\s+')]",
+      "regex = '|'.join(f'(?P<{name}>{pattern})' for name, pattern in TOKEN_SPEC)",
+      "",
+      "source = 'if (count <= 10) total = total + 1;'",
+      "for m in re.finditer(regex, source):",
+      "    if m.lastgroup != 'SKIP':",
+      "        print(m.lastgroup, repr(m.group()))"
+    ],
+    "code_explanation": [
+      {"en": "Each token class is a named regular expression; KEYWORD comes before ID so 'if' is a keyword.", "ru": "Har token class naam wala regular expression hai; KEYWORD ID se pehle hai is liye 'if' keyword banta hai."},
+      {"en": "RELOP lists '<=' before '<' to get the longest match.", "ru": "Sab se lamba match lene ke liye RELOP mein '<=' '<' se pehle hai."},
+      {"en": "Whitespace is matched as SKIP and not printed.", "ru": "Whitespace SKIP ke taur par milta hai aur print nahi hota."}
+    ],
+    "applications": [
+      {"en": "Scanner generators such as lex/flex.", "ru": "lex/flex jaise scanner generators."},
+      {"en": "Syntax highlighting in editors.", "ru": "Editors mein syntax highlighting."},
+      {"en": "Input validation and log parsing with regular expressions.", "ru": "Regular expressions se input validation aur log parsing."}
+    ],
+    "exam_points": [
+      {"en": "Count and list the tokens of a statement.", "ru": "Statement ke tokens gin kar likhein."},
+      {"en": "Write regular expressions for identifiers and numbers.", "ru": "Identifiers aur numbers ke regular expressions likhein."},
+      {"en": "Convert a small NFA to a DFA with subset construction.", "ru": "Subset construction se chhota NFA ko DFA banayein."}
+    ],
+    "common_mistakes": [
+      {"en": "Counting spaces or comments as tokens.", "ru": "Spaces ya comments ko tokens ginna."},
+      {"en": "Splitting '<=' into two tokens.", "ru": "'<=' ko do tokens mein todna."},
+      {"en": "Confusing lexeme (text) with token (class).", "ru": "Lexeme (text) ko token (class) samajhna."}
+    ],
+    "questions": [
+      {"type": "numerical", "kind": "problem", "difficulty": "medium", "q": {"en": "How many tokens are in: x = y + 25 ;", "ru": "Is mein kitne tokens hain: x = y + 25 ;"},
+       "answer": 6, "tolerance": 0, "hints": [{"en": "Count identifiers, operators, numbers and the semicolon.", "ru": "Identifiers, operators, numbers aur semicolon ginein."}],
+       "explanation": {"en": "x, =, y, +, 25, ; = 6 tokens.", "ru": "x, =, y, +, 25, ; = 6 tokens."}},
+      {"type": "mcq", "kind": "conceptual", "difficulty": "medium", "q": {"en": "Which automaton is used directly by a fast scanner?", "ru": "Tez scanner seedha kaunsa automaton istemal karta hai?"},
+       "options": [{"en": "DFA", "ru": "DFA"}, {"en": "NFA with epsilon moves", "ru": "Epsilon moves wala NFA"}, {"en": "Pushdown automaton", "ru": "Pushdown automaton"}, {"en": "Turing machine", "ru": "Turing machine"}],
+       "answer": 0, "hints": [{"en": "Exactly one move per input character.", "ru": "Har input character par bilkul ek move."}],
+       "explanation": {"en": "A DFA has one transition per character, so scanning is linear and fast.", "ru": "DFA ka har character par ek transition hota hai, is liye scanning linear aur tez hai."}},
+      {"type": "tf", "kind": "conceptual", "difficulty": "easy", "q": {"en": "Regular expressions are powerful enough to check that parentheses are balanced.", "ru": "Regular expressions itne taqatwar hain ke brackets ka tawazun check kar sakein."},
+       "answer": false, "hints": [{"en": "Balancing needs unlimited counting.", "ru": "Tawazun ke liye la-mehdood ginti chahiye."}],
+       "explanation": {"en": "False: balanced parentheses need a context-free grammar (a parser), not a regular expression.", "ru": "Ghalat: balanced brackets ke liye context-free grammar (parser) chahiye, regular expression nahi."}},
+      {"type": "mcq", "kind": "basic", "difficulty": "easy", "q": {"en": "In 'count = 5', 'count' is a:", "ru": "'count = 5' mein 'count' kya hai?"},
+       "options": [{"en": "Lexeme of token ID", "ru": "Token ID ka lexeme"}, {"en": "Keyword", "ru": "Keyword"}, {"en": "Pattern", "ru": "Pattern"}, {"en": "Grammar rule", "ru": "Grammar ka qaida"}],
+       "answer": 0, "hints": [{"en": "It is the actual text of an identifier.", "ru": "Yeh identifier ka asal text hai."}],
+       "explanation": {"en": "The text 'count' is the lexeme; its token class is ID.", "ru": "Text 'count' lexeme hai; us ki token class ID hai."}}
+    ]
+  },
+  {
+    "id": "context_free_grammars",
+    "title": {"en": "Context-Free Grammars and Parse Trees", "ru": "Context-Free Grammars aur Parse Trees"},
+    "subject": "Compiler Construction",
+    "category": "front_end",
+    "aliases": ["context free grammar", "cfg", "grammar", "parse tree", "derivation", "leftmost derivation", "ambiguous grammar", "ambiguity", "syntax analysis", "parsing"],
+    "search_query": "context free grammar derivation parse tree ambiguity",
+    "video_queries": ["context free grammar derivation parse tree compiler design", "ambiguous grammar compiler design example"],
+    "subtopics": [{"name": "Productions", "terms": ["production", "non terminal", "terminal"]}, {"name": "Derivations", "terms": ["leftmost derivation", "rightmost derivation", "derivation"]}, {"name": "Parse tree", "terms": ["parse tree"]}, {"name": "Ambiguity", "terms": ["ambiguous", "ambiguity"]}],
+    "practice": ["cc_first_follow"],
+    "intro": {"en": "A programming language's syntax is defined by a grammar. The parser uses it to check programs and to build the tree that the rest of the compiler works on.",
+              "ru": "Programming language ka syntax grammar se tay hota hai. Parser isi se programs check karta hai aur woh tree banata hai jis par baqi compiler kaam karta hai."},
+    "definition": {"en": "A context-free grammar (CFG) has terminals (tokens), non-terminals (syntactic categories), a start symbol and productions of the form A -> alpha. A derivation repeatedly replaces a non-terminal by the right side of one of its productions; a parse tree shows a derivation as a tree.",
+                   "ru": "Context-free grammar (CFG) mein terminals (tokens), non-terminals (syntax ki categories), ek start symbol aur A -> alpha jaisi productions hoti hain. Derivation baar baar non-terminal ko us ki kisi production ke right side se badalti hai; parse tree derivation ko tree ki shakal mein dikhata hai."},
+    "explanation": {"en": "In a leftmost derivation the leftmost non-terminal is replaced at each step (top-down parsers produce this); in a rightmost derivation the rightmost one is (bottom-up parsers produce its reverse). A grammar is ambiguous if some string has two different parse trees, for example E -> E + E | E * E | id for 'id + id * id'. Ambiguity is removed by rewriting the grammar with one non-terminal per precedence level: E -> E + T | T, T -> T * F | F, F -> ( E ) | id, which makes * bind tighter than + and both left-associative. Top-down (LL) parsers cannot handle left recursion such as E -> E + T, so it is rewritten as E -> T E', E' -> + T E' | epsilon; common prefixes are removed by left factoring.",
+                    "ru": "Leftmost derivation mein har step par sab se baayan non-terminal badla jata hai (top-down parsers yahi banate hain); rightmost derivation mein sab se daayan (bottom-up parsers is ka ulat banate hain). Grammar ambiguous hai agar kisi string ke do mukhtalif parse trees hon, maslan 'id + id * id' ke liye E -> E + E | E * E | id. Ambiguity har precedence level ke liye alag non-terminal bana kar khatam hoti hai: E -> E + T | T, T -> T * F | F, F -> ( E ) | id, jis se * ki pakar + se mazboot aur dono left-associative ho jate hain. Top-down (LL) parsers E -> E + T jaisi left recursion nahi sambhal sakte, is liye ise E -> T E', E' -> + T E' | epsilon likha jata hai; mushtarik prefixes left factoring se hatate hain."},
+    "example": {"en": "Grammar E -> E + T | T, T -> T * F | F, F -> id. Leftmost derivation of id + id * id: E => E + T => T + T => F + T => id + T => id + T * F => id + F * F => id + id * F => id + id * id. In the parse tree the * node sits below the + node, so multiplication happens first.",
+                "ru": "Grammar E -> E + T | T, T -> T * F | F, F -> id. id + id * id ki leftmost derivation: E => E + T => T + T => F + T => id + T => id + T * F => id + F * F => id + id * F => id + id * id. Parse tree mein * wala node + wale node ke neeche hai, is liye zarab pehle hoti hai."},
+    "key_concepts": [
+      {"term": "Terminal vs non-terminal", "en": "Tokens vs grammar variables.", "ru": "Tokens vs grammar ke variables."},
+      {"term": "Ambiguity", "en": "Two parse trees for the same string.", "ru": "Ek hi string ke do parse trees."},
+      {"term": "Left recursion elimination", "en": "A -> A a | b becomes A -> b A', A' -> a A' | epsilon.", "ru": "A -> A a | b ban jata hai A -> b A', A' -> a A' | epsilon."}
+    ],
+    "formulas": [{"latex": "A \\rightarrow A\\alpha \\mid \\beta \\;\\Longrightarrow\\; A \\rightarrow \\beta A', \\; A' \\rightarrow \\alpha A' \\mid \\epsilon", "en": "Removing immediate left recursion.", "ru": "Seedhi left recursion hatana."}],
+    "code": [
+      "import ast",
+      "",
+      "tree = ast.parse('a + b * c', mode='eval').body",
+      "print(type(tree.op).__name__)        # Add is at the root",
+      "print(type(tree.right.op).__name__)  # Mult is below it: * binds tighter",
+      "print(ast.dump(tree))"
+    ],
+    "code_explanation": [
+      {"en": "Python's grammar is unambiguous: the root operator of a + b * c is Add.", "ru": "Python ki grammar unambiguous hai: a + b * c ka root operator Add hai."},
+      {"en": "The multiplication is a child of the addition, exactly like the parse tree above.", "ru": "Zarab jama ka bacha (child) hai, bilkul upar wale parse tree ki tarah."}
+    ],
+    "applications": [
+      {"en": "Language specifications (Python, Java and SQL grammars).", "ru": "Zubanon ki specifications (Python, Java aur SQL grammars)."},
+      {"en": "Parser generators such as yacc, bison and ANTLR.", "ru": "yacc, bison aur ANTLR jaise parser generators."},
+      {"en": "Configuration file and data format parsers (JSON).", "ru": "Configuration files aur data formats (JSON) ke parsers."}
+    ],
+    "exam_points": [
+      {"en": "Write leftmost and rightmost derivations and draw the parse tree.", "ru": "Leftmost aur rightmost derivations likhein aur parse tree banayein."},
+      {"en": "Show that a grammar is ambiguous and rewrite it.", "ru": "Grammar ka ambiguous hona dikhayein aur dobara likhein."},
+      {"en": "Remove left recursion and apply left factoring.", "ru": "Left recursion hatayein aur left factoring karein."}
+    ],
+    "common_mistakes": [
+      {"en": "Replacing a non-leftmost symbol in a leftmost derivation.", "ru": "Leftmost derivation mein sab se baayan na hone wala symbol badalna."},
+      {"en": "Thinking ambiguity is about the language rather than the grammar.", "ru": "Ambiguity ko grammar ki jagah zubaan ki khasiyat samajhna."},
+      {"en": "Forgetting the epsilon production when removing left recursion.", "ru": "Left recursion hatate waqt epsilon production bhool jana."}
+    ],
+    "questions": [
+      {"type": "mcq", "kind": "conceptual", "difficulty": "medium", "q": {"en": "A grammar is ambiguous if:", "ru": "Grammar ambiguous hoti hai agar:"},
+       "options": [{"en": "Some string has more than one parse tree", "ru": "Kisi string ke ek se zyada parse trees hon"}, {"en": "It has left recursion", "ru": "Us mein left recursion ho"}, {"en": "It has epsilon productions", "ru": "Us mein epsilon productions hon"}, {"en": "It has more than one non-terminal", "ru": "Us mein ek se zyada non-terminals hon"}],
+       "answer": 0, "hints": [{"en": "Think of id + id * id with E -> E + E | E * E | id.", "ru": "E -> E + E | E * E | id ke saath id + id * id sochein."}],
+       "explanation": {"en": "Ambiguity = two different parse trees (or two leftmost derivations) for one string.", "ru": "Ambiguity = ek string ke do mukhtalif parse trees (ya do leftmost derivations)."}},
+      {"type": "tf", "kind": "conceptual", "difficulty": "medium", "q": {"en": "LL (top-down) parsers can directly handle left-recursive grammars.", "ru": "LL (top-down) parsers left-recursive grammars seedha sambhal sakte hain."},
+       "answer": false, "hints": [{"en": "E -> E + T would call E again forever.", "ru": "E -> E + T hamesha E ko dobara bulata rahega."}],
+       "explanation": {"en": "False: left recursion causes infinite recursion in top-down parsing, so it must be removed.", "ru": "Ghalat: left recursion top-down parsing mein la-mehdood recursion paida karti hai, is liye hatana zaroori hai."}},
+      {"type": "short", "kind": "exam", "difficulty": "hard", "q": {"en": "Remove the left recursion from A -> A a | b.", "ru": "A -> A a | b se left recursion hatayein."},
+       "answer": "A -> b A' and A' -> a A' | epsilon",
+       "keywords": ["b a'", "a a'", "epsilon"], "min_keywords": 2,
+       "hints": [{"en": "Strings of this grammar are b followed by any number of a.", "ru": "Is grammar ki strings b ke baad kitne bhi a hain."}],
+       "explanation": {"en": "A -> b A', A' -> a A' | epsilon generates the same strings b a*.", "ru": "A -> b A', A' -> a A' | epsilon wahi strings b a* banata hai."}}
+    ]
+  },
+  {
+    "id": "ll1_parsing",
+    "title": {"en": "FIRST, FOLLOW and LL(1) Parsing", "ru": "FIRST, FOLLOW aur LL(1) Parsing"},
+    "subject": "Compiler Construction",
+    "category": "front_end",
+    "aliases": ["ll1", "ll(1)", "ll 1 parsing", "first and follow", "first follow", "predictive parsing", "parsing table", "top down parsing", "recursive descent"],
+    "search_query": "first and follow ll1 parsing table predictive parser",
+    "video_queries": ["first and follow sets compiler design example", "LL(1) parsing table construction example"],
+    "subtopics": [{"name": "FIRST sets", "terms": ["first of", "first set", "first function"]}, {"name": "FOLLOW sets", "terms": ["follow of", "follow set", "follow function"]}, {"name": "Parsing table", "terms": ["parsing table"]}, {"name": "Stack trace", "terms": ["stack", "input buffer"]}],
+    "practice": ["cc_first_follow"],
+    "intro": {"en": "An LL(1) parser reads input left to right and decides each step by looking at just one token. It is built from two sets computed from the grammar: FIRST and FOLLOW.",
+              "ru": "LL(1) parser input baayen se daayen parhta hai aur har step sirf ek token dekh kar tay karta hai. Yeh grammar se nikalne wale do sets se banta hai: FIRST aur FOLLOW."},
+    "definition": {"en": "FIRST(alpha) is the set of terminals that can begin strings derived from alpha (plus epsilon if alpha can derive the empty string). FOLLOW(A) is the set of terminals that can appear immediately after A in some sentential form ($ for the end). A grammar is LL(1) if its predictive parsing table built from these sets has at most one production in every cell.",
+                   "ru": "FIRST(alpha) un terminals ka set hai jin se alpha se banne wali strings shuru ho sakti hain (aur epsilon agar alpha khali string bana sake). FOLLOW(A) un terminals ka set hai jo kisi sentential form mein A ke foran baad aa sakte hain (aakhir ke liye $). Grammar LL(1) hai agar in sets se bani predictive parsing table ke har khane mein zyada se zyada ek production ho."},
+    "explanation": {"en": "FIRST rules: for a terminal a, FIRST(a) = {a}; for A -> X1 X2 ..., add FIRST(X1) without epsilon, and if X1 can be empty continue with X2, and so on. FOLLOW rules: put $ in FOLLOW(start); for A -> alpha B beta add FIRST(beta) without epsilon to FOLLOW(B); if beta can be empty (or is missing) add FOLLOW(A) to FOLLOW(B). Table: for each production A -> alpha, put it in M[A, a] for every a in FIRST(alpha); if epsilon is in FIRST(alpha), also for every b in FOLLOW(A). The parser keeps a stack starting with $ and the start symbol: if the top is a terminal it must match the input; if it is a non-terminal, the table entry tells which production to expand. An empty or double entry means a syntax error or a non-LL(1) grammar.",
+                    "ru": "FIRST ke qaide: terminal a ke liye FIRST(a) = {a}; A -> X1 X2 ... ke liye FIRST(X1) (epsilon ke baghair) shamil karein, aur agar X1 khali ho sakta hai to X2 par jayein, waghera. FOLLOW ke qaide: start ke FOLLOW mein $ dalein; A -> alpha B beta ke liye FIRST(beta) (epsilon ke baghair) FOLLOW(B) mein dalein; agar beta khali ho sakta hai (ya maujood hi nahi) to FOLLOW(A) ko FOLLOW(B) mein dalein. Table: har production A -> alpha ko FIRST(alpha) ke har a ke liye M[A, a] mein rakhein; agar FIRST(alpha) mein epsilon ho to FOLLOW(A) ke har b ke liye bhi. Parser ka stack $ aur start symbol se shuru hota hai: upar terminal ho to input se milna chahiye; non-terminal ho to table batati hai kaunsi production phailani hai. Khali ya do entries wala khana syntax error ya non-LL(1) grammar ki nishani hai."},
+    "example": {"en": "E -> T E', E' -> + T E' | eps, T -> F T', T' -> * F T' | eps, F -> ( E ) | id. FIRST(E) = FIRST(T) = FIRST(F) = { (, id }; FIRST(E') = { +, eps }; FIRST(T') = { *, eps }. FOLLOW(E) = FOLLOW(E') = { ), $ }; FOLLOW(T) = FOLLOW(T') = { +, ), $ }; FOLLOW(F) = { *, +, ), $ }. Use the FIRST/FOLLOW tool to compute these and parse id + id * id.",
+                "ru": "E -> T E', E' -> + T E' | eps, T -> F T', T' -> * F T' | eps, F -> ( E ) | id. FIRST(E) = FIRST(T) = FIRST(F) = { (, id }; FIRST(E') = { +, eps }; FIRST(T') = { *, eps }. FOLLOW(E) = FOLLOW(E') = { ), $ }; FOLLOW(T) = FOLLOW(T') = { +, ), $ }; FOLLOW(F) = { *, +, ), $ }. Yeh sets nikalne aur id + id * id parse karne ke liye FIRST/FOLLOW tool istemal karein."},
+    "key_concepts": [
+      {"term": "LL(1)", "en": "Left-to-right scan, Leftmost derivation, 1 token of lookahead.", "ru": "Left-to-right scan, Leftmost derivation, 1 token lookahead."},
+      {"term": "FIRST / FOLLOW", "en": "What can start a phrase / what can come after a non-terminal.", "ru": "Kis se phrase shuru ho sakta hai / non-terminal ke baad kya aa sakta hai."},
+      {"term": "Conflict", "en": "Two productions in one table cell: the grammar is not LL(1).", "ru": "Ek khane mein do productions: grammar LL(1) nahi."}
+    ],
+    "formulas": [],
+    "code": [
+      "grammar = {",
+      "    'E': [['T', \"E'\"]], \"E'\": [['+', 'T', \"E'\"], []],",
+      "    'T': [['F', \"T'\"]], \"T'\": [['*', 'F', \"T'\"], []],",
+      "    'F': [['(', 'E', ')'], ['id']],",
+      "}",
+      "",
+      "def first_sets(g):",
+      "    first = {A: set() for A in g}",
+      "    changed = True",
+      "    while changed:",
+      "        changed = False",
+      "        for A, prods in g.items():",
+      "            for prod in prods:",
+      "                before = len(first[A])",
+      "                for X in prod:",
+      "                    if X not in g:              # terminal",
+      "                        first[A].add(X)",
+      "                        break",
+      "                    first[A] |= first[X] - {'eps'}",
+      "                    if 'eps' not in first[X]:",
+      "                        break",
+      "                else:",
+      "                    first[A].add('eps')         # every symbol can be empty",
+      "                changed |= len(first[A]) != before",
+      "    return first",
+      "",
+      "for A, s in first_sets(grammar).items():",
+      "    print(f'FIRST({A}) =', sorted(s))"
+    ],
+    "code_explanation": [
+      {"en": "An empty list is an epsilon production.", "ru": "Khali list epsilon production hai."},
+      {"en": "The loop repeats until no FIRST set grows (a fixed point).", "ru": "Loop tab tak chalta hai jab tak koi FIRST set na barhe (fixed point)."},
+      {"en": "If every symbol of a production can be empty, epsilon is added.", "ru": "Agar production ka har symbol khali ho sakta ho to epsilon shamil hota hai."}
+    ],
+    "applications": [
+      {"en": "Hand-written recursive-descent parsers in many real compilers.", "ru": "Kai asal compilers ke haath se likhe recursive-descent parsers."},
+      {"en": "Parser generators such as ANTLR (LL(*)).", "ru": "ANTLR (LL(*)) jaise parser generators."}
+    ],
+    "exam_points": [
+      {"en": "Compute FIRST and FOLLOW for every non-terminal.", "ru": "Har non-terminal ke FIRST aur FOLLOW nikalein."},
+      {"en": "Build the LL(1) table and show a parse trace with stack and input.", "ru": "LL(1) table banayein aur stack aur input ke saath parse trace dikhayein."},
+      {"en": "Decide whether a grammar is LL(1).", "ru": "Faisla karein grammar LL(1) hai ya nahi."}
+    ],
+    "common_mistakes": [
+      {"en": "Putting epsilon in a FOLLOW set (FOLLOW never contains epsilon).", "ru": "FOLLOW set mein epsilon dalna (FOLLOW mein kabhi epsilon nahi hota)."},
+      {"en": "Forgetting $ in FOLLOW of the start symbol.", "ru": "Start symbol ke FOLLOW mein $ bhool jana."},
+      {"en": "Filling epsilon productions using FIRST instead of FOLLOW.", "ru": "Epsilon productions FOLLOW ki jagah FIRST se bharna."}
+    ],
+    "questions": [
+      {"type": "mcq", "kind": "problem", "difficulty": "medium", "q": {"en": "For the expression grammar above, FIRST(F) is:", "ru": "Upar wali expression grammar ke liye FIRST(F) kya hai?"},
+       "options": [{"en": "{ (, id }", "ru": "{ (, id }"}, {"en": "{ +, * }", "ru": "{ +, * }"}, {"en": "{ ), $ }", "ru": "{ ), $ }"}, {"en": "{ id }", "ru": "{ id }"}],
+       "answer": 0, "hints": [{"en": "F -> ( E ) | id.", "ru": "F -> ( E ) | id."}],
+       "explanation": {"en": "Both alternatives start with a terminal: ( and id.", "ru": "Dono alternatives terminal se shuru hote hain: ( aur id."}},
+      {"type": "tf", "kind": "conceptual", "difficulty": "easy", "q": {"en": "FOLLOW sets can contain epsilon.", "ru": "FOLLOW sets mein epsilon ho sakta hai."},
+       "answer": false, "hints": [{"en": "FOLLOW lists terminals (and $).", "ru": "FOLLOW terminals (aur $) ki list hai."}],
+       "explanation": {"en": "False: FOLLOW contains terminals and $, never epsilon.", "ru": "Ghalat: FOLLOW mein terminals aur $ hote hain, epsilon kabhi nahi."}},
+      {"type": "mcq", "kind": "conceptual", "difficulty": "medium", "q": {"en": "In the LL(1) table, where is E' -> eps placed?", "ru": "LL(1) table mein E' -> eps kahan rakha jata hai?"},
+       "options": [{"en": "Under every terminal in FOLLOW(E') = { ), $ }", "ru": "FOLLOW(E') = { ), $ } ke har terminal ke neeche"}, {"en": "Under +", "ru": "+ ke neeche"}, {"en": "Under id", "ru": "id ke neeche"}, {"en": "Nowhere", "ru": "Kahin nahi"}],
+       "answer": 0, "hints": [{"en": "Epsilon productions use FOLLOW.", "ru": "Epsilon productions FOLLOW istemal karti hain."}],
+       "explanation": {"en": "M[E', )] and M[E', $] get E' -> eps.", "ru": "M[E', )] aur M[E', $] mein E' -> eps aata hai."}},
+      {"type": "short", "kind": "exam", "difficulty": "hard", "q": {"en": "When is a grammar not LL(1)?", "ru": "Grammar kab LL(1) nahi hoti?"},
+       "answer": "A grammar is not LL(1) when its predictive parsing table has a cell with more than one production (a conflict), for example because it is ambiguous, left recursive or not left factored.",
+       "keywords": ["more than one production", "conflict", "ambiguous", "left recursive"], "min_keywords": 2,
+       "hints": [{"en": "Look at the cells of the parsing table.", "ru": "Parsing table ke khane dekhein."}],
+       "explanation": {"en": "Multiple entries in a cell = conflict = not LL(1).", "ru": "Ek khane mein kai entries = conflict = LL(1) nahi."}}
+    ]
+  },
+  {
+    "id": "lr_parsing",
+    "title": {"en": "Bottom-Up Parsing: Shift-Reduce and LR", "ru": "Bottom-Up Parsing: Shift-Reduce aur LR"},
+    "subject": "Compiler Construction",
+    "category": "front_end",
+    "aliases": ["lr parsing", "shift reduce", "shift-reduce parsing", "bottom up parsing", "slr", "lalr", "lr(0)", "lr(1)", "handle", "yacc"],
+    "search_query": "shift reduce parsing lr parser handle",
+    "video_queries": ["shift reduce parsing compiler design example", "LR(0) SLR parsing table construction"],
+    "subtopics": [{"name": "Handle", "terms": ["handle"]}, {"name": "Shift and reduce", "terms": ["shift", "reduce"]}, {"name": "LR items", "terms": ["lr(0) item", "items", "closure", "goto"]}, {"name": "Conflicts", "terms": ["shift reduce conflict", "reduce reduce conflict"]}],
+    "practice": ["cc_shift_reduce"],
+    "intro": {"en": "Bottom-up parsers build the parse tree from the leaves up to the root. LR parsers are the most powerful practical parsers and are generated automatically by tools such as yacc and bison.",
+              "ru": "Bottom-up parsers parse tree ko patton (leaves) se root ki taraf banate hain. LR parsers sab se taqatwar amli parsers hain aur yacc aur bison jaise tools inhein khud banate hain."},
+    "definition": {"en": "A shift-reduce parser uses a stack and four actions: shift (push the next input token), reduce (replace a handle on top of the stack by the left side of a production), accept and error. LR parsers decide these actions with a table built from LR items; SLR, LALR and canonical LR(1) differ in how much lookahead information they use.",
+                   "ru": "Shift-reduce parser stack aur chaar actions istemal karta hai: shift (agla input token stack par dalna), reduce (stack ke upar maujood handle ko production ke left side se badalna), accept aur error. LR parsers yeh actions LR items se bani table se tay karte hain; SLR, LALR aur canonical LR(1) is mein mukhtalif hain ke kitni lookahead maloomat istemal karte hain."},
+    "explanation": {"en": "A handle is the substring that matches a production's right side and whose reduction is a step of the rightmost derivation in reverse. An LR(0) item is a production with a dot showing how much has been seen, e.g. E -> E . + T. The closure and goto operations build a DFA of item sets (the canonical collection); its states become the rows of the ACTION and GOTO tables. SLR puts a reduce in the columns of FOLLOW of the left side; LALR and LR(1) use more precise lookaheads and accept more grammars. A shift-reduce conflict happens when both actions are possible in a cell (the dangling else); a reduce-reduce conflict when two reductions are possible. LR parsers handle left recursion naturally and detect errors as early as possible.",
+                    "ru": "Handle woh substring hai jo kisi production ke right side se milta hai aur jis ka reduction rightmost derivation ka ulta qadam hai. LR(0) item dot wali production hai jo batati hai kitna dekha ja chuka hai, maslan E -> E . + T. Closure aur goto operations item sets ka DFA (canonical collection) banate hain; is ki states ACTION aur GOTO tables ki rows banti hain. SLR reduce ko left side ke FOLLOW wale columns mein rakhta hai; LALR aur LR(1) zyada durust lookaheads istemal karte hain aur zyada grammars qubool karte hain. Shift-reduce conflict tab hota hai jab ek khane mein dono actions mumkin hon (dangling else); reduce-reduce conflict jab do reductions mumkin hon. LR parsers left recursion qudrati tor par sambhalte hain aur errors jald se jald pakarte hain."},
+    "example": {"en": "Grammar E -> E + id | id, input id + id. Stack $ / input id + id $: shift id; reduce E -> id (stack $ E); shift +; shift id (stack $ E + id); reduce E -> E + id (stack $ E); accept. The shift-reduce simulator shows each step.",
+                "ru": "Grammar E -> E + id | id, input id + id. Stack $ / input id + id $: id shift; E -> id reduce (stack $ E); + shift; id shift (stack $ E + id); E -> E + id reduce (stack $ E); accept. Shift-reduce simulator har step dikhata hai."},
+    "key_concepts": [
+      {"term": "Handle", "en": "Right side to reduce next.", "ru": "Agla reduce hone wala right side."},
+      {"term": "LR item", "en": "Production with a dot marking progress.", "ru": "Dot wali production jo pesh-raft batati hai."},
+      {"term": "SLR / LALR / LR(1)", "en": "Increasing precision of lookaheads.", "ru": "Lookaheads ki barhti hui durusti."}
+    ],
+    "formulas": [],
+    "code": [
+      "def shift_reduce(tokens, rules):",
+      "    stack, steps = [], []",
+      "    tokens = tokens + ['$']",
+      "    while True:",
+      "        for lhs, rhs in rules:                      # try to reduce a handle",
+      "            if len(stack) >= len(rhs) and stack[-len(rhs):] == rhs:",
+      "                stack[-len(rhs):] = [lhs]",
+      "                steps.append(('reduce ' + lhs + ' -> ' + ' '.join(rhs), list(stack)))",
+      "                break",
+      "        else:",
+      "            if tokens[0] == '$':",
+      "                return steps, stack == [rules[0][0]]",
+      "            stack.append(tokens.pop(0))",
+      "            steps.append(('shift', list(stack)))",
+      "",
+      "rules = [('E', ['E', '+', 'id']), ('E', ['id'])]",
+      "steps, ok = shift_reduce(['id', '+', 'id'], rules)",
+      "for action, stack in steps:",
+      "    print(f'{action:22} {stack}')",
+      "print('accepted' if ok else 'rejected')"
+    ],
+    "code_explanation": [
+      {"en": "This greedy demo reduces whenever the top of the stack matches a right side; real LR parsers consult a table instead.", "ru": "Yeh greedy demo jab bhi stack ka upari hissa kisi right side se mile reduce kar deta hai; asal LR parsers table dekhte hain."},
+      {"en": "Longer right sides are listed first so E + id is reduced as a whole.", "ru": "Lambe right sides pehle likhe hain taake E + id poora reduce ho."}
+    ],
+    "applications": [
+      {"en": "yacc/bison-generated parsers for C-like languages.", "ru": "C jaisi zubanon ke liye yacc/bison se bane parsers."},
+      {"en": "Database query parsers and many DSLs.", "ru": "Database query parsers aur kai DSLs."}
+    ],
+    "exam_points": [
+      {"en": "Show a shift-reduce trace with stack, input and action.", "ru": "Stack, input aur action ke saath shift-reduce trace dikhayein."},
+      {"en": "Build LR(0) item sets with closure and goto.", "ru": "Closure aur goto se LR(0) item sets banayein."},
+      {"en": "Identify shift-reduce and reduce-reduce conflicts.", "ru": "Shift-reduce aur reduce-reduce conflicts pehchanein."}
+    ],
+    "common_mistakes": [
+      {"en": "Reducing a substring that is not a handle.", "ru": "Aisa substring reduce karna jo handle nahi."},
+      {"en": "Mixing up the ACTION table (terminals) and GOTO table (non-terminals).", "ru": "ACTION table (terminals) aur GOTO table (non-terminals) ko gadmad karna."},
+      {"en": "Thinking LR parsers cannot handle left recursion.", "ru": "Yeh samajhna ke LR parsers left recursion nahi sambhal sakte."}
+    ],
+    "questions": [
+      {"type": "mcq", "kind": "basic", "difficulty": "easy", "q": {"en": "A shift-reduce parser builds the parse tree:", "ru": "Shift-reduce parser parse tree kaise banata hai?"},
+       "options": [{"en": "Bottom-up, from the leaves to the root", "ru": "Bottom-up, patton se root tak"}, {"en": "Top-down, from the root", "ru": "Top-down, root se"}, {"en": "Randomly", "ru": "Be-tarteeb"}, {"en": "It does not build one", "ru": "Banata hi nahi"}],
+       "answer": 0, "hints": [{"en": "It reduces tokens into non-terminals.", "ru": "Yeh tokens ko non-terminals mein reduce karta hai."}],
+       "explanation": {"en": "Reductions combine children into a parent: bottom-up.", "ru": "Reductions bachon ko parent mein jorti hain: bottom-up."}},
+      {"type": "tf", "kind": "conceptual", "difficulty": "medium", "q": {"en": "The dangling-else problem causes a shift-reduce conflict.", "ru": "Dangling-else masla shift-reduce conflict paida karta hai."},
+       "answer": true, "hints": [{"en": "After 'if E then S' the parser sees 'else'.", "ru": "'if E then S' ke baad parser 'else' dekhta hai."}],
+       "explanation": {"en": "True: it can shift else or reduce the inner if; parsers usually choose shift.", "ru": "Sahi: yeh else shift bhi kar sakta hai aur andar wala if reduce bhi; parsers aam taur par shift chunte hain."}},
+      {"type": "numerical", "kind": "problem", "difficulty": "medium", "q": {"en": "With E -> E + id | id, how many reduce actions are needed to parse id + id + id?", "ru": "E -> E + id | id ke saath id + id + id parse karne ke liye kitne reduce actions chahiye?"},
+       "answer": 3, "tolerance": 0, "hints": [{"en": "One reduce E -> id, then one E -> E + id per '+ id'.", "ru": "Ek reduce E -> id, phir har '+ id' ke liye ek E -> E + id."}],
+       "explanation": {"en": "E -> id once and E -> E + id twice = 3 reductions.", "ru": "E -> id ek dafa aur E -> E + id do dafa = 3 reductions."}},
+      {"type": "mcq", "kind": "conceptual", "difficulty": "hard", "q": {"en": "Which LR variant accepts the most grammars?", "ru": "Kaunsa LR variant sab se zyada grammars qubool karta hai?"},
+       "options": [{"en": "Canonical LR(1)", "ru": "Canonical LR(1)"}, {"en": "LALR(1)", "ru": "LALR(1)"}, {"en": "SLR(1)", "ru": "SLR(1)"}, {"en": "LR(0)", "ru": "LR(0)"}],
+       "answer": 0, "hints": [{"en": "It keeps the most precise lookaheads.", "ru": "Yeh sab se durust lookaheads rakhta hai."}],
+       "explanation": {"en": "LR(0) is in SLR, in LALR, in LR(1); LR(1) is the most powerful (but has the largest tables).", "ru": "LR(0) SLR mein, SLR LALR mein, LALR LR(1) mein; LR(1) sab se taqatwar hai (lekin tables sab se bari)."}}
+    ]
+  },
+  {
+    "id": "intermediate_code",
+    "title": {"en": "Intermediate Code and Code Optimization", "ru": "Intermediate Code aur Code Optimization"},
+    "subject": "Compiler Construction",
+    "category": "back_end",
+    "aliases": ["intermediate code", "three address code", "three-address code", "tac", "quadruples", "code optimization", "code optimisation", "constant folding", "dead code elimination", "basic blocks", "syntax directed translation"],
+    "search_query": "three address code intermediate code generation optimization",
+    "video_queries": ["three address code intermediate code generation compiler design", "code optimization techniques compiler design constant folding"],
+    "subtopics": [{"name": "Three-address code", "terms": ["three address code"]}, {"name": "Quadruples", "terms": ["quadruple", "triple"]}, {"name": "Optimization", "terms": ["constant folding", "dead code", "common subexpression"]}, {"name": "Basic blocks", "terms": ["basic block"]}],
+    "practice": ["cc_tac"],
+    "intro": {"en": "Between the parse tree and machine code, compilers use a simple intermediate language. It is easy to generate, easy to optimise and independent of the target machine.",
+              "ru": "Parse tree aur machine code ke darmiyan compilers ek saada intermediate zubaan istemal karte hain. Ise banana aur optimise karna aasan hai aur yeh target machine se azad hai."},
+    "definition": {"en": "Three-address code (TAC) is an intermediate representation in which each instruction has at most one operator and at most three addresses, for example t1 = b * c. Code optimization transforms the code to run faster or use less memory without changing its meaning.",
+                   "ru": "Three-address code (TAC) aisi intermediate representation hai jis ki har instruction mein zyada se zyada ek operator aur teen addresses hote hain, maslan t1 = b * c. Code optimization code ko maani badle baghair tez chalne ya kam memory lene wala banati hai."},
+    "explanation": {"en": "TAC is produced by walking the syntax tree: each operator node gets a new temporary that holds its result. Common forms are assignments, copies, conditional and unconditional jumps (if x < y goto L1), and procedure calls. TAC is stored as quadruples (op, arg1, arg2, result) or triples (results referred to by position). The code is split into basic blocks - straight-line sequences with one entry and one exit - which form a control-flow graph. Typical optimizations: constant folding (2 * 3 becomes 6), constant propagation, common sub-expression elimination (compute b * c once), dead-code elimination (remove results never used), copy propagation, and loop optimizations such as moving loop-invariant code out of the loop and strength reduction (replace i * 4 by repeated addition).",
+                    "ru": "TAC syntax tree par chal kar banta hai: har operator node ko naya temporary milta hai jo us ka natija rakhta hai. Aam shaklein assignments, copies, conditional aur unconditional jumps (if x < y goto L1), aur procedure calls hain. TAC quadruples (op, arg1, arg2, result) ya triples (natije position se) ki shakal mein rakha jata hai. Code basic blocks mein toot-ta hai - seedhe silsile jin ka ek darwaza andar aur ek bahar - jo control-flow graph banate hain. Aam optimizations: constant folding (2 * 3 ban jata hai 6), constant propagation, common sub-expression elimination (b * c ek dafa nikalna), dead-code elimination (kabhi istemal na hone wale natije hatana), copy propagation, aur loop optimizations jaise loop-invariant code ko loop se bahar nikalna aur strength reduction (i * 4 ko baar baar jama se badalna)."},
+    "example": {"en": "a = b * c + b * c - 2 * 3. TAC: t1 = b * c; t2 = b * c; t3 = t1 + t2; t4 = 2 * 3; t5 = t3 - t4; a = t5. After common sub-expression elimination and constant folding: t1 = b * c; t3 = t1 + t1; a = t3 - 6.",
+                "ru": "a = b * c + b * c - 2 * 3. TAC: t1 = b * c; t2 = b * c; t3 = t1 + t2; t4 = 2 * 3; t5 = t3 - t4; a = t5. Common sub-expression elimination aur constant folding ke baad: t1 = b * c; t3 = t1 + t1; a = t3 - 6."},
+    "key_concepts": [
+      {"term": "Temporary", "en": "Compiler-made name holding an intermediate result (t1, t2 ...).", "ru": "Compiler ka banaya naam jo darmiyani natija rakhta hai (t1, t2 ...)."},
+      {"term": "Basic block", "en": "Straight-line code with a single entry and exit.", "ru": "Seedha code jis ka ek hi andar aur ek hi bahar ka rasta ho."},
+      {"term": "Safe optimization", "en": "Must not change the program's observable behaviour.", "ru": "Program ka zahiri rawaiyya nahi badalna chahiye."}
+    ],
+    "formulas": [],
+    "code": [
+      "import ast",
+      "",
+      "def to_tac(expr):",
+      "    code, count = [], [0]",
+      "    def walk(node):",
+      "        if isinstance(node, ast.BinOp):",
+      "            left, right = walk(node.left), walk(node.right)",
+      "            count[0] += 1",
+      "            temp = f't{count[0]}'",
+      "            op = {ast.Add: '+', ast.Sub: '-', ast.Mult: '*', ast.Div: '/'}[type(node.op)]",
+      "            code.append(f'{temp} = {left} {op} {right}')",
+      "            return temp",
+      "        return ast.unparse(node)",
+      "    result = walk(ast.parse(expr, mode='eval').body)",
+      "    return code, result",
+      "",
+      "code, result = to_tac('b * c + b * c - 2 * 3')",
+      "print('\\n'.join(code + [f'a = {result}']))"
+    ],
+    "code_explanation": [
+      {"en": "The expression is parsed into a tree; every operator node produces one TAC instruction with a new temporary.", "ru": "Expression tree mein parse hota hai; har operator node naye temporary ke saath ek TAC instruction banata hai."},
+      {"en": "Children are translated first (post-order), so operands are ready before they are used.", "ru": "Bachay pehle tarjuma hote hain (post-order), is liye operands istemal se pehle tayyar hote hain."}
+    ],
+    "applications": [
+      {"en": "LLVM IR and Java bytecode are real intermediate representations.", "ru": "LLVM IR aur Java bytecode asal intermediate representations hain."},
+      {"en": "Optimizing compilers (gcc -O2) apply these transformations.", "ru": "Optimizing compilers (gcc -O2) yeh transformations lagate hain."}
+    ],
+    "exam_points": [
+      {"en": "Generate TAC for an expression or an if/while statement.", "ru": "Expression ya if/while statement ka TAC banayein."},
+      {"en": "Write quadruples and triples for the same TAC.", "ru": "Ek hi TAC ke quadruples aur triples likhein."},
+      {"en": "Apply and name optimizations on a code fragment.", "ru": "Code ke tukre par optimizations lagayein aur un ke naam batayein."}
+    ],
+    "common_mistakes": [
+      {"en": "Using two operators in one TAC instruction.", "ru": "Ek TAC instruction mein do operators istemal karna."},
+      {"en": "Removing code that has side effects (e.g. a function call) as 'dead'.", "ru": "Side effects wale code (maslan function call) ko 'dead' samajh kar hatana."},
+      {"en": "Reusing a sub-expression after one of its operands has changed.", "ru": "Operand badalne ke baad bhi sub-expression ko dobara istemal karna."}
+    ],
+    "questions": [
+      {"type": "numerical", "kind": "problem", "difficulty": "medium", "q": {"en": "How many TAC instructions (excluding the final assignment) does x = a + b * c - d need?", "ru": "x = a + b * c - d ke liye kitni TAC instructions chahiyein (aakhri assignment ke ilawa)?"},
+       "answer": 3, "tolerance": 0, "hints": [{"en": "One instruction per operator.", "ru": "Har operator ke liye ek instruction."}],
+       "explanation": {"en": "t1 = b * c; t2 = a + t1; t3 = t2 - d: 3 instructions.", "ru": "t1 = b * c; t2 = a + t1; t3 = t2 - d: 3 instructions."}},
+      {"type": "mcq", "kind": "basic", "difficulty": "easy", "q": {"en": "Replacing 4 * 2 by 8 at compile time is called:", "ru": "Compile time par 4 * 2 ko 8 se badalna kehlata hai:"},
+       "options": [{"en": "Constant folding", "ru": "Constant folding"}, {"en": "Dead-code elimination", "ru": "Dead-code elimination"}, {"en": "Strength reduction", "ru": "Strength reduction"}, {"en": "Loop unrolling", "ru": "Loop unrolling"}],
+       "answer": 0, "hints": [{"en": "Both operands are constants.", "ru": "Dono operands constants hain."}],
+       "explanation": {"en": "Evaluating constant expressions during compilation is constant folding.", "ru": "Compilation ke dauran constant expressions ka hisaab constant folding hai."}},
+      {"type": "tf", "kind": "conceptual", "difficulty": "medium", "q": {"en": "A basic block can have a jump into the middle of it.", "ru": "Basic block ke beech mein jump aa sakta hai."},
+       "answer": false, "hints": [{"en": "Single entry point.", "ru": "Andar aane ka ek hi rasta."}],
+       "explanation": {"en": "False: control enters a basic block only at its first instruction.", "ru": "Ghalat: control basic block mein sirf pehli instruction se dakhil hota hai."}}
+    ]
+  }
+]

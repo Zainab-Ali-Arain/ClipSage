@@ -1,0 +1,468 @@
+[
+  {
+    "id": "binary_search_tree",
+    "title": {
+      "en": "Binary Search Tree",
+      "ru": "Binary Search Tree"
+    },
+    "subject": "Data Structures",
+    "category": "cs",
+    "aliases": [
+      "binary search tree",
+      "bst",
+      "binary tree",
+      "tree traversal",
+      "inorder traversal"
+    ],
+    "search_query": "binary search tree insertion search",
+    "intro": {
+      "en": "A binary search tree keeps data sorted in a tree shape so that searching, inserting and deleting can be fast.",
+      "ru": "Binary search tree data ko tree ki shakal mein tarteeb se rakhta hai taake search, insert aur delete tez ho sakein."
+    },
+    "definition": {
+      "en": "A binary search tree (BST) is a binary tree in which every key in a node's left subtree is smaller than the node's key and every key in its right subtree is larger.",
+      "ru": "Binary search tree (BST) aisa binary tree hai jis mein har node ke left subtree ki har key us node ki key se chhoti aur right subtree ki har key bari hoti hai."
+    },
+    "explanation": {
+      "en": "To search, compare the key with the root and go left if it is smaller or right if it is larger, repeating until the key is found or a null child is reached. Insertion follows the same path and adds the new key as a leaf. Deleting a node with two children replaces it with its in-order successor (the smallest key in its right subtree). All of these take O(h) time where h is the height: O(log n) for a balanced tree but O(n) for a skewed tree (e.g. inserting sorted data). Self-balancing trees such as AVL and red-black trees keep h = O(log n). An in-order traversal (left, node, right) visits the keys in sorted order.",
+      "ru": "Search ke liye key ko root se milayein: chhoti ho to left, bari ho to right jayein, aur yahi dohrayein jab tak key mil na jaye ya khali child aa jaye. Insertion isi raste par chal kar nayi key ko leaf ke taur par lagati hai. Do children wali node delete karne ke liye use in-order successor (right subtree ki sab se chhoti key) se badla jata hai. Yeh sab O(h) waqt lete hain jahan h height hai: balanced tree mein O(log n) lekin skewed tree (maslan sorted data insert karna) mein O(n). AVL aur red-black jaise self-balancing trees h = O(log n) rakhte hain. In-order traversal (left, node, right) keys ko tarteeb se dikhata hai."
+    },
+    "example": {
+      "en": "Insert 50, 30, 70, 20, 40, 60, 80. Root 50; 30 goes left; 70 right; 20 left of 30; 40 right of 30; 60 left of 70; 80 right of 70. Searching 60: 60 > 50 go right to 70, 60 < 70 go left, found in 3 comparisons. In-order traversal: 20, 30, 40, 50, 60, 70, 80.",
+      "ru": "50, 30, 70, 20, 40, 60, 80 insert karein. Root 50; 30 left; 70 right; 20, 30 ke left; 40, 30 ke right; 60, 70 ke left; 80, 70 ke right. 60 search: 60 > 50 to right 70 par, 60 < 70 to left, 3 muqablon mein mil gaya. In-order traversal: 20, 30, 40, 50, 60, 70, 80."
+    },
+    "key_concepts": [
+      {
+        "term": "BST property",
+        "en": "Left subtree smaller, right subtree larger.",
+        "ru": "Left subtree chhota, right subtree bara."
+      },
+      {
+        "term": "Height",
+        "en": "Longest root-to-leaf path; determines the running time.",
+        "ru": "Root se leaf tak sab se lamba rasta; yahi waqt tay karta hai."
+      },
+      {
+        "term": "In-order successor",
+        "en": "Smallest key in the right subtree; used in deletion.",
+        "ru": "Right subtree ki sab se chhoti key; deletion mein istemal."
+      },
+      {
+        "term": "Balanced tree",
+        "en": "Height O(log n), e.g. AVL or red-black trees.",
+        "ru": "Height O(log n), maslan AVL ya red-black trees."
+      }
+    ],
+    "formulas": [
+      {
+        "latex": "T_{search} = O(h), \\quad h = O(\\log n) \\text{ (balanced)}, \\; O(n) \\text{ (skewed)}",
+        "en": "Time complexity of search/insert/delete.",
+        "ru": "Search/insert/delete ki time complexity."
+      }
+    ],
+    "code": [
+      "class Node:",
+      "    def __init__(self, key):",
+      "        self.key, self.left, self.right = key, None, None",
+      "",
+      "def insert(root, key):",
+      "    if root is None:",
+      "        return Node(key)",
+      "    if key < root.key:",
+      "        root.left = insert(root.left, key)",
+      "    else:",
+      "        root.right = insert(root.right, key)",
+      "    return root",
+      "",
+      "def inorder(root):",
+      "    return inorder(root.left) + [root.key] + inorder(root.right) if root else []",
+      "",
+      "root = None",
+      "for k in [50, 30, 70, 20, 40, 60, 80]:",
+      "    root = insert(root, k)",
+      "print('in-order:', inorder(root))"
+    ],
+    "code_explanation": [
+      {
+        "en": "insert walks left or right by comparing keys and attaches the new node at an empty spot.",
+        "ru": "insert keys milate hue left ya right chalta hai aur khali jagah par nayi node lagata hai."
+      },
+      {
+        "en": "inorder visits left subtree, node, right subtree, which prints the keys sorted.",
+        "ru": "inorder left subtree, node, right subtree dekhta hai, jis se keys tarteeb se print hoti hain."
+      }
+    ],
+    "applications": [
+      {
+        "en": "Implementing sorted sets and maps (e.g. TreeMap in Java).",
+        "ru": "Sorted sets aur maps banana (maslan Java ka TreeMap)."
+      },
+      {
+        "en": "Database indexes (B-trees are a generalisation).",
+        "ru": "Database indexes (B-trees is ki wasee shakal hain)."
+      },
+      {
+        "en": "Range queries such as 'all students with marks between 60 and 80'.",
+        "ru": "Range queries jaise '60 se 80 marks wale tamam students'."
+      }
+    ],
+    "exam_points": [
+      {
+        "en": "Draw the BST for a given insertion order and write its traversals.",
+        "ru": "Di gayi tarteeb se BST banayein aur traversals likhein."
+      },
+      {
+        "en": "State the complexities for balanced and skewed trees.",
+        "ru": "Balanced aur skewed trees ki complexities likhein."
+      },
+      {
+        "en": "Explain deletion of a node with two children.",
+        "ru": "Do children wali node ki deletion samjhayein."
+      }
+    ],
+    "common_mistakes": [
+      {
+        "en": "Checking the BST property only against the parent instead of the whole subtree.",
+        "ru": "BST property sirf parent se check karna, poore subtree se nahi."
+      },
+      {
+        "en": "Assuming search is always O(log n).",
+        "ru": "Search ko hamesha O(log n) samajhna."
+      },
+      {
+        "en": "Mixing up pre-order, in-order and post-order traversals.",
+        "ru": "Pre-order, in-order aur post-order traversals gadmad karna."
+      }
+    ],
+    "questions": [
+      {
+        "type": "mcq",
+        "kind": "basic",
+        "q": {
+          "en": "Which traversal of a BST gives the keys in sorted order?",
+          "ru": "BST ka kaunsa traversal keys ko tarteeb se deta hai?"
+        },
+        "options": [
+          {
+            "en": "In-order",
+            "ru": "In-order"
+          },
+          {
+            "en": "Pre-order",
+            "ru": "Pre-order"
+          },
+          {
+            "en": "Post-order",
+            "ru": "Post-order"
+          },
+          {
+            "en": "None of them",
+            "ru": "Koi nahi"
+          }
+        ],
+        "answer": 0,
+        "hints": [
+          {
+            "en": "Left, node, right.",
+            "ru": "Left, node, right."
+          }
+        ],
+        "explanation": {
+          "en": "In-order visits smaller keys, then the node, then larger keys.",
+          "ru": "In-order pehle chhoti keys, phir node, phir bari keys dekhta hai."
+        },
+        "difficulty": "easy"
+      },
+      {
+        "type": "mcq",
+        "kind": "conceptual",
+        "q": {
+          "en": "Inserting 1, 2, 3, 4, 5 in that order into an empty BST makes search take:",
+          "ru": "Khali BST mein 1, 2, 3, 4, 5 isi tarteeb se dalne par search kitna waqt lega?"
+        },
+        "options": [
+          {
+            "en": "O(n), the tree is a chain",
+            "ru": "O(n), tree ek zanjeer ban gaya"
+          },
+          {
+            "en": "O(log n)",
+            "ru": "O(log n)"
+          },
+          {
+            "en": "O(1)",
+            "ru": "O(1)"
+          },
+          {
+            "en": "O(n log n)",
+            "ru": "O(n log n)"
+          }
+        ],
+        "answer": 0,
+        "hints": [
+          {
+            "en": "Where does each new key go?",
+            "ru": "Har nayi key kahan jati hai?"
+          }
+        ],
+        "explanation": {
+          "en": "Every key goes to the right, so the height equals n.",
+          "ru": "Har key right mein jati hai, height n ke barabar ho jati hai."
+        },
+        "difficulty": "medium"
+      },
+      {
+        "type": "numerical",
+        "kind": "problem",
+        "q": {
+          "en": "After inserting 50, 30, 70, 20, 40, 60, 80, how many comparisons are needed to find 60 (counting the comparison that finds it)?",
+          "ru": "50, 30, 70, 20, 40, 60, 80 dalne ke baad 60 dhoondne mein kitne muqable lagenge (jis muqable par mile woh bhi gin kar)?"
+        },
+        "answer": 3,
+        "tolerance": 0,
+        "hints": [
+          {
+            "en": "Compare with 50, then 70, then ...",
+            "ru": "50 se, phir 70 se, phir ..."
+          }
+        ],
+        "explanation": {
+          "en": "50 (go right), 70 (go left), 60 (found): 3 comparisons.",
+          "ru": "50 (right), 70 (left), 60 (mil gaya): 3 muqable."
+        },
+        "difficulty": "medium"
+      }
+    ]
+  },
+  {
+    "id": "normalization",
+    "title": {
+      "en": "Database Normalization",
+      "ru": "Database Normalization"
+    },
+    "subject": "Databases",
+    "category": "cs",
+    "aliases": [
+      "normalization",
+      "normalisation",
+      "database normalization",
+      "normal forms",
+      "1nf",
+      "2nf",
+      "3nf",
+      "bcnf",
+      "functional dependency"
+    ],
+    "search_query": "database normalization 1nf 2nf 3nf",
+    "intro": {
+      "en": "Normalization is how database designers organise tables so that the same fact is not stored in many places, which avoids inconsistent data.",
+      "ru": "Normalization ke zariye database designers tables ko aise tarteeb dete hain ke ek hi baat kai jagah save na ho, taake data be-rabt (inconsistent) na ho."
+    },
+    "definition": {
+      "en": "Normalization is the process of decomposing relational tables, guided by functional dependencies, to reduce redundancy and avoid insertion, update and deletion anomalies.",
+      "ru": "Normalization functional dependencies ki rehnumai mein relational tables ko chhote tables mein todne ka amal hai, taake redundancy kam ho aur insertion, update aur deletion anomalies se bacha ja sake."
+    },
+    "explanation": {
+      "en": "A functional dependency A -> B means the value of A determines the value of B. First normal form (1NF): every column holds a single atomic value (no lists). Second normal form (2NF): 1NF and no non-key column depends on only part of a composite primary key (no partial dependency). Third normal form (3NF): 2NF and no non-key column depends on another non-key column (no transitive dependency). Boyce-Codd normal form (BCNF) is stricter: the left side of every non-trivial functional dependency must be a candidate key. The smaller tables are linked again with foreign keys. Over-normalising can slow reads because queries need many joins, so some systems denormalise on purpose.",
+      "ru": "Functional dependency A -> B ka matlab hai A ki value B ki value tay karti hai. First normal form (1NF): har column mein ek hi atomic value (lists nahi). Second normal form (2NF): 1NF aur koi non-key column composite primary key ke sirf ek hisse par munhasir na ho (partial dependency nahi). Third normal form (3NF): 2NF aur koi non-key column doosre non-key column par munhasir na ho (transitive dependency nahi). Boyce-Codd normal form (BCNF) zyada sakht hai: har non-trivial functional dependency ka baayan hissa candidate key ho. Chhote tables foreign keys se dobara jore jate hain. Zyada normalisation reads ko dheema kar sakti hai kyunki queries ko bohat se joins chahiye, is liye kuch systems jaan boojh kar denormalise karte hain."
+    },
+    "example": {
+      "en": "Table Enrollment(student_id, course_id, student_name, course_title, instructor, instructor_office) with key (student_id, course_id). student_name depends only on student_id and course_title only on course_id: partial dependencies, so it is not 2NF. Split into Student(student_id, student_name), Course(course_id, course_title, instructor, instructor_office) and Enrollment(student_id, course_id). In Course, instructor_office depends on instructor (a non-key column): a transitive dependency, so split again into Course(course_id, course_title, instructor) and Instructor(instructor, instructor_office) to reach 3NF.",
+      "ru": "Table Enrollment(student_id, course_id, student_name, course_title, instructor, instructor_office), key (student_id, course_id). student_name sirf student_id par aur course_title sirf course_id par munhasir hai: partial dependencies, yaani 2NF nahi. Todein: Student(student_id, student_name), Course(course_id, course_title, instructor, instructor_office) aur Enrollment(student_id, course_id). Course mein instructor_office instructor (non-key) par munhasir hai: transitive dependency, is liye 3NF ke liye mazeed todein: Course(course_id, course_title, instructor) aur Instructor(instructor, instructor_office)."
+    },
+    "key_concepts": [
+      {
+        "term": "Functional dependency",
+        "en": "A -> B: A determines B.",
+        "ru": "A -> B: A, B ko tay karta hai."
+      },
+      {
+        "term": "Anomalies",
+        "en": "Insertion, update and deletion problems caused by redundancy.",
+        "ru": "Redundancy se paida hone wale insertion, update aur deletion masail."
+      },
+      {
+        "term": "Partial vs transitive dependency",
+        "en": "On part of the key (breaks 2NF) vs through a non-key column (breaks 3NF).",
+        "ru": "Key ke hisse par (2NF torti hai) vs non-key column ke zariye (3NF torti hai)."
+      }
+    ],
+    "formulas": [
+      {
+        "latex": "X \\rightarrow Y",
+        "en": "Functional dependency notation.",
+        "ru": "Functional dependency likhne ka tareeqa."
+      }
+    ],
+    "code": [
+      "import sqlite3",
+      "",
+      "db = sqlite3.connect(':memory:')",
+      "db.executescript('''",
+      "CREATE TABLE Instructor(instructor TEXT PRIMARY KEY, office TEXT);",
+      "CREATE TABLE Course(course_id TEXT PRIMARY KEY, title TEXT,",
+      "                    instructor TEXT REFERENCES Instructor(instructor));",
+      "INSERT INTO Instructor VALUES ('Dr. Khan', 'B-12');",
+      "INSERT INTO Course VALUES ('CS301', 'Databases', 'Dr. Khan'), ('CS302', 'Networks', 'Dr. Khan');",
+      "''')",
+      "db.execute(\"UPDATE Instructor SET office = 'C-7' WHERE instructor = 'Dr. Khan'\")",
+      "for row in db.execute('SELECT c.course_id, c.title, i.office FROM Course c JOIN Instructor i USING (instructor)'):",
+      "    print(row)"
+    ],
+    "code_explanation": [
+      {
+        "en": "The instructor's office is stored once in the Instructor table (3NF), not in every course row.",
+        "ru": "Instructor ka office Instructor table mein ek dafa save hai (3NF), har course ki row mein nahi."
+      },
+      {
+        "en": "One UPDATE changes the office for every course - no update anomaly.",
+        "ru": "Ek UPDATE har course ke liye office badal deta hai - koi update anomaly nahi."
+      },
+      {
+        "en": "The JOIN puts the information back together when it is needed.",
+        "ru": "JOIN zaroorat par maloomat ko dobara jorta hai."
+      }
+    ],
+    "applications": [
+      {
+        "en": "Designing schemas for banking, university and e-commerce systems.",
+        "ru": "Banking, university aur e-commerce systems ke schemas banana."
+      },
+      {
+        "en": "Keeping data consistent when many users update it.",
+        "ru": "Jab bohat se users update karein to data ko durust rakhna."
+      }
+    ],
+    "exam_points": [
+      {
+        "en": "Define 1NF, 2NF, 3NF and BCNF with examples.",
+        "ru": "Misalon ke saath 1NF, 2NF, 3NF aur BCNF ki tareef."
+      },
+      {
+        "en": "Identify partial and transitive dependencies in a given table and decompose it.",
+        "ru": "Diye gaye table mein partial aur transitive dependencies pehchan kar use todein."
+      },
+      {
+        "en": "Explain the three anomalies.",
+        "ru": "Teen anomalies samjhayein."
+      }
+    ],
+    "common_mistakes": [
+      {
+        "en": "Confusing partial dependency (2NF) with transitive dependency (3NF).",
+        "ru": "Partial dependency (2NF) ko transitive dependency (3NF) samajhna."
+      },
+      {
+        "en": "Decomposing in a way that loses information (lossy join).",
+        "ru": "Aise todna ke maloomat zaya ho (lossy join)."
+      },
+      {
+        "en": "Believing more normalisation is always better for performance.",
+        "ru": "Yeh samajhna ke zyada normalisation hamesha performance ke liye behtar hai."
+      }
+    ],
+    "questions": [
+      {
+        "type": "mcq",
+        "kind": "basic",
+        "q": {
+          "en": "A column that stores 'Math, Physics' (a list of values) violates:",
+          "ru": "Jo column 'Math, Physics' (values ki list) rakhta hai woh kis ki khilaf warzi hai?"
+        },
+        "options": [
+          {
+            "en": "1NF",
+            "ru": "1NF"
+          },
+          {
+            "en": "2NF only",
+            "ru": "Sirf 2NF"
+          },
+          {
+            "en": "3NF only",
+            "ru": "Sirf 3NF"
+          },
+          {
+            "en": "Nothing",
+            "ru": "Kisi ki nahi"
+          }
+        ],
+        "answer": 0,
+        "hints": [
+          {
+            "en": "1NF requires atomic values.",
+            "ru": "1NF atomic values maangta hai."
+          }
+        ],
+        "explanation": {
+          "en": "A list in one cell is not atomic, so the table is not in 1NF.",
+          "ru": "Ek cell mein list atomic nahi, is liye table 1NF mein nahi."
+        },
+        "difficulty": "easy"
+      },
+      {
+        "type": "mcq",
+        "kind": "conceptual",
+        "q": {
+          "en": "A non-key column depends on another non-key column. Which normal form is violated?",
+          "ru": "Ek non-key column doosre non-key column par munhasir hai. Kaunsa normal form toota?"
+        },
+        "options": [
+          {
+            "en": "3NF",
+            "ru": "3NF"
+          },
+          {
+            "en": "1NF",
+            "ru": "1NF"
+          },
+          {
+            "en": "2NF",
+            "ru": "2NF"
+          },
+          {
+            "en": "None",
+            "ru": "Koi nahi"
+          }
+        ],
+        "answer": 0,
+        "hints": [
+          {
+            "en": "This is a transitive dependency.",
+            "ru": "Yeh transitive dependency hai."
+          }
+        ],
+        "explanation": {
+          "en": "Transitive dependencies are removed in 3NF.",
+          "ru": "Transitive dependencies 3NF mein khatam hoti hain."
+        },
+        "difficulty": "medium"
+      },
+      {
+        "type": "short",
+        "kind": "exam",
+        "q": {
+          "en": "What is an update anomaly?",
+          "ru": "Update anomaly kya hai?"
+        },
+        "answer": "When the same fact is stored in several rows, updating it in only some of them leaves the database inconsistent; for example changing an instructor's office in one course row but not the others.",
+        "keywords": [
+          "same fact",
+          "several rows",
+          "inconsistent"
+        ],
+        "hints": [
+          {
+            "en": "Think of redundant copies of the same data.",
+            "ru": "Ek hi data ki faltu copies ke baare mein sochein."
+          }
+        ],
+        "explanation": {
+          "en": "Redundant copies can disagree after a partial update.",
+          "ru": "Adhoore update ke baad faltu copies mein ikhtilaf ho sakta hai."
+        },
+        "difficulty": "hard"
+      }
+    ]
+  }
+]

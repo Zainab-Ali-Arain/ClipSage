@@ -3,6 +3,7 @@ Practice questions: grading, hints and questions built from lecture transcripts.
 
 Grading
   * MCQ        - exact match of the chosen option.
+  * true/false - exact match.
   * numerical  - the number is parsed (fractions like 3/4 allowed) and compared
                  with the stored answer within a tolerance.
   * short      - an ML grader: Sentence-BERT cosine similarity between the
@@ -112,10 +113,19 @@ def grade_short(question: dict, answer: str) -> dict:
             "coverage": round(coverage, 3), "matched": matched, "missing": missing, "method": method}
 
 
+def grade_tf(question: dict, response) -> dict:
+    if isinstance(response, str):
+        response = {"true": True, "false": False}.get(response.strip().lower())
+    ok = response is not None and bool(response) == bool(question["answer"])
+    return {"status": CORRECT if ok else INCORRECT, "score": 1.0 if ok else 0.0}
+
+
 def grade(question: dict, response) -> dict:
     kind = question["type"]
     if kind == "mcq":
         return grade_mcq(question, response)
+    if kind == "tf":
+        return grade_tf(question, response)
     if kind == "numerical":
         return grade_numerical(question, response)
     return grade_short(question, response)

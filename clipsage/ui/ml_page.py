@@ -6,7 +6,8 @@ import streamlit as st
 
 from .. import playground as pg
 from ..knowledge import load_topics
-from .common import S, T, TL, badges, bi_html, esc, get_progress, open_topic, show
+from .common import activity, badges, en as S, esc, open_topic, ui as T, ui as TL
+from .common import content_html as bi_html, show_content as show
 
 LESSON_FOR = {"linear_regression": "linear_regression", "gradient_descent": "gradient_descent",
               "logistic_regression": "logistic_regression", "knn": "knn", "naive_bayes": "naive_bayes",
@@ -79,10 +80,8 @@ def _predict_box(out: dict, n_features: int, key: str) -> None:
 
 def ml_page() -> None:
     st.title(TL("nav_ml"))
-    show({"en": "Pick an algorithm, choose data, change the parameters and run it. Every number and chart below is "
-                "computed by the real algorithm on your data.",
-          "ru": "Algorithm chunein, data chunein, parameters badlein aur chalayein. Neeche har number aur chart asli "
-                "algorithm ne aap ke data par nikala hai."})
+    st.caption("Pick an algorithm, choose data, change the parameters and run it. Every number and chart is computed "
+               "by the real algorithm on your data.")
     names = list(pg.ALGORITHMS)
     default = st.session_state.get("ml_algorithm", "linear_regression")
     algo = st.selectbox(TL("algorithm"), names, index=names.index(default) if default in names else 0,
@@ -92,7 +91,7 @@ def ml_page() -> None:
     topics = load_topics()
     lesson_id = LESSON_FOR.get(algo)
     if lesson_id in topics:
-        st.button(f"\U0001F4D8 {TL('lesson_link')}", on_click=open_topic, args=(topics[lesson_id]["title"]["en"],),
+        st.button(f"\U0001F4D8 {TL('lesson_link')}", on_click=open_topic, args=(lesson_id, topics[lesson_id]["subject"]),
                   key="ml_lesson")
 
     left, right = st.columns([1, 2], gap="large")
@@ -176,7 +175,7 @@ def ml_page() -> None:
                     with st.spinner("Sentence-BERT ..."):
                         out = pg.run_sentence_bert(data["sentences"])
                 if run:
-                    get_progress().record_playground_run()
+                    activity().add_practice("Machine Learning", algo, f"{S(pg.ALGORITHMS[algo])} run")
                 st.session_state["ml_last"] = algo
                 n_features = data["X"].shape[1] if "X" in data else 0
                 _show_output(out, f"out_{algo}")
@@ -185,5 +184,4 @@ def ml_page() -> None:
             except (pg.DataError, ValueError) as e:
                 st.error(T("data_error", err=e))
         else:
-            show({"en": "Press “Run algorithm” to see the results.",
-                  "ru": "Natije dekhne ke liye “Algorithm chalayein” dabayein."})
+            st.caption("Press Run algorithm to see the results.")

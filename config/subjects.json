@@ -1,0 +1,65 @@
+{
+  "_comment": "The six ClipSage subjects. Names are shown in the (English-only) interface. Each subject's lessons live in knowledge/<id>.json; 'tools' lists the practice simulators available in that subject; 'categories' names the topic groups.",
+  "subjects": [
+    {
+      "id": "operating_systems",
+      "name": "Operating Systems",
+      "icon": ":material/memory:",
+      "tagline": "Processes, scheduling, synchronization, deadlocks and memory management",
+      "intro": {"en": "Operating Systems explains how a computer shares its CPU, memory and devices between many programs safely and efficiently - from processes and threads to CPU scheduling, synchronization, deadlocks, paging and virtual memory.",
+                "ru": "Operating Systems samjhata hai ke computer apna CPU, memory aur devices bohat se programs mein mehfooz aur kaar-aamad tareeqe se kaise baant-ta hai - processes aur threads se le kar CPU scheduling, synchronization, deadlocks, paging aur virtual memory tak."},
+      "categories": {"concept": "Core concepts", "algorithm": "Algorithms"},
+      "tools": ["os_scheduling", "os_page_replacement", "os_paging", "os_bankers"]
+    },
+    {
+      "id": "machine_learning",
+      "name": "Machine Learning",
+      "icon": ":material/psychology:",
+      "tagline": "Supervised and unsupervised algorithms, optimisation, NLP and the maths behind them",
+      "intro": {"en": "Machine Learning teaches computers to learn patterns from data. This subject covers regression and classification algorithms, clustering, gradient descent, overfitting, text representation (TF-IDF, embeddings) and the probability, statistics and calculus they rely on.",
+                "ru": "Machine Learning computers ko data se patterns seekhna sikhata hai. Is subject mein regression aur classification algorithms, clustering, gradient descent, overfitting, text representation (TF-IDF, embeddings) aur un ki buniyad wali probability, statistics aur calculus shamil hain."},
+      "categories": {"ml_algorithm": "Algorithms", "ml_concept": "Model concepts", "nlp": "NLP and retrieval", "math": "Maths for ML"},
+      "tools": ["ml_playground", "ml_math"]
+    },
+    {
+      "id": "linear_algebra",
+      "name": "Linear Algebra",
+      "icon": ":material/grid_on:",
+      "tagline": "Vectors, matrices, systems of equations, vector spaces and eigenvalues",
+      "intro": {"en": "Linear Algebra is the mathematics of vectors and matrices. It is the language of machine learning, computer graphics and engineering: solving systems of equations, understanding transformations and finding eigenvalues.",
+                "ru": "Linear Algebra vectors aur matrices ki mathematics hai. Yeh machine learning, computer graphics aur engineering ki zubaan hai: equations ke systems hal karna, transformations samajhna aur eigenvalues nikalna."},
+      "categories": {"foundations": "Foundations", "computation": "Computation", "advanced": "Advanced topics"},
+      "tools": ["la_solver", "la_elimination"]
+    },
+    {
+      "id": "compiler_construction",
+      "name": "Compiler Construction",
+      "icon": ":material/code:",
+      "tagline": "Lexical analysis, grammars, parsing and code generation",
+      "intro": {"en": "Compiler Construction shows how source code becomes machine code: scanning characters into tokens, parsing them with grammars, checking meaning, and generating and optimising intermediate code.",
+                "ru": "Compiler Construction dikhata hai ke source code machine code kaise banta hai: characters ko tokens mein todna, grammars se unhein parse karna, maani check karna, aur intermediate code banana aur optimise karna."},
+      "categories": {"foundations": "Foundations", "front_end": "Front end (analysis)", "back_end": "Back end (synthesis)"},
+      "tools": ["cc_lexer", "cc_first_follow", "cc_shift_reduce", "cc_tac"]
+    },
+    {
+      "id": "web_engineering",
+      "name": "Web Engineering",
+      "icon": ":material/language:",
+      "tagline": "HTTP, HTML, CSS, JavaScript, REST APIs and web security",
+      "intro": {"en": "Web Engineering covers how the web works and how web applications are built: HTTP and networking basics, HTML structure, CSS layout, JavaScript and the DOM, REST APIs, sessions and security.",
+                "ru": "Web Engineering batata hai ke web kaise kaam karta hai aur web applications kaise banti hain: HTTP aur networking ki buniyad, HTML ka dhancha, CSS layout, JavaScript aur DOM, REST APIs, sessions aur security."},
+      "categories": {"foundations": "Foundations", "front_end": "Front end", "back_end": "Back end and security"},
+      "tools": ["web_live", "web_http"]
+    },
+    {
+      "id": "computer_architecture",
+      "name": "Computer Architecture",
+      "icon": ":material/developer_board:",
+      "tagline": "Number representation, ISA, pipelining, caches and performance",
+      "intro": {"en": "Computer Architecture explains how a processor is organised and why it performs the way it does: how numbers are represented, how instructions execute, pipelining and hazards, the cache memory hierarchy and performance equations.",
+                "ru": "Computer Architecture samjhata hai ke processor kaise munazzam hota hai aur us ki performance aisi kyun hoti hai: numbers kaise represent hote hain, instructions kaise chalti hain, pipelining aur hazards, cache memory hierarchy aur performance equations."},
+      "categories": {"foundations": "Foundations", "processor": "Processor", "memory": "Memory", "performance": "Performance"},
+      "tools": ["ca_numbers", "ca_cache", "ca_pipeline", "ca_performance"]
+    }
+  ]
+}

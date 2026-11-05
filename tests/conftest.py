@@ -82,7 +82,7 @@ LECTURES = {
         "Recovery can terminate a process or preempt its resources.",
         "A semaphore used incorrectly can easily cause a deadlock.",
     ]),
-    "fake_net_001": ("Computer Networks", "TCP Three Way Handshake", "Demo Networks Channel", [
+    "fake_net_001": ("Web Engineering", "TCP Three Way Handshake", "Demo Networks Channel", [
         "TCP is a reliable connection oriented transport protocol.",
         "Before sending data TCP sets up a connection with a three way handshake.",
         "First the client sends a SYN segment with its initial sequence number.",
@@ -106,6 +106,11 @@ LECTURES = {
         "Too much normalization can make queries slower because of many joins.",
     ]),
 }
+
+
+# which lesson each fake lecture belongs to (as the library collector would record it)
+TOPIC_IDS = {"fake_ml_001": "overfitting", "fake_ml_002": "gradient_descent", "fake_os_001": "deadlock",
+             "fake_net_001": "tcp_handshake"}
 
 
 def make_snippets(sentences, seconds_per_sentence=6.0):
@@ -161,7 +166,8 @@ def corpus(tmp_path, monkeypatch):
             snippets = make_snippets(sentences)
             duration = int(snippets[-1]["start"] + snippets[-1]["duration"]) + 1
             writer.writerow({"video_id": vid, "title": title, "channel_id": "UC_fake", "channel_title": channel,
-                             "subject": subject, "source": "test", "duration_seconds": duration,
+                             "subject": subject, "topic_id": TOPIC_IDS.get(vid, ""), "source": "test",
+                             "duration_seconds": duration,
                              "published_at": "", "has_captions": True, "default_audio_language": "en",
                              "view_count": 0, "description": "", "url": ""})
             with open(paths["TRANSCRIPT_DIR"] / f"{vid}.json", "w", encoding="utf-8") as tf:

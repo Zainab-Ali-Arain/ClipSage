@@ -1,0 +1,1685 @@
+[
+  {
+    "id": "processes_threads",
+    "title": {
+      "en": "Processes and Threads",
+      "ru": "Processes aur Threads"
+    },
+    "subject": "Operating Systems",
+    "category": "concept",
+    "aliases": [
+      "process",
+      "thread",
+      "process vs thread",
+      "process and thread",
+      "multithreading",
+      "process control block",
+      "pcb",
+      "context switch",
+      "process states"
+    ],
+    "search_query": "process vs thread operating system process states",
+    "video_queries": [
+      "process vs thread operating system lecture",
+      "process states process control block operating system"
+    ],
+    "subtopics": [
+      {
+        "name": "Process states",
+        "terms": [
+          "process state",
+          "ready state",
+          "running state",
+          "waiting state"
+        ]
+      },
+      {
+        "name": "PCB",
+        "terms": [
+          "process control block",
+          "pcb"
+        ]
+      },
+      {
+        "name": "Threads",
+        "terms": [
+          "thread",
+          "multithreading"
+        ]
+      },
+      {
+        "name": "Context switch",
+        "terms": [
+          "context switch"
+        ]
+      }
+    ],
+    "practice": [
+      "os_scheduling"
+    ],
+    "intro": {
+      "en": "Every program you run becomes a process. Modern programs also split their work into threads so they can do several things at once, like a browser loading a page while you scroll.",
+      "ru": "Har chalne wala program ek process ban jata hai. Aaj ke programs apna kaam threads mein bhi baant dete hain taake ek waqt mein kai kaam ho sakein, jaise browser page load karta rahe aur aap scroll karte rahein."
+    },
+    "definition": {
+      "en": "A process is a program in execution with its own address space and resources. A thread is the smallest unit of CPU scheduling inside a process; threads of the same process share its memory and open files but each has its own registers, program counter and stack.",
+      "ru": "Process chalta hua program hai jis ka apna address space aur resources hote hain. Thread process ke andar CPU scheduling ki sab se chhoti unit hai; ek process ke threads us ki memory aur open files share karte hain lekin har thread ke apne registers, program counter aur stack hote hain."
+    },
+    "explanation": {
+      "en": "The operating system keeps a Process Control Block (PCB) for every process: process id, state, program counter, CPU registers, memory information and open files. A process moves between states: new, ready (waiting for the CPU), running, waiting/blocked (waiting for I/O) and terminated. Switching the CPU from one process to another is a context switch: the OS saves the old PCB state and loads the new one, which costs time. Creating a process (fork) copies or maps a whole address space, so it is expensive; creating a thread is cheaper because threads share the address space. Threads make programs responsive and let them use several CPU cores, but shared memory means threads must synchronise to avoid race conditions. A crash in one thread can bring down the whole process, while processes are isolated from each other.",
+      "ru": "Operating system har process ke liye Process Control Block (PCB) rakhta hai: process id, state, program counter, CPU registers, memory ki maloomat aur open files. Process mukhtalif states se guzarta hai: new, ready (CPU ka intezar), running, waiting/blocked (I/O ka intezar) aur terminated. CPU ko ek process se doosre par le jana context switch kehlata hai: OS purane PCB ki halat save karta hai aur naya load karta hai, jis mein waqt lagta hai. Naya process banana (fork) poora address space copy ya map karta hai, is liye mehenga hai; thread banana sasta hai kyunki threads address space share karte hain. Threads program ko tez jawab dene wala banate hain aur kai CPU cores istemal karne dete hain, lekin shared memory ki wajah se threads ko race conditions se bachne ke liye synchronise karna parta hai. Ek thread crash ho to poora process gir sakta hai, jabke processes ek doosre se alag (isolated) hote hain."
+    },
+    "example": {
+      "en": "A web browser can run each tab as a separate process: if one tab crashes, the others keep working (isolation). Inside one tab, separate threads handle the network download, the page rendering and your mouse clicks at the same time (shared memory, cheap switching).",
+      "ru": "Web browser har tab ko alag process ke taur par chala sakta hai: ek tab crash ho to baqi chalte rehte hain (isolation). Ek tab ke andar alag threads ek hi waqt mein network download, page rendering aur mouse clicks sambhalte hain (shared memory, sasti switching)."
+    },
+    "key_concepts": [
+      {
+        "term": "PCB",
+        "en": "Data structure holding everything the OS needs to pause and resume a process.",
+        "ru": "Woh data structure jis mein process ko rokne aur dobara chalane ke liye OS ki har zaroori maloomat hoti hai."
+      },
+      {
+        "term": "Process states",
+        "en": "New, ready, running, waiting, terminated.",
+        "ru": "New, ready, running, waiting, terminated."
+      },
+      {
+        "term": "Context switch",
+        "en": "Saving one process's state and loading another's; pure overhead.",
+        "ru": "Ek process ki halat save kar ke doosre ki load karna; khalis overhead."
+      },
+      {
+        "term": "Shared vs private",
+        "en": "Threads share code, data and files; each has its own stack and registers.",
+        "ru": "Threads code, data aur files share karte hain; har ek ka apna stack aur registers."
+      }
+    ],
+    "formulas": [],
+    "applications": [
+      {
+        "en": "Web servers handle each request in a thread from a thread pool.",
+        "ru": "Web servers har request ko thread pool ke ek thread mein sambhalte hain."
+      },
+      {
+        "en": "Browsers isolate tabs in separate processes for safety.",
+        "ru": "Browsers hifazat ke liye tabs ko alag processes mein rakhte hain."
+      },
+      {
+        "en": "Games use threads for rendering, physics and audio.",
+        "ru": "Games rendering, physics aur audio ke liye threads istemal karti hain."
+      }
+    ],
+    "exam_points": [
+      {
+        "en": "Draw the process state diagram with all transitions.",
+        "ru": "Process state diagram tamam transitions ke saath banayein."
+      },
+      {
+        "en": "List the contents of a PCB.",
+        "ru": "PCB mein kya hota hai, likhein."
+      },
+      {
+        "en": "Compare process and thread: memory, creation cost, communication, isolation.",
+        "ru": "Process aur thread ka muqabla: memory, banane ki qeemat, communication, isolation."
+      }
+    ],
+    "common_mistakes": [
+      {
+        "en": "Saying threads have separate memory - they share the process's address space.",
+        "ru": "Yeh kehna ke threads ki memory alag hoti hai - woh process ka address space share karte hain."
+      },
+      {
+        "en": "Forgetting that each thread still needs its own stack.",
+        "ru": "Bhool jana ke har thread ka apna stack phir bhi hota hai."
+      },
+      {
+        "en": "Confusing the ready state (waiting for CPU) with the waiting state (waiting for I/O).",
+        "ru": "Ready state (CPU ka intezar) ko waiting state (I/O ka intezar) samajh lena."
+      }
+    ],
+    "questions": [
+      {
+        "type": "mcq",
+        "kind": "basic",
+        "difficulty": "easy",
+        "q": {
+          "en": "Which of these do threads of the same process share?",
+          "ru": "Ek process ke threads in mein se kya share karte hain?"
+        },
+        "options": [
+          {
+            "en": "Heap memory and open files",
+            "ru": "Heap memory aur open files"
+          },
+          {
+            "en": "Stack",
+            "ru": "Stack"
+          },
+          {
+            "en": "Program counter",
+            "ru": "Program counter"
+          },
+          {
+            "en": "CPU registers",
+            "ru": "CPU registers"
+          }
+        ],
+        "answer": 0,
+        "hints": [
+          {
+            "en": "Each thread needs its own place to keep function calls.",
+            "ru": "Har thread ko function calls rakhne ki apni jagah chahiye."
+          }
+        ],
+        "explanation": {
+          "en": "Threads share code, data/heap and files; stack, registers and program counter are private.",
+          "ru": "Threads code, data/heap aur files share karte hain; stack, registers aur program counter apne hote hain."
+        }
+      },
+      {
+        "type": "tf",
+        "kind": "conceptual",
+        "difficulty": "easy",
+        "q": {
+          "en": "Creating a thread is usually cheaper than creating a process.",
+          "ru": "Thread banana aam taur par process banane se sasta hota hai."
+        },
+        "answer": true,
+        "hints": [
+          {
+            "en": "Does a new thread need a new address space?",
+            "ru": "Kya naye thread ko naya address space chahiye?"
+          }
+        ],
+        "explanation": {
+          "en": "True: a thread reuses the process's address space, a new process needs its own.",
+          "ru": "Sahi: thread process ka address space istemal karta hai, naye process ko apna chahiye."
+        }
+      },
+      {
+        "type": "mcq",
+        "kind": "conceptual",
+        "difficulty": "medium",
+        "q": {
+          "en": "A process waiting for a disk read to finish is in which state?",
+          "ru": "Jo process disk read mukammal hone ka intezar kar raha ho woh kis state mein hai?"
+        },
+        "options": [
+          {
+            "en": "Waiting (blocked)",
+            "ru": "Waiting (blocked)"
+          },
+          {
+            "en": "Ready",
+            "ru": "Ready"
+          },
+          {
+            "en": "Running",
+            "ru": "Running"
+          },
+          {
+            "en": "New",
+            "ru": "New"
+          }
+        ],
+        "answer": 0,
+        "hints": [
+          {
+            "en": "It cannot use the CPU until the I/O completes.",
+            "ru": "I/O mukammal hone tak yeh CPU istemal nahi kar sakta."
+          }
+        ],
+        "explanation": {
+          "en": "Waiting for I/O = waiting/blocked; ready means it only waits for the CPU.",
+          "ru": "I/O ka intezar = waiting/blocked; ready ka matlab sirf CPU ka intezar."
+        }
+      },
+      {
+        "type": "short",
+        "kind": "exam",
+        "difficulty": "hard",
+        "q": {
+          "en": "What is a context switch and why is it overhead?",
+          "ru": "Context switch kya hai aur yeh overhead kyun hai?"
+        },
+        "answer": "A context switch saves the state of the running process (registers, program counter) in its PCB and loads the saved state of another process; no useful work is done during the switch, so it is pure overhead.",
+        "keywords": [
+          "save",
+          "state",
+          "pcb",
+          "load"
+        ],
+        "min_keywords": 3,
+        "hints": [
+          {
+            "en": "Think about what must be stored to resume a process later.",
+            "ru": "Sochein process ko baad mein dobara chalane ke liye kya save karna zaroori hai."
+          }
+        ],
+        "explanation": {
+          "en": "Saving and loading PCB state takes CPU time without running any user program.",
+          "ru": "PCB ki halat save aur load karne mein CPU ka waqt lagta hai lekin koi user program nahi chalta."
+        }
+      }
+    ]
+  },
+  {
+    "id": "cpu_scheduling",
+    "title": {
+      "en": "CPU Scheduling",
+      "ru": "CPU Scheduling"
+    },
+    "subject": "Operating Systems",
+    "category": "algorithm",
+    "aliases": [
+      "cpu scheduling",
+      "process scheduling",
+      "scheduling",
+      "fcfs",
+      "sjf",
+      "round robin",
+      "priority scheduling",
+      "srtf",
+      "scheduling algorithms",
+      "waiting time",
+      "turnaround time"
+    ],
+    "search_query": "cpu scheduling fcfs sjf round robin waiting time",
+    "video_queries": [
+      "cpu scheduling algorithms FCFS SJF round robin operating system",
+      "round robin scheduling example gantt chart"
+    ],
+    "subtopics": [
+      {
+        "name": "FCFS",
+        "terms": [
+          "fcfs",
+          "first come first serve",
+          "first come first served"
+        ]
+      },
+      {
+        "name": "SJF",
+        "terms": [
+          "sjf",
+          "shortest job"
+        ]
+      },
+      {
+        "name": "Round Robin",
+        "terms": [
+          "round robin",
+          "time quantum"
+        ]
+      },
+      {
+        "name": "Priority",
+        "terms": [
+          "priority scheduling"
+        ]
+      },
+      {
+        "name": "Gantt chart",
+        "terms": [
+          "gantt chart"
+        ]
+      }
+    ],
+    "practice": [
+      "os_scheduling"
+    ],
+    "intro": {
+      "en": "When several processes are ready, the CPU scheduler decides which one runs next. The choice changes how long users wait, so scheduling is one of the most examined OS topics.",
+      "ru": "Jab kai processes ready hon to CPU scheduler tay karta hai ke agla kaun chalega. Is faisle se users ka intezar badalta hai, is liye scheduling OS ke sab se zyada exam mein aane wale topics mein se hai."
+    },
+    "definition": {
+      "en": "CPU scheduling is the policy that selects which ready process gets the CPU next. Common algorithms are First-Come-First-Served (FCFS), Shortest Job First (SJF), Shortest Remaining Time First (SRTF), Priority and Round Robin (RR).",
+      "ru": "CPU scheduling woh policy hai jo tay karti hai ke ready processes mein se agla CPU kis ko mile. Mashhoor algorithms First-Come-First-Served (FCFS), Shortest Job First (SJF), Shortest Remaining Time First (SRTF), Priority aur Round Robin (RR) hain."
+    },
+    "explanation": {
+      "en": "Key measures: turnaround time = completion time - arrival time; waiting time = turnaround time - burst time; response time = first run - arrival. FCFS runs processes in arrival order; it is simple but a long job in front makes everyone wait (convoy effect). SJF picks the shortest burst next and gives the minimum average waiting time among non-preemptive algorithms, but needs burst lengths in advance and can starve long jobs. SRTF is its preemptive version. Priority scheduling runs the highest priority first; aging (raising the priority of old processes) prevents starvation. Round Robin gives each process a fixed time quantum in turn; it is fair and gives good response time, but a very small quantum causes many context switches and a very large quantum turns it into FCFS. Results are shown with a Gantt chart.",
+      "ru": "Ahem paimane: turnaround time = completion time - arrival time; waiting time = turnaround time - burst time; response time = pehli dafa chalna - arrival. FCFS processes ko aane ki tarteeb se chalata hai; saada hai lekin aage lamba kaam ho to sab intezar karte hain (convoy effect). SJF agla sab se chhota burst chunta hai aur non-preemptive algorithms mein sab se kam average waiting time deta hai, lekin bursts pehle se maloom hone chahiye aur lambe kaam bhookay (starve) reh sakte hain. SRTF is ka preemptive version hai. Priority scheduling sab se zyada priority wala pehle chalati hai; aging (purane processes ki priority barhana) starvation rokta hai. Round Robin har process ko bari bari ek muqarrar time quantum deta hai; yeh insaaf wala hai aur jaldi response deta hai, lekin bohat chhota quantum bohat se context switches karwata hai aur bohat bara quantum ise FCFS bana deta hai. Natije Gantt chart se dikhaye jate hain."
+    },
+    "example": {
+      "en": "Processes (arrival, burst): P1 (0, 5), P2 (1, 3), P3 (2, 1). FCFS order P1, P2, P3: completion 5, 8, 9; turnaround 5, 7, 7; waiting 0, 4, 6; average waiting = 10/3 = 3.33. Non-preemptive SJF: P1 runs 0-5 (only one ready), then P3 (burst 1) 5-6, then P2 6-9; waiting 0, 5, 3; average = 8/3 = 2.67. Run the OS scheduling simulator to see the Gantt charts and try Round Robin.",
+      "ru": "Processes (arrival, burst): P1 (0, 5), P2 (1, 3), P3 (2, 1). FCFS tarteeb P1, P2, P3: completion 5, 8, 9; turnaround 5, 7, 7; waiting 0, 4, 6; average waiting = 10/3 = 3.33. Non-preemptive SJF: P1 0-5 (sirf yahi ready tha), phir P3 (burst 1) 5-6, phir P2 6-9; waiting 0, 5, 3; average = 8/3 = 2.67. Gantt charts dekhne aur Round Robin try karne ke liye OS scheduling simulator chalayein."
+    },
+    "key_concepts": [
+      {
+        "term": "Turnaround and waiting time",
+        "en": "TAT = CT - AT; WT = TAT - BT.",
+        "ru": "TAT = CT - AT; WT = TAT - BT."
+      },
+      {
+        "term": "Preemptive vs non-preemptive",
+        "en": "Whether a running process can be interrupted for a better one.",
+        "ru": "Kya chalte process ko behtar process ke liye roka ja sakta hai."
+      },
+      {
+        "term": "Convoy effect",
+        "en": "Short jobs stuck behind a long job in FCFS.",
+        "ru": "FCFS mein chhote kaam lambe kaam ke peeche phans jana."
+      },
+      {
+        "term": "Time quantum",
+        "en": "The slice of CPU time each process gets in Round Robin.",
+        "ru": "Round Robin mein har process ko milne wala CPU ka hissa."
+      }
+    ],
+    "formulas": [
+      {
+        "latex": "TAT_i = CT_i - AT_i, \\quad WT_i = TAT_i - BT_i",
+        "en": "Turnaround and waiting time.",
+        "ru": "Turnaround aur waiting time."
+      },
+      {
+        "latex": "\\overline{WT} = \\frac{1}{n}\\sum_i WT_i",
+        "en": "Average waiting time.",
+        "ru": "Average waiting time."
+      }
+    ],
+    "workflow": [
+      {
+        "en": "List arrival and burst times for every process.",
+        "ru": "Har process ka arrival aur burst time likhein."
+      },
+      {
+        "en": "At each decision point pick the next process according to the policy.",
+        "ru": "Har faisle ke waqt policy ke mutabiq agla process chunein."
+      },
+      {
+        "en": "Draw the Gantt chart and read off completion times.",
+        "ru": "Gantt chart banayein aur completion times parhein."
+      },
+      {
+        "en": "Compute turnaround and waiting time for each process and the averages.",
+        "ru": "Har process ka turnaround aur waiting time aur averages nikalein."
+      }
+    ],
+    "code": [
+      "procs = [('P1', 0, 5), ('P2', 1, 3), ('P3', 2, 1)]  # (name, arrival, burst)",
+      "",
+      "def fcfs(procs):",
+      "    time, rows = 0, []",
+      "    for name, at, bt in sorted(procs, key=lambda p: p[1]):",
+      "        start = max(time, at)",
+      "        time = start + bt",
+      "        rows.append((name, time - at, time - at - bt))  # (name, turnaround, waiting)",
+      "    return rows",
+      "",
+      "rows = fcfs(procs)",
+      "for r in rows:",
+      "    print(r)",
+      "print('average waiting time:', round(sum(r[2] for r in rows) / len(rows), 2))"
+    ],
+    "code_explanation": [
+      {
+        "en": "Processes are sorted by arrival time because FCFS serves them in that order.",
+        "ru": "Processes arrival time se sort hote hain kyunki FCFS isi tarteeb se chalata hai."
+      },
+      {
+        "en": "max(time, at) handles idle CPU time when the next process has not arrived yet.",
+        "ru": "max(time, at) us waqt ko sambhalta hai jab agla process abhi aaya hi na ho (CPU khali)."
+      },
+      {
+        "en": "Turnaround = completion - arrival and waiting = turnaround - burst, as in the formulas.",
+        "ru": "Turnaround = completion - arrival aur waiting = turnaround - burst, bilkul formulas ki tarah."
+      }
+    ],
+    "applications": [
+      {
+        "en": "Desktop OSs use priority-based preemptive schedulers with time slices.",
+        "ru": "Desktop OS time slices ke saath priority par mabni preemptive schedulers istemal karte hain."
+      },
+      {
+        "en": "Batch systems favour throughput (SJF-like policies).",
+        "ru": "Batch systems throughput ko tarjeeh dete hain (SJF jaisi policies)."
+      },
+      {
+        "en": "Round Robin ideas appear in network packet scheduling.",
+        "ru": "Round Robin ke ideas network packet scheduling mein bhi hain."
+      }
+    ],
+    "exam_points": [
+      {
+        "en": "Draw Gantt charts for FCFS, SJF, SRTF, Priority and RR and compute averages.",
+        "ru": "FCFS, SJF, SRTF, Priority aur RR ke Gantt charts bana kar averages nikalein."
+      },
+      {
+        "en": "State that SJF minimises average waiting time and why it can starve long jobs.",
+        "ru": "Batayein SJF average waiting time kam se kam karta hai aur lambe kaam kyun starve hote hain."
+      },
+      {
+        "en": "Explain the effect of the time quantum in Round Robin.",
+        "ru": "Round Robin mein time quantum ka asar samjhayein."
+      }
+    ],
+    "common_mistakes": [
+      {
+        "en": "Ignoring arrival times and scheduling a process before it arrives.",
+        "ru": "Arrival times nazar andaz kar ke process ko aane se pehle chala dena."
+      },
+      {
+        "en": "Computing waiting time as start time instead of TAT - BT (wrong for preemptive algorithms).",
+        "ru": "Waiting time ko TAT - BT ki jagah start time samajhna (preemptive algorithms mein ghalat)."
+      },
+      {
+        "en": "In Round Robin, forgetting that a newly arrived process joins the queue before the preempted one.",
+        "ru": "Round Robin mein bhool jana ke naya aane wala process preempt hue process se pehle queue mein lagta hai."
+      }
+    ],
+    "questions": [
+      {
+        "type": "numerical",
+        "kind": "problem",
+        "difficulty": "medium",
+        "q": {
+          "en": "FCFS with P1 (arrival 0, burst 5), P2 (1, 3), P3 (2, 1). What is the average waiting time?",
+          "ru": "FCFS: P1 (arrival 0, burst 5), P2 (1, 3), P3 (2, 1). Average waiting time kya hai?"
+        },
+        "answer": 3.333,
+        "tolerance": 0.01,
+        "hints": [
+          {
+            "en": "Completion times are 5, 8 and 9.",
+            "ru": "Completion times 5, 8 aur 9 hain."
+          },
+          {
+            "en": "Waiting = (CT - AT) - BT: 0, 4, 6.",
+            "ru": "Waiting = (CT - AT) - BT: 0, 4, 6."
+          }
+        ],
+        "explanation": {
+          "en": "(0 + 4 + 6) / 3 = 3.33.",
+          "ru": "(0 + 4 + 6) / 3 = 3.33."
+        }
+      },
+      {
+        "type": "mcq",
+        "kind": "basic",
+        "difficulty": "easy",
+        "q": {
+          "en": "Which algorithm gives the minimum average waiting time among non-preemptive algorithms?",
+          "ru": "Non-preemptive algorithms mein sab se kam average waiting time kaunsa deta hai?"
+        },
+        "options": [
+          {
+            "en": "SJF",
+            "ru": "SJF"
+          },
+          {
+            "en": "FCFS",
+            "ru": "FCFS"
+          },
+          {
+            "en": "Round Robin",
+            "ru": "Round Robin"
+          },
+          {
+            "en": "Priority",
+            "ru": "Priority"
+          }
+        ],
+        "answer": 0,
+        "hints": [
+          {
+            "en": "Running short jobs first lowers everyone's wait.",
+            "ru": "Chhote kaam pehle chalane se sab ka intezar kam hota hai."
+          }
+        ],
+        "explanation": {
+          "en": "SJF is provably optimal for average waiting time (non-preemptive).",
+          "ru": "SJF average waiting time ke liye sabit shuda behtareen hai (non-preemptive)."
+        }
+      },
+      {
+        "type": "tf",
+        "kind": "conceptual",
+        "difficulty": "medium",
+        "q": {
+          "en": "Round Robin with a very large time quantum behaves like FCFS.",
+          "ru": "Bohat bare time quantum wala Round Robin FCFS jaisa ban jata hai."
+        },
+        "answer": true,
+        "hints": [
+          {
+            "en": "What happens if every job finishes within one quantum?",
+            "ru": "Agar har kaam ek quantum mein khatam ho jaye to kya hoga?"
+          }
+        ],
+        "explanation": {
+          "en": "True: no process is ever preempted, so they run in arrival order.",
+          "ru": "Sahi: koi process preempt nahi hota, is liye sab aane ki tarteeb se chalte hain."
+        }
+      },
+      {
+        "type": "mcq",
+        "kind": "conceptual",
+        "difficulty": "medium",
+        "q": {
+          "en": "The convoy effect is a problem of:",
+          "ru": "Convoy effect kis ka masla hai?"
+        },
+        "options": [
+          {
+            "en": "FCFS",
+            "ru": "FCFS"
+          },
+          {
+            "en": "Round Robin",
+            "ru": "Round Robin"
+          },
+          {
+            "en": "SRTF",
+            "ru": "SRTF"
+          },
+          {
+            "en": "Multilevel queues only",
+            "ru": "Sirf multilevel queues"
+          }
+        ],
+        "answer": 0,
+        "hints": [
+          {
+            "en": "Short jobs wait behind one long job.",
+            "ru": "Chhote kaam ek lambe kaam ke peeche intezar karte hain."
+          }
+        ],
+        "explanation": {
+          "en": "In FCFS a long CPU-bound job at the front delays all the short jobs behind it.",
+          "ru": "FCFS mein aage laga lamba CPU-bound kaam peeche ke tamam chhote kaamon ko der karwata hai."
+        }
+      },
+      {
+        "type": "short",
+        "kind": "exam",
+        "difficulty": "hard",
+        "q": {
+          "en": "Why can SJF cause starvation and how can it be prevented?",
+          "ru": "SJF starvation kyun paida kar sakta hai aur ise kaise roka ja sakta hai?"
+        },
+        "answer": "If short jobs keep arriving, a long job is always postponed and may never run; aging gradually increases the priority of waiting jobs so that every job eventually runs.",
+        "keywords": [
+          "long job",
+          "short jobs",
+          "never",
+          "aging"
+        ],
+        "min_keywords": 2,
+        "hints": [
+          {
+            "en": "Think of a long job when short jobs keep arriving.",
+            "ru": "Sochein jab chhote kaam aate hi rahein to lambe kaam ka kya hoga."
+          }
+        ],
+        "explanation": {
+          "en": "Continuous short arrivals postpone long jobs forever; aging fixes it.",
+          "ru": "Lagatar chhote kaam lambe kaam ko hamesha peeche karte hain; aging is ka hal hai."
+        }
+      }
+    ]
+  },
+  {
+    "id": "synchronization",
+    "title": {
+      "en": "Process Synchronization and Semaphores",
+      "ru": "Process Synchronization aur Semaphores"
+    },
+    "subject": "Operating Systems",
+    "category": "concept",
+    "aliases": [
+      "synchronization",
+      "synchronisation",
+      "semaphore",
+      "semaphores",
+      "mutex",
+      "critical section",
+      "race condition",
+      "producer consumer",
+      "mutual exclusion",
+      "peterson"
+    ],
+    "search_query": "critical section semaphore race condition synchronization",
+    "video_queries": [
+      "critical section problem semaphores operating system",
+      "producer consumer problem semaphore"
+    ],
+    "subtopics": [
+      {
+        "name": "Race condition",
+        "terms": [
+          "race condition"
+        ]
+      },
+      {
+        "name": "Critical section",
+        "terms": [
+          "critical section"
+        ]
+      },
+      {
+        "name": "Semaphore",
+        "terms": [
+          "semaphore",
+          "wait and signal"
+        ]
+      },
+      {
+        "name": "Producer-consumer",
+        "terms": [
+          "producer consumer",
+          "bounded buffer"
+        ]
+      }
+    ],
+    "practice": [],
+    "intro": {
+      "en": "When threads or processes share data, the order in which they run can corrupt it. Synchronization tools make sure shared data stays correct.",
+      "ru": "Jab threads ya processes data share karte hain to un ke chalne ki tarteeb data ko kharab kar sakti hai. Synchronization ke tools yaqeeni banate hain ke shared data durust rahe."
+    },
+    "definition": {
+      "en": "A race condition occurs when the result depends on the timing of concurrent accesses to shared data. The code that accesses shared data is the critical section; synchronization (locks, semaphores, monitors) ensures that at most one process executes its critical section at a time.",
+      "ru": "Race condition tab hoti hai jab natija is baat par munhasir ho ke shared data ko concurrent tor par kis waqt access kiya gaya. Shared data ko access karne wala code critical section hai; synchronization (locks, semaphores, monitors) yaqeeni banati hai ke ek waqt mein zyada se zyada ek process apne critical section mein ho."
+    },
+    "explanation": {
+      "en": "A correct solution to the critical-section problem needs mutual exclusion (only one process inside), progress (a free critical section must be given to a waiting process) and bounded waiting (no process waits forever). A semaphore is an integer S with two atomic operations: wait(S) (also P or down) decrements S and blocks if it becomes negative; signal(S) (V or up) increments S and wakes a waiting process. A binary semaphore (0/1) works like a mutex lock; a counting semaphore counts available resources. The producer-consumer (bounded buffer) problem uses three semaphores: mutex = 1 for buffer access, empty = n for free slots and full = 0 for filled slots. Wrong ordering of wait calls can cause deadlock.",
+      "ru": "Critical-section masle ke sahi hal ko teen cheezein chahiye: mutual exclusion (andar sirf ek process), progress (khali critical section intezar karne wale process ko mile) aur bounded waiting (koi process hamesha intezar na kare). Semaphore ek integer S hai jis ke do atomic operations hain: wait(S) (P ya down) S ko kam karta hai aur manfi ho jaye to block karta hai; signal(S) (V ya up) S ko barhata hai aur intezar karne wale process ko jagata hai. Binary semaphore (0/1) mutex lock ki tarah hai; counting semaphore dastiyab resources ginta hai. Producer-consumer (bounded buffer) masla teen semaphores istemal karta hai: mutex = 1 buffer ke liye, empty = n khali jagahon ke liye aur full = 0 bhari jagahon ke liye. wait calls ki ghalat tarteeb deadlock karwa sakti hai."
+    },
+    "example": {
+      "en": "Two threads each run counter = counter + 1 on a shared counter of 5. Each loads 5, adds 1 and stores 6, so the result is 6 instead of 7: a race condition. Wrapping the update in wait(mutex) ... signal(mutex) with mutex = 1 makes the second thread wait, so the result is 7.",
+      "ru": "Do threads shared counter (value 5) par counter = counter + 1 chalate hain. Dono 5 load karte hain, 1 jama karte hain aur 6 store karte hain, natija 7 ki jagah 6: race condition. Update ko mutex = 1 ke saath wait(mutex) ... signal(mutex) mein band karne se doosra thread intezar karta hai aur natija 7 aata hai."
+    },
+    "key_concepts": [
+      {
+        "term": "Three requirements",
+        "en": "Mutual exclusion, progress, bounded waiting.",
+        "ru": "Mutual exclusion, progress, bounded waiting."
+      },
+      {
+        "term": "wait / signal",
+        "en": "Atomic decrement-and-maybe-block / increment-and-maybe-wake.",
+        "ru": "Atomic kam karo aur shayad block karo / barhao aur shayad jagao."
+      },
+      {
+        "term": "Binary vs counting semaphore",
+        "en": "Lock (0/1) vs number of available resources.",
+        "ru": "Lock (0/1) vs dastiyab resources ki tadaad."
+      }
+    ],
+    "formulas": [],
+    "code": [
+      "import threading",
+      "",
+      "counter = 0",
+      "lock = threading.Lock()  # a binary semaphore / mutex",
+      "",
+      "def add(n):",
+      "    global counter",
+      "    for _ in range(n):",
+      "        with lock:          # wait(mutex) ... signal(mutex)",
+      "            counter += 1    # critical section",
+      "",
+      "threads = [threading.Thread(target=add, args=(100000,)) for _ in range(4)]",
+      "for t in threads:",
+      "    t.start()",
+      "for t in threads:",
+      "    t.join()",
+      "print('counter =', counter, '(expected 400000)')"
+    ],
+    "code_explanation": [
+      {
+        "en": "Four threads update the same counter, the classic race-condition setup.",
+        "ru": "Chaar threads ek hi counter update karte hain, race condition ki classic soorat."
+      },
+      {
+        "en": "with lock acquires the mutex before the critical section and releases it after.",
+        "ru": "with lock critical section se pehle mutex leta hai aur baad mein chhorta hai."
+      },
+      {
+        "en": "Because of the lock the final value is always exactly 400000.",
+        "ru": "Lock ki wajah se aakhri value hamesha bilkul 400000 aati hai."
+      }
+    ],
+    "applications": [
+      {
+        "en": "Database transactions and bank account updates.",
+        "ru": "Database transactions aur bank account updates."
+      },
+      {
+        "en": "Producer-consumer queues in web servers and logging.",
+        "ru": "Web servers aur logging mein producer-consumer queues."
+      },
+      {
+        "en": "Limiting concurrent connections with a counting semaphore.",
+        "ru": "Counting semaphore se ek waqt ki connections mehdood karna."
+      }
+    ],
+    "exam_points": [
+      {
+        "en": "State the three requirements of a critical-section solution.",
+        "ru": "Critical-section hal ki teen zarooriyat likhein."
+      },
+      {
+        "en": "Write wait() and signal() and the producer-consumer solution with three semaphores.",
+        "ru": "wait() aur signal() aur teen semaphores wala producer-consumer hal likhein."
+      },
+      {
+        "en": "Show how a race condition produces a wrong result step by step.",
+        "ru": "Step by step dikhayein race condition ghalat natija kaise deti hai."
+      }
+    ],
+    "common_mistakes": [
+      {
+        "en": "Forgetting that wait and signal must be atomic.",
+        "ru": "Bhool jana ke wait aur signal atomic hone chahiye."
+      },
+      {
+        "en": "Swapping wait(mutex) and wait(empty) in the producer, which can deadlock.",
+        "ru": "Producer mein wait(mutex) aur wait(empty) ki jagah badalna, jis se deadlock ho sakta hai."
+      },
+      {
+        "en": "Initialising the full semaphore to n instead of 0.",
+        "ru": "full semaphore ko 0 ki jagah n se shuru karna."
+      }
+    ],
+    "questions": [
+      {
+        "type": "numerical",
+        "kind": "problem",
+        "difficulty": "medium",
+        "q": {
+          "en": "A counting semaphore starts at 3. Five processes call wait() and then two call signal(). What is its value?",
+          "ru": "Counting semaphore 3 se shuru hota hai. Paanch processes wait() aur phir do signal() karte hain. Value kya hai?"
+        },
+        "answer": 0,
+        "tolerance": 0,
+        "hints": [
+          {
+            "en": "Each wait subtracts 1, each signal adds 1.",
+            "ru": "Har wait 1 kam karta hai, har signal 1 barhata hai."
+          }
+        ],
+        "explanation": {
+          "en": "3 - 5 + 2 = 0 (two processes were blocked and are now woken).",
+          "ru": "3 - 5 + 2 = 0 (do processes block hue the aur ab jaga diye gaye)."
+        }
+      },
+      {
+        "type": "mcq",
+        "kind": "basic",
+        "difficulty": "easy",
+        "q": {
+          "en": "In the bounded-buffer problem, the semaphore 'full' is initialised to:",
+          "ru": "Bounded-buffer masle mein semaphore 'full' kis value se shuru hota hai?"
+        },
+        "options": [
+          {
+            "en": "0",
+            "ru": "0"
+          },
+          {
+            "en": "1",
+            "ru": "1"
+          },
+          {
+            "en": "n (buffer size)",
+            "ru": "n (buffer size)"
+          },
+          {
+            "en": "-1",
+            "ru": "-1"
+          }
+        ],
+        "answer": 0,
+        "hints": [
+          {
+            "en": "At the start the buffer is empty.",
+            "ru": "Shuru mein buffer khali hota hai."
+          }
+        ],
+        "explanation": {
+          "en": "No slot is full at the start, so full = 0 (empty = n, mutex = 1).",
+          "ru": "Shuru mein koi jagah bhari nahi, is liye full = 0 (empty = n, mutex = 1)."
+        }
+      },
+      {
+        "type": "tf",
+        "kind": "conceptual",
+        "difficulty": "medium",
+        "q": {
+          "en": "Mutual exclusion alone is enough for a correct critical-section solution.",
+          "ru": "Critical-section ke sahi hal ke liye sirf mutual exclusion kaafi hai."
+        },
+        "answer": false,
+        "hints": [
+          {
+            "en": "There are three requirements.",
+            "ru": "Teen zarooriyat hain."
+          }
+        ],
+        "explanation": {
+          "en": "False: progress and bounded waiting are also required.",
+          "ru": "Ghalat: progress aur bounded waiting bhi zaroori hain."
+        }
+      },
+      {
+        "type": "short",
+        "kind": "conceptual",
+        "difficulty": "medium",
+        "q": {
+          "en": "What is a race condition?",
+          "ru": "Race condition kya hai?"
+        },
+        "answer": "A race condition is when several processes or threads access shared data concurrently and the final result depends on the order or timing in which they run.",
+        "keywords": [
+          "shared data",
+          "concurrent",
+          "order",
+          "timing"
+        ],
+        "min_keywords": 2,
+        "hints": [
+          {
+            "en": "Think of two threads updating one counter.",
+            "ru": "Ek counter update karne wale do threads sochein."
+          }
+        ],
+        "explanation": {
+          "en": "The outcome depends on timing because unsynchronised updates interleave.",
+          "ru": "Natija timing par munhasir hai kyunki be-synchronise updates aapas mein ghul mil jate hain."
+        }
+      }
+    ]
+  },
+  {
+    "id": "deadlock",
+    "title": {
+      "en": "Deadlock",
+      "ru": "Deadlock"
+    },
+    "subject": "Operating Systems",
+    "category": "algorithm",
+    "aliases": [
+      "deadlock",
+      "deadlocks",
+      "coffman conditions",
+      "bankers algorithm",
+      "banker's algorithm",
+      "circular wait"
+    ],
+    "search_query": "deadlock conditions prevention avoidance",
+    "intro": {
+      "en": "Deadlock is a classic operating-system problem in which programs wait for each other forever, so none of them can continue.",
+      "ru": "Deadlock operating system ka classic masla hai jis mein programs hamesha ek doosre ka intezar karte rehte hain aur koi aage nahi barh pata."
+    },
+    "definition": {
+      "en": "A deadlock is a state in which each process in a set holds at least one resource and waits for a resource held by another process in the same set, so none of them can proceed.",
+      "ru": "Deadlock aisi halat hai jis mein ek group ka har process kam az kam ek resource pakre hota hai aur usi group ke kisi doosre process ke resource ka intezar karta hai, is liye koi bhi aage nahi barh sakta."
+    },
+    "explanation": {
+      "en": "A deadlock can only happen when four (Coffman) conditions hold at the same time: mutual exclusion (a resource can be used by one process at a time), hold and wait (a process holds resources while waiting for more), no preemption (resources cannot be taken away), and circular wait (a cycle of processes each waiting for the next). Handling strategies: prevention breaks one condition (e.g. request all resources at once, or order resources and always request them in that order); avoidance grants requests only if the system stays in a safe state (Banker's algorithm); detection builds a wait-for / resource-allocation graph and looks for a cycle, then recovers by terminating a process or preempting resources; or the system ignores the problem (the 'ostrich' approach used by many desktop OSs).",
+      "ru": "Deadlock sirf tab hota hai jab chaar (Coffman) conditions ek saath poori hon: mutual exclusion (resource ek waqt mein ek process istemal kare), hold and wait (process resources pakre hue mazeed ka intezar kare), no preemption (resources cheene nahi ja sakte), aur circular wait (processes ka daira jis mein har ek agle ka intezar kare). Hal ke tareeqe: prevention ek condition tor deta hai (maslan saare resources ek saath maangna, ya resources ko tarteeb de kar hamesha usi tarteeb mein maangna); avoidance sirf tab request deta hai jab system safe state mein rahe (Banker's algorithm); detection wait-for / resource-allocation graph bana kar cycle dhoondta hai, phir process khatam kar ke ya resources cheen kar recover karta hai; ya system masle ko nazar andaz karta hai ('ostrich' tareeqa, kai desktop OS yahi karte hain)."
+    },
+    "example": {
+      "en": "Process P1 holds the printer and requests the scanner. Process P2 holds the scanner and requests the printer. Both wait forever: mutual exclusion (one user per device), hold and wait (each holds one), no preemption (the OS will not take the printer away), circular wait (P1 -> P2 -> P1). If both processes always request the printer before the scanner (resource ordering), circular wait is impossible and the deadlock cannot occur.",
+      "ru": "Process P1 printer pakre hue scanner maangta hai. Process P2 scanner pakre hue printer maangta hai. Dono hamesha intezar karte rehte hain: mutual exclusion (ek device ka ek user), hold and wait (har ek ne ek pakra hai), no preemption (OS printer nahi cheenta), circular wait (P1 -> P2 -> P1). Agar dono hamesha pehle printer phir scanner maangein (resource ordering), to circular wait mumkin nahi aur deadlock nahi hoga."
+    },
+    "key_concepts": [
+      {
+        "term": "Coffman conditions",
+        "en": "Mutual exclusion, hold and wait, no preemption, circular wait.",
+        "ru": "Mutual exclusion, hold and wait, no preemption, circular wait."
+      },
+      {
+        "term": "Safe state",
+        "en": "There is an order in which all processes can finish.",
+        "ru": "Aisi tarteeb maujood hai jis mein saare processes mukammal ho sakein."
+      },
+      {
+        "term": "Resource allocation graph",
+        "en": "Graph of processes and resources; a cycle indicates (possible) deadlock.",
+        "ru": "Processes aur resources ka graph; cycle (mumkin) deadlock ki nishani hai."
+      }
+    ],
+    "formulas": [
+      {
+        "latex": "Need_{ij} = Max_{ij} - Allocation_{ij}",
+        "en": "Banker's algorithm: remaining need of process i for resource j.",
+        "ru": "Banker's algorithm: process i ki resource j ki baqi zaroorat."
+      }
+    ],
+    "code": [
+      "def is_safe(available, max_need, allocation):",
+      "    n = len(allocation)",
+      "    need = [[m - a for m, a in zip(max_need[i], allocation[i])] for i in range(n)]",
+      "    work, finished, order = list(available), [False] * n, []",
+      "    while len(order) < n:",
+      "        progressed = False",
+      "        for i in range(n):",
+      "            if not finished[i] and all(nd <= w for nd, w in zip(need[i], work)):",
+      "                work = [w + a for w, a in zip(work, allocation[i])]",
+      "                finished[i], progressed = True, True",
+      "                order.append(f'P{i}')",
+      "        if not progressed:",
+      "            return False, order",
+      "    return True, order",
+      "",
+      "print(is_safe(available=[3, 3, 2],",
+      "              max_need=[[7, 5, 3], [3, 2, 2], [9, 0, 2], [2, 2, 2], [4, 3, 3]],",
+      "              allocation=[[0, 1, 0], [2, 0, 0], [3, 0, 2], [2, 1, 1], [0, 0, 2]]))"
+    ],
+    "code_explanation": [
+      {
+        "en": "need = max - allocation for every process and resource type.",
+        "ru": "Har process aur resource ke liye need = max - allocation."
+      },
+      {
+        "en": "The loop repeatedly finds a process whose need fits in the available work vector, lets it finish and returns its resources.",
+        "ru": "Loop baar baar aisa process dhoondta hai jis ki need available mein aa jaye, use mukammal karwata hai aur us ke resources wapas karta hai."
+      },
+      {
+        "en": "If every process can finish, the state is safe and the order is a safe sequence.",
+        "ru": "Agar har process mukammal ho sake to state safe hai aur order ek safe sequence hai."
+      }
+    ],
+    "applications": [
+      {
+        "en": "Database transaction locking.",
+        "ru": "Database transactions ki locking."
+      },
+      {
+        "en": "Multithreaded programs that use several locks.",
+        "ru": "Kai locks istemal karne wale multithreaded programs."
+      },
+      {
+        "en": "Resource scheduling in operating systems.",
+        "ru": "Operating systems mein resource scheduling."
+      }
+    ],
+    "exam_points": [
+      {
+        "en": "List and explain the four necessary conditions.",
+        "ru": "Chaar zaroori conditions likh kar samjhayein."
+      },
+      {
+        "en": "Compare prevention, avoidance, detection and recovery.",
+        "ru": "Prevention, avoidance, detection aur recovery ka muqabla karein."
+      },
+      {
+        "en": "Run the Banker's safety algorithm on a small table.",
+        "ru": "Chhote table par Banker's safety algorithm chalayein."
+      }
+    ],
+    "common_mistakes": [
+      {
+        "en": "Thinking any one condition alone causes deadlock - all four are needed.",
+        "ru": "Yeh samajhna ke koi ek condition deadlock ke liye kaafi hai - chaaron zaroori hain."
+      },
+      {
+        "en": "Confusing deadlock with starvation.",
+        "ru": "Deadlock ko starvation samajhna."
+      },
+      {
+        "en": "Assuming an unsafe state is always a deadlock (it only might lead to one).",
+        "ru": "Unsafe state ko hamesha deadlock samajhna (yeh sirf deadlock ki taraf le ja sakti hai)."
+      }
+    ],
+    "questions": [
+      {
+        "type": "mcq",
+        "kind": "basic",
+        "q": {
+          "en": "Which of these is NOT one of the four necessary conditions for deadlock?",
+          "ru": "In mein se kaunsi deadlock ki chaar zaroori conditions mein se NAHI hai?"
+        },
+        "options": [
+          {
+            "en": "Preemption of resources",
+            "ru": "Resources ka preemption"
+          },
+          {
+            "en": "Mutual exclusion",
+            "ru": "Mutual exclusion"
+          },
+          {
+            "en": "Hold and wait",
+            "ru": "Hold and wait"
+          },
+          {
+            "en": "Circular wait",
+            "ru": "Circular wait"
+          }
+        ],
+        "answer": 0,
+        "hints": [
+          {
+            "en": "The real condition is NO preemption.",
+            "ru": "Asal condition NO preemption hai."
+          }
+        ],
+        "explanation": {
+          "en": "The conditions are mutual exclusion, hold and wait, NO preemption and circular wait.",
+          "ru": "Conditions hain mutual exclusion, hold and wait, NO preemption aur circular wait."
+        },
+        "difficulty": "easy"
+      },
+      {
+        "type": "short",
+        "kind": "application",
+        "q": {
+          "en": "How does ordering resources prevent deadlock?",
+          "ru": "Resources ko tarteeb dena deadlock kaise rokta hai?"
+        },
+        "answer": "If every process requests resources in the same global order, a cycle of processes waiting for each other cannot form, so the circular wait condition is broken and deadlock cannot occur.",
+        "keywords": [
+          "order",
+          "circular wait",
+          "cycle"
+        ],
+        "hints": [
+          {
+            "en": "Which of the four conditions is broken?",
+            "ru": "Chaar mein se kaunsi condition toot-ti hai?"
+          }
+        ],
+        "explanation": {
+          "en": "A global order makes a cycle impossible, which removes circular wait.",
+          "ru": "Aalami tarteeb se cycle mumkin nahi rehti, circular wait khatam ho jata hai."
+        },
+        "difficulty": "medium"
+      },
+      {
+        "type": "mcq",
+        "kind": "conceptual",
+        "q": {
+          "en": "The Banker's algorithm is a deadlock ... technique.",
+          "ru": "Banker's algorithm deadlock ki kaunsi technique hai?"
+        },
+        "options": [
+          {
+            "en": "Avoidance",
+            "ru": "Avoidance"
+          },
+          {
+            "en": "Prevention",
+            "ru": "Prevention"
+          },
+          {
+            "en": "Detection",
+            "ru": "Detection"
+          },
+          {
+            "en": "Recovery",
+            "ru": "Recovery"
+          }
+        ],
+        "answer": 0,
+        "hints": [
+          {
+            "en": "It checks whether granting a request keeps the system in a safe state.",
+            "ru": "Yeh check karta hai ke request dene se system safe state mein rehta hai ya nahi."
+          }
+        ],
+        "explanation": {
+          "en": "It avoids unsafe states before they happen: avoidance.",
+          "ru": "Yeh unsafe states se pehle hi bachata hai: avoidance."
+        },
+        "difficulty": "medium"
+      }
+    ],
+    "video_queries": [
+      "deadlock in operating system necessary conditions",
+      "bankers algorithm deadlock avoidance example"
+    ],
+    "subtopics": [
+      {
+        "name": "Four conditions",
+        "terms": [
+          "mutual exclusion",
+          "hold and wait",
+          "circular wait"
+        ]
+      },
+      {
+        "name": "Banker's algorithm",
+        "terms": [
+          "banker"
+        ]
+      },
+      {
+        "name": "Resource allocation graph",
+        "terms": [
+          "resource allocation graph"
+        ]
+      }
+    ],
+    "practice": [
+      "os_bankers"
+    ]
+  },
+  {
+    "id": "paging_virtual_memory",
+    "title": {
+      "en": "Paging and Virtual Memory",
+      "ru": "Paging aur Virtual Memory"
+    },
+    "subject": "Operating Systems",
+    "category": "concept",
+    "aliases": [
+      "paging",
+      "virtual memory",
+      "page table",
+      "address translation",
+      "tlb",
+      "logical address",
+      "physical address",
+      "page fault",
+      "frames",
+      "memory management"
+    ],
+    "search_query": "paging page table address translation virtual memory",
+    "video_queries": [
+      "paging in operating system page table address translation",
+      "virtual memory page fault TLB operating system"
+    ],
+    "subtopics": [
+      {
+        "name": "Page table",
+        "terms": [
+          "page table"
+        ]
+      },
+      {
+        "name": "Address translation",
+        "terms": [
+          "logical address",
+          "physical address",
+          "address translation"
+        ]
+      },
+      {
+        "name": "TLB",
+        "terms": [
+          "tlb",
+          "translation lookaside buffer"
+        ]
+      },
+      {
+        "name": "Page fault",
+        "terms": [
+          "page fault"
+        ]
+      }
+    ],
+    "practice": [
+      "os_paging"
+    ],
+    "intro": {
+      "en": "Paging lets the operating system place a program's memory in any free frames of RAM, and virtual memory lets programs be larger than RAM by keeping some pages on disk.",
+      "ru": "Paging OS ko program ki memory RAM ke kisi bhi khali frame mein rakhne deti hai, aur virtual memory programs ko RAM se bara hone deti hai kyunki kuch pages disk par rakhe jate hain."
+    },
+    "definition": {
+      "en": "Paging divides logical memory into fixed-size pages and physical memory into frames of the same size; a page table maps each page number to a frame number. Virtual memory loads pages only when they are needed (demand paging) and triggers a page fault when a page is not in memory.",
+      "ru": "Paging logical memory ko barabar size ke pages aur physical memory ko usi size ke frames mein baantti hai; page table har page number ko frame number se jorta hai. Virtual memory pages sirf zaroorat par load karti hai (demand paging) aur jab page memory mein na ho to page fault hota hai."
+    },
+    "explanation": {
+      "en": "A logical address is split into a page number p (high bits) and an offset d (low bits). With page size 2^n bytes, the offset has n bits. The page table gives the frame number f, and the physical address is f x page size + d. Paging removes external fragmentation, but the last page of a process may be partly empty (internal fragmentation). Every memory access now needs an extra page-table lookup, so a small cache called the TLB stores recent translations. Effective access time with a TLB = hit ratio x (TLB time + memory time) + miss ratio x (TLB time + 2 x memory time). On a page fault the OS finds the page on disk, loads it into a free frame (or evicts one with a page replacement algorithm), updates the page table and restarts the instruction.",
+      "ru": "Logical address page number p (upar ke bits) aur offset d (neeche ke bits) mein toot-ta hai. Page size 2^n bytes ho to offset ke n bits hote hain. Page table frame number f deti hai, aur physical address = f x page size + d. Paging external fragmentation khatam karti hai, lekin process ka aakhri page aadha khali reh sakta hai (internal fragmentation). Ab har memory access ko page table ka ek izafi lookup chahiye, is liye TLB naam ka chhota cache haal ki translations rakhta hai. TLB ke saath effective access time = hit ratio x (TLB time + memory time) + miss ratio x (TLB time + 2 x memory time). Page fault par OS disk se page dhoondta hai, use khali frame mein load karta hai (ya page replacement algorithm se kisi ko nikalta hai), page table update karta hai aur instruction dobara chalata hai."
+    },
+    "example": {
+      "en": "Page size 1 KB (1024 bytes, offset 10 bits). Logical address 2500: page = 2500 // 1024 = 2, offset = 2500 - 2048 = 452. If the page table maps page 2 to frame 5, the physical address = 5 x 1024 + 452 = 5572.",
+      "ru": "Page size 1 KB (1024 bytes, offset 10 bits). Logical address 2500: page = 2500 // 1024 = 2, offset = 2500 - 2048 = 452. Agar page table page 2 ko frame 5 se jore to physical address = 5 x 1024 + 452 = 5572."
+    },
+    "key_concepts": [
+      {
+        "term": "Page and frame",
+        "en": "Equal-size blocks of logical and physical memory.",
+        "ru": "Logical aur physical memory ke barabar size ke blocks."
+      },
+      {
+        "term": "Offset bits",
+        "en": "log2(page size).",
+        "ru": "log2(page size)."
+      },
+      {
+        "term": "TLB",
+        "en": "Cache of page-table entries that speeds up translation.",
+        "ru": "Page-table entries ka cache jo translation tez karta hai."
+      },
+      {
+        "term": "Page fault",
+        "en": "Access to a page not currently in RAM.",
+        "ru": "Aise page tak rasai jo abhi RAM mein nahi."
+      }
+    ],
+    "formulas": [
+      {
+        "latex": "p = \\lfloor A / S \\rfloor, \\quad d = A \\bmod S, \\quad PA = f \\times S + d",
+        "en": "Page number, offset and physical address (S = page size).",
+        "ru": "Page number, offset aur physical address (S = page size)."
+      },
+      {
+        "latex": "EAT = h (t_{TLB} + t_m) + (1-h)(t_{TLB} + 2 t_m)",
+        "en": "Effective access time with a TLB.",
+        "ru": "TLB ke saath effective access time."
+      }
+    ],
+    "code": [
+      "page_size = 1024",
+      "page_table = {0: 3, 1: 7, 2: 5, 3: 1}",
+      "",
+      "def translate(logical):",
+      "    page, offset = divmod(logical, page_size)",
+      "    if page not in page_table:",
+      "        return f'page fault (page {page})'",
+      "    return page_table[page] * page_size + offset",
+      "",
+      "for address in [2500, 100, 5000]:",
+      "    print(address, '->', translate(address))"
+    ],
+    "code_explanation": [
+      {
+        "en": "divmod splits the address into page number and offset in one step.",
+        "ru": "divmod ek hi qadam mein address ko page number aur offset mein todta hai."
+      },
+      {
+        "en": "A missing page-table entry represents a page fault.",
+        "ru": "Page table mein entry na ho to yeh page fault hai."
+      }
+    ],
+    "applications": [
+      {
+        "en": "Every modern OS (Windows, Linux, macOS) uses paged virtual memory.",
+        "ru": "Har jadeed OS (Windows, Linux, macOS) paged virtual memory istemal karta hai."
+      },
+      {
+        "en": "Memory protection between processes.",
+        "ru": "Processes ke darmiyan memory ki hifazat."
+      },
+      {
+        "en": "Memory-mapped files and shared libraries.",
+        "ru": "Memory-mapped files aur shared libraries."
+      }
+    ],
+    "exam_points": [
+      {
+        "en": "Translate logical to physical addresses with a given page table.",
+        "ru": "Diye gaye page table se logical ko physical address mein badlein."
+      },
+      {
+        "en": "Compute the number of bits for page number and offset.",
+        "ru": "Page number aur offset ke bits ginein."
+      },
+      {
+        "en": "Compute effective access time with a TLB.",
+        "ru": "TLB ke saath effective access time nikalein."
+      }
+    ],
+    "common_mistakes": [
+      {
+        "en": "Using decimal page size boundaries (1000) instead of powers of two (1024).",
+        "ru": "Do ki powers (1024) ki jagah decimal hadood (1000) istemal karna."
+      },
+      {
+        "en": "Forgetting the second memory access on a TLB miss.",
+        "ru": "TLB miss par doosri memory access bhool jana."
+      },
+      {
+        "en": "Confusing internal and external fragmentation.",
+        "ru": "Internal aur external fragmentation ko gadmad karna."
+      }
+    ],
+    "questions": [
+      {
+        "type": "numerical",
+        "kind": "problem",
+        "difficulty": "medium",
+        "q": {
+          "en": "Page size 1024 bytes, logical address 2500, page 2 is in frame 5. What is the physical address?",
+          "ru": "Page size 1024 bytes, logical address 2500, page 2 frame 5 mein hai. Physical address kya hai?"
+        },
+        "answer": 5572,
+        "tolerance": 0,
+        "hints": [
+          {
+            "en": "Offset = 2500 - 2 x 1024.",
+            "ru": "Offset = 2500 - 2 x 1024."
+          }
+        ],
+        "explanation": {
+          "en": "Offset 452; 5 x 1024 + 452 = 5572.",
+          "ru": "Offset 452; 5 x 1024 + 452 = 5572."
+        }
+      },
+      {
+        "type": "numerical",
+        "kind": "problem",
+        "difficulty": "medium",
+        "q": {
+          "en": "With 4 KB pages, how many bits are used for the offset?",
+          "ru": "4 KB pages ke saath offset ke liye kitne bits istemal hote hain?"
+        },
+        "answer": 12,
+        "tolerance": 0,
+        "hints": [
+          {
+            "en": "4 KB = 4096 = 2^?",
+            "ru": "4 KB = 4096 = 2^?"
+          }
+        ],
+        "explanation": {
+          "en": "4096 = 2^12, so 12 offset bits.",
+          "ru": "4096 = 2^12, yaani 12 offset bits."
+        }
+      },
+      {
+        "type": "numerical",
+        "kind": "exam",
+        "difficulty": "hard",
+        "q": {
+          "en": "TLB lookup 20 ns, memory access 100 ns, TLB hit ratio 0.8. What is the effective access time in ns?",
+          "ru": "TLB lookup 20 ns, memory access 100 ns, TLB hit ratio 0.8. Effective access time kitne ns hai?"
+        },
+        "answer": 140,
+        "tolerance": 0.01,
+        "hints": [
+          {
+            "en": "Hit: 20 + 100. Miss: 20 + 200.",
+            "ru": "Hit: 20 + 100. Miss: 20 + 200."
+          }
+        ],
+        "explanation": {
+          "en": "0.8 x 120 + 0.2 x 220 = 96 + 44 = 140 ns.",
+          "ru": "0.8 x 120 + 0.2 x 220 = 96 + 44 = 140 ns."
+        }
+      },
+      {
+        "type": "tf",
+        "kind": "conceptual",
+        "difficulty": "easy",
+        "q": {
+          "en": "Paging eliminates external fragmentation.",
+          "ru": "Paging external fragmentation khatam kar deti hai."
+        },
+        "answer": true,
+        "hints": [
+          {
+            "en": "Any free frame can hold any page.",
+            "ru": "Koi bhi khali frame koi bhi page rakh sakta hai."
+          }
+        ],
+        "explanation": {
+          "en": "True: all frames are the same size, so free memory is never too fragmented to use (internal fragmentation can remain).",
+          "ru": "Sahi: tamam frames barabar size ke hain, is liye khali memory kabhi itni bikhri nahi hoti ke istemal na ho sake (internal fragmentation reh sakti hai)."
+        }
+      }
+    ]
+  },
+  {
+    "id": "page_replacement",
+    "title": {
+      "en": "Page Replacement Algorithms",
+      "ru": "Page Replacement Algorithms"
+    },
+    "subject": "Operating Systems",
+    "category": "algorithm",
+    "aliases": [
+      "page replacement",
+      "fifo page replacement",
+      "lru",
+      "optimal page replacement",
+      "belady",
+      "belady's anomaly",
+      "page faults"
+    ],
+    "search_query": "page replacement fifo lru optimal page faults",
+    "video_queries": [
+      "page replacement algorithms FIFO LRU optimal operating system",
+      "belady's anomaly page replacement"
+    ],
+    "subtopics": [
+      {
+        "name": "FIFO",
+        "terms": [
+          "fifo",
+          "first in first out"
+        ]
+      },
+      {
+        "name": "LRU",
+        "terms": [
+          "lru",
+          "least recently used"
+        ]
+      },
+      {
+        "name": "Optimal",
+        "terms": [
+          "optimal page replacement",
+          "optimal algorithm"
+        ]
+      },
+      {
+        "name": "Belady's anomaly",
+        "terms": [
+          "belady"
+        ]
+      }
+    ],
+    "practice": [
+      "os_page_replacement"
+    ],
+    "intro": {
+      "en": "When RAM is full and a page fault occurs, the OS must choose a page to throw out. A good choice means fewer slow disk reads.",
+      "ru": "Jab RAM bhari ho aur page fault ho to OS ko koi page nikalna parta hai. Acha intikhab ka matlab kam dheemi disk reads."
+    },
+    "definition": {
+      "en": "A page replacement algorithm chooses the victim page to evict on a page fault when no frame is free. Classic algorithms are FIFO (oldest page), LRU (least recently used page) and Optimal (page used farthest in the future).",
+      "ru": "Page replacement algorithm page fault par, jab koi frame khali na ho, nikalne wala (victim) page chunta hai. Classic algorithms FIFO (sab se purana page), LRU (sab se kam haal mein istemal hua page) aur Optimal (jo page mustaqbil mein sab se der se istemal hoga) hain."
+    },
+    "explanation": {
+      "en": "Algorithms are compared by counting page faults on a reference string for a given number of frames. FIFO is simple but suffers from Belady's anomaly: adding frames can increase faults. Optimal (OPT) gives the minimum possible faults but needs future knowledge, so it is only a benchmark. LRU approximates OPT by looking at the past; it is a stack algorithm and never shows Belady's anomaly, but exact LRU needs hardware support (counters or a stack), so real systems use approximations such as the clock (second-chance) algorithm. If processes have too few frames they fault constantly and spend more time paging than running: thrashing.",
+      "ru": "Algorithms ka muqabla kisi reference string par diye gaye frames ke saath page faults gin kar hota hai. FIFO saada hai lekin Belady's anomaly ka shikaar hai: frames barhane se faults barh sakte hain. Optimal (OPT) kam se kam mumkin faults deta hai lekin mustaqbil ka ilm chahiye, is liye sirf muqable ka paimana hai. LRU maazi dekh kar OPT ke qareeb aata hai; yeh stack algorithm hai aur is mein Belady's anomaly kabhi nahi hoti, lekin bilkul sahi LRU ko hardware ki madad (counters ya stack) chahiye, is liye asal systems clock (second-chance) jaise approximations istemal karte hain. Agar processes ko bohat kam frames milein to woh lagatar fault karte hain aur chalne se zyada paging mein waqt lagate hain: thrashing."
+    },
+    "example": {
+      "en": "Reference string 7, 0, 1, 2, 0, 3, 0, 4 with 3 frames. FIFO: 7, 0, 1 fault (3); 2 replaces 7 (4); 0 hit; 3 replaces 0 (5); 0 replaces 1 (6); 4 replaces 2 (7) - 7 faults. LRU: 7, 0, 1 (3); 2 replaces 7 (4); 0 hit; 3 replaces 1 (5); 0 hit; 4 replaces 2 (6) - 6 faults. Try the page replacement simulator to step through it.",
+      "ru": "Reference string 7, 0, 1, 2, 0, 3, 0, 4, 3 frames. FIFO: 7, 0, 1 fault (3); 2 ne 7 ki jagah li (4); 0 hit; 3 ne 0 ki jagah li (5); 0 ne 1 ki (6); 4 ne 2 ki (7) - 7 faults. LRU: 7, 0, 1 (3); 2 ne 7 ki jagah li (4); 0 hit; 3 ne 1 ki (5); 0 hit; 4 ne 2 ki (6) - 6 faults. Step by step dekhne ke liye page replacement simulator chalayein."
+    },
+    "key_concepts": [
+      {
+        "term": "Reference string",
+        "en": "The sequence of page numbers a process accesses.",
+        "ru": "Process jin page numbers tak tarteeb se rasai karta hai."
+      },
+      {
+        "term": "Belady's anomaly",
+        "en": "More frames giving more faults (possible with FIFO).",
+        "ru": "Zyada frames se zyada faults (FIFO mein mumkin)."
+      },
+      {
+        "term": "Thrashing",
+        "en": "Excessive paging because processes lack frames.",
+        "ru": "Frames ki kami se hadd se zyada paging."
+      }
+    ],
+    "formulas": [
+      {
+        "latex": "\\text{fault rate} = \\frac{\\text{page faults}}{\\text{references}}",
+        "en": "Page fault rate.",
+        "ru": "Page fault rate."
+      }
+    ],
+    "code": [
+      "def fifo(refs, frames):",
+      "    memory, faults = [], 0",
+      "    for page in refs:",
+      "        if page not in memory:",
+      "            faults += 1",
+      "            if len(memory) == frames:",
+      "                memory.pop(0)        # evict the oldest page",
+      "            memory.append(page)",
+      "    return faults",
+      "",
+      "refs = [1, 2, 3, 4, 1, 2, 5, 1, 2, 3, 4, 5]",
+      "print('3 frames:', fifo(refs, 3), 'faults')",
+      "print('4 frames:', fifo(refs, 4), 'faults  <- Belady\\'s anomaly')"
+    ],
+    "code_explanation": [
+      {
+        "en": "The list works as a queue: new pages join at the end, the oldest leaves from the front.",
+        "ru": "List queue ki tarah kaam karti hai: naye pages aakhir mein lagte hain, sab se purana aage se nikalta hai."
+      },
+      {
+        "en": "With this classic reference string FIFO gives 9 faults with 3 frames but 10 with 4 frames.",
+        "ru": "Is classic reference string par FIFO 3 frames mein 9 aur 4 frames mein 10 faults deta hai."
+      }
+    ],
+    "applications": [
+      {
+        "en": "OS memory managers (clock algorithm in Linux-style systems).",
+        "ru": "OS memory managers (Linux jaise systems mein clock algorithm)."
+      },
+      {
+        "en": "Caches in databases, browsers and CDNs use LRU-like eviction.",
+        "ru": "Databases, browsers aur CDNs ke caches LRU jaisa eviction istemal karte hain."
+      }
+    ],
+    "exam_points": [
+      {
+        "en": "Trace FIFO, LRU and Optimal on a reference string and count faults.",
+        "ru": "Reference string par FIFO, LRU aur Optimal trace kar ke faults ginein."
+      },
+      {
+        "en": "Explain Belady's anomaly with an example.",
+        "ru": "Misaal ke saath Belady's anomaly samjhayein."
+      },
+      {
+        "en": "Define thrashing and its cause.",
+        "ru": "Thrashing aur us ki wajah batayein."
+      }
+    ],
+    "common_mistakes": [
+      {
+        "en": "Updating the FIFO order on a hit (FIFO ignores hits; LRU does not).",
+        "ru": "Hit par FIFO ki tarteeb badalna (FIFO hits ko nazar andaz karta hai; LRU nahi)."
+      },
+      {
+        "en": "Counting the first loads into empty frames as hits.",
+        "ru": "Khali frames mein pehli dafa load hone ko hit ginna."
+      },
+      {
+        "en": "Thinking LRU can show Belady's anomaly.",
+        "ru": "Yeh samajhna ke LRU mein Belady's anomaly ho sakti hai."
+      }
+    ],
+    "questions": [
+      {
+        "type": "numerical",
+        "kind": "problem",
+        "difficulty": "medium",
+        "q": {
+          "en": "FIFO with 3 frames on 7, 0, 1, 2, 0, 3, 0, 4. How many page faults?",
+          "ru": "3 frames ke saath FIFO, reference 7, 0, 1, 2, 0, 3, 0, 4. Kitne page faults?"
+        },
+        "answer": 7,
+        "tolerance": 0,
+        "hints": [
+          {
+            "en": "The first three references are always faults.",
+            "ru": "Pehle teen references hamesha faults hote hain."
+          }
+        ],
+        "explanation": {
+          "en": "Faults at 7, 0, 1, 2, 3, 0, 4 = 7 (only the first 0 after 2 is a hit).",
+          "ru": "7, 0, 1, 2, 3, 0, 4 par faults = 7 (sirf 2 ke baad wala pehla 0 hit hai)."
+        }
+      },
+      {
+        "type": "mcq",
+        "kind": "basic",
+        "difficulty": "easy",
+        "q": {
+          "en": "Which algorithm gives the fewest possible page faults?",
+          "ru": "Kaunsa algorithm kam se kam mumkin page faults deta hai?"
+        },
+        "options": [
+          {
+            "en": "Optimal (OPT)",
+            "ru": "Optimal (OPT)"
+          },
+          {
+            "en": "LRU",
+            "ru": "LRU"
+          },
+          {
+            "en": "FIFO",
+            "ru": "FIFO"
+          },
+          {
+            "en": "Random",
+            "ru": "Random"
+          }
+        ],
+        "answer": 0,
+        "hints": [
+          {
+            "en": "It knows the future references.",
+            "ru": "Yeh mustaqbil ke references jaanta hai."
+          }
+        ],
+        "explanation": {
+          "en": "OPT evicts the page used farthest in the future, which is provably optimal.",
+          "ru": "OPT woh page nikalta hai jo sab se der se istemal hoga, jo sabit shuda behtareen hai."
+        }
+      },
+      {
+        "type": "tf",
+        "kind": "conceptual",
+        "difficulty": "medium",
+        "q": {
+          "en": "LRU can suffer from Belady's anomaly.",
+          "ru": "LRU Belady's anomaly ka shikaar ho sakta hai."
+        },
+        "answer": false,
+        "hints": [
+          {
+            "en": "LRU is a stack algorithm.",
+            "ru": "LRU stack algorithm hai."
+          }
+        ],
+        "explanation": {
+          "en": "False: stack algorithms such as LRU and OPT never show Belady's anomaly.",
+          "ru": "Ghalat: LRU aur OPT jaise stack algorithms mein Belady's anomaly kabhi nahi hoti."
+        }
+      },
+      {
+        "type": "short",
+        "kind": "exam",
+        "difficulty": "hard",
+        "q": {
+          "en": "What is thrashing?",
+          "ru": "Thrashing kya hai?"
+        },
+        "answer": "Thrashing is when processes do not have enough frames, so they page fault constantly and the system spends most of its time swapping pages instead of executing, which makes CPU utilisation drop.",
+        "keywords": [
+          "frames",
+          "page fault",
+          "swapping",
+          "cpu utilisation"
+        ],
+        "min_keywords": 2,
+        "hints": [
+          {
+            "en": "Too little memory per process.",
+            "ru": "Har process ke liye bohat kam memory."
+          }
+        ],
+        "explanation": {
+          "en": "Too few frames lead to constant faults; the CPU waits for paging most of the time.",
+          "ru": "Bohat kam frames se lagatar faults hote hain; CPU zyada waqt paging ka intezar karta hai."
+        }
+      }
+    ]
+  }
+]

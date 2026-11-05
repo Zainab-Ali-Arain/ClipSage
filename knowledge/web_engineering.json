@@ -1,0 +1,1869 @@
+[
+  {
+    "id": "http_basics",
+    "title": {
+      "en": "HTTP and the Client-Server Model",
+      "ru": "HTTP aur Client-Server Model"
+    },
+    "subject": "Web Engineering",
+    "category": "foundations",
+    "aliases": [
+      "http",
+      "https",
+      "http methods",
+      "http status codes",
+      "client server",
+      "request response",
+      "get and post",
+      "status code",
+      "url",
+      "dns",
+      "how the web works"
+    ],
+    "search_query": "http request response methods status codes client server",
+    "video_queries": [
+      "how the web works HTTP request response explained",
+      "HTTP methods GET POST status codes explained"
+    ],
+    "subtopics": [
+      {
+        "name": "Request/response",
+        "terms": [
+          "request",
+          "response"
+        ]
+      },
+      {
+        "name": "Methods",
+        "terms": [
+          "get request",
+          "post request",
+          "http method"
+        ]
+      },
+      {
+        "name": "Status codes",
+        "terms": [
+          "status code",
+          "404",
+          "200"
+        ]
+      },
+      {
+        "name": "Headers",
+        "terms": [
+          "header"
+        ]
+      },
+      {
+        "name": "HTTPS",
+        "terms": [
+          "https",
+          "tls",
+          "ssl"
+        ]
+      }
+    ],
+    "practice": [
+      "web_http"
+    ],
+    "intro": {
+      "en": "Every web page you open is the result of a conversation between your browser (the client) and a server. HTTP is the language of that conversation.",
+      "ru": "Aap jo bhi web page kholte hain woh aap ke browser (client) aur server ki guftagu ka natija hai. HTTP is guftagu ki zubaan hai."
+    },
+    "definition": {
+      "en": "HTTP (HyperText Transfer Protocol) is a stateless request-response protocol: the client sends a request with a method, a URL, headers and an optional body; the server replies with a status code, headers and a body. HTTPS is HTTP sent over an encrypted TLS connection.",
+      "ru": "HTTP (HyperText Transfer Protocol) stateless request-response protocol hai: client method, URL, headers aur ikhtiyari body ke saath request bhejta hai; server status code, headers aur body ke saath jawab deta hai. HTTPS woh HTTP hai jo encrypted TLS connection par bheja jaye."
+    },
+    "explanation": {
+      "en": "Opening https://example.com/page: the browser resolves the domain to an IP address with DNS, opens a TCP connection (and a TLS handshake for HTTPS), sends 'GET /page HTTP/1.1' with headers such as Host and Accept, and the server responds, for example '200 OK' with Content-Type: text/html and the HTML. Methods: GET reads data and should not change anything; POST creates or submits data; PUT replaces; PATCH partially updates; DELETE removes. GET, PUT and DELETE are idempotent (repeating them has the same effect). Status codes: 1xx informational, 2xx success (200 OK, 201 Created), 3xx redirection (301, 304 Not Modified), 4xx client error (400, 401, 403, 404), 5xx server error (500, 503). HTTP is stateless, so cookies and sessions are used to remember users.",
+      "ru": "https://example.com/page kholna: browser DNS se domain ko IP address mein badalta hai, TCP connection kholta hai (HTTPS ke liye TLS handshake bhi), Host aur Accept jaise headers ke saath 'GET /page HTTP/1.1' bhejta hai, aur server jawab deta hai, maslan '200 OK', Content-Type: text/html aur HTML. Methods: GET data parhta hai aur kuch nahi badalna chahiye; POST data banata ya jama karta hai; PUT poora badalta hai; PATCH kuch hissa update karta hai; DELETE hatata hai. GET, PUT aur DELETE idempotent hain (dohrane se asar wahi rehta hai). Status codes: 1xx maloomati, 2xx kamyabi (200 OK, 201 Created), 3xx redirection (301, 304 Not Modified), 4xx client ki ghalti (400, 401, 403, 404), 5xx server ki ghalti (500, 503). HTTP stateless hai, is liye users ko yaad rakhne ke liye cookies aur sessions istemal hote hain."
+    },
+    "example": {
+      "en": "Request: 'POST /api/students HTTP/1.1', Host: uni.edu, Content-Type: application/json, body {\"name\": \"Ali\"}. Response: 'HTTP/1.1 201 Created', Location: /api/students/42. A later 'GET /api/students/42' returns 200 with the student, and 'GET /api/students/999' returns 404 Not Found.",
+      "ru": "Request: 'POST /api/students HTTP/1.1', Host: uni.edu, Content-Type: application/json, body {\"name\": \"Ali\"}. Response: 'HTTP/1.1 201 Created', Location: /api/students/42. Baad mein 'GET /api/students/42' 200 ke saath student deta hai, aur 'GET /api/students/999' 404 Not Found deta hai."
+    },
+    "key_concepts": [
+      {
+        "term": "Stateless",
+        "en": "Each request is independent; the server does not remember earlier ones by itself.",
+        "ru": "Har request azad hai; server khud pichli requests yaad nahi rakhta."
+      },
+      {
+        "term": "Idempotent",
+        "en": "Repeating the request has the same effect (GET, PUT, DELETE).",
+        "ru": "Request dohrane ka asar wahi (GET, PUT, DELETE)."
+      },
+      {
+        "term": "Status code classes",
+        "en": "2xx success, 3xx redirect, 4xx client error, 5xx server error.",
+        "ru": "2xx kamyabi, 3xx redirect, 4xx client ki ghalti, 5xx server ki ghalti."
+      }
+    ],
+    "formulas": [],
+    "code": [
+      "from urllib.parse import urlparse, parse_qs",
+      "from http import HTTPStatus",
+      "",
+      "url = urlparse('https://uni.edu:443/courses/search?subject=web&level=3#top')",
+      "print('scheme:', url.scheme, '| host:', url.hostname, '| port:', url.port)",
+      "print('path:', url.path, '| query:', parse_qs(url.query), '| fragment:', url.fragment)",
+      "",
+      "for code in [200, 201, 301, 304, 400, 401, 403, 404, 500, 503]:",
+      "    print(code, HTTPStatus(code).phrase)"
+    ],
+    "code_explanation": [
+      {
+        "en": "urlparse splits a URL into scheme, host, port, path, query and fragment.",
+        "ru": "urlparse URL ko scheme, host, port, path, query aur fragment mein todta hai."
+      },
+      {
+        "en": "HTTPStatus gives the standard reason phrase for each status code.",
+        "ru": "HTTPStatus har status code ka standard reason phrase deta hai."
+      }
+    ],
+    "applications": [
+      {
+        "en": "Every website and web API.",
+        "ru": "Har website aur web API."
+      },
+      {
+        "en": "Debugging with browser developer tools (Network tab).",
+        "ru": "Browser developer tools (Network tab) se debugging."
+      },
+      {
+        "en": "Caching with 304 Not Modified and Cache-Control headers.",
+        "ru": "304 Not Modified aur Cache-Control headers se caching."
+      }
+    ],
+    "exam_points": [
+      {
+        "en": "Describe the steps from typing a URL to seeing the page.",
+        "ru": "URL likhne se page dekhne tak ke steps bayan karein."
+      },
+      {
+        "en": "Compare GET and POST; define idempotent and safe methods.",
+        "ru": "GET aur POST ka muqabla; idempotent aur safe methods ki tareef."
+      },
+      {
+        "en": "Know the meaning of common status codes.",
+        "ru": "Aam status codes ka matlab jaanein."
+      }
+    ],
+    "common_mistakes": [
+      {
+        "en": "Using GET to change data on the server.",
+        "ru": "Server par data badalne ke liye GET istemal karna."
+      },
+      {
+        "en": "Confusing 401 Unauthorized (not logged in) with 403 Forbidden (logged in but not allowed).",
+        "ru": "401 Unauthorized (login nahi) ko 403 Forbidden (login hai lekin ijazat nahi) samajhna."
+      },
+      {
+        "en": "Thinking HTTPS hides the domain name completely.",
+        "ru": "Yeh samajhna ke HTTPS domain ka naam poori tarah chhupa deta hai."
+      }
+    ],
+    "questions": [
+      {
+        "type": "mcq",
+        "kind": "basic",
+        "difficulty": "easy",
+        "q": {
+          "en": "Which status code means the requested resource does not exist?",
+          "ru": "Kaunsa status code batata hai ke maangi gayi cheez maujood nahi?"
+        },
+        "options": [
+          {
+            "en": "404",
+            "ru": "404"
+          },
+          {
+            "en": "200",
+            "ru": "200"
+          },
+          {
+            "en": "500",
+            "ru": "500"
+          },
+          {
+            "en": "301",
+            "ru": "301"
+          }
+        ],
+        "answer": 0,
+        "hints": [
+          {
+            "en": "It is a client-error code.",
+            "ru": "Yeh client error code hai."
+          }
+        ],
+        "explanation": {
+          "en": "404 Not Found.",
+          "ru": "404 Not Found."
+        }
+      },
+      {
+        "type": "tf",
+        "kind": "conceptual",
+        "difficulty": "easy",
+        "q": {
+          "en": "HTTP is a stateless protocol.",
+          "ru": "HTTP stateless protocol hai."
+        },
+        "answer": true,
+        "hints": [
+          {
+            "en": "Does the server remember the previous request by itself?",
+            "ru": "Kya server khud pichli request yaad rakhta hai?"
+          }
+        ],
+        "explanation": {
+          "en": "True: state is added on top with cookies, sessions or tokens.",
+          "ru": "Sahi: state upar se cookies, sessions ya tokens ke zariye shamil ki jati hai."
+        }
+      },
+      {
+        "type": "mcq",
+        "kind": "conceptual",
+        "difficulty": "medium",
+        "q": {
+          "en": "Which method is NOT idempotent?",
+          "ru": "Kaunsa method idempotent NAHI?"
+        },
+        "options": [
+          {
+            "en": "POST",
+            "ru": "POST"
+          },
+          {
+            "en": "GET",
+            "ru": "GET"
+          },
+          {
+            "en": "PUT",
+            "ru": "PUT"
+          },
+          {
+            "en": "DELETE",
+            "ru": "DELETE"
+          }
+        ],
+        "answer": 0,
+        "hints": [
+          {
+            "en": "Submitting a form twice can create two records.",
+            "ru": "Form do dafa jama karne se do records ban sakte hain."
+          }
+        ],
+        "explanation": {
+          "en": "Repeating POST can create duplicates, so it is not idempotent.",
+          "ru": "POST dohrane se duplicates ban sakte hain, is liye yeh idempotent nahi."
+        }
+      },
+      {
+        "type": "short",
+        "kind": "exam",
+        "difficulty": "medium",
+        "q": {
+          "en": "What happens (briefly) when you type a URL and press Enter?",
+          "ru": "URL likh kar Enter dabane par mukhtasar tor par kya hota hai?"
+        },
+        "answer": "The browser resolves the domain with DNS to an IP address, opens a TCP connection and a TLS handshake for HTTPS, sends an HTTP GET request, receives the response with a status code and HTML, and renders the page, fetching CSS, JavaScript and images with further requests.",
+        "keywords": [
+          "dns",
+          "tcp",
+          "request",
+          "response",
+          "render"
+        ],
+        "min_keywords": 3,
+        "hints": [
+          {
+            "en": "DNS, connection, request, response, rendering.",
+            "ru": "DNS, connection, request, response, rendering."
+          }
+        ],
+        "explanation": {
+          "en": "DNS lookup, connection, request, response, render (plus extra requests for resources).",
+          "ru": "DNS lookup, connection, request, response, render (aur resources ke liye mazeed requests)."
+        }
+      }
+    ]
+  },
+  {
+    "id": "tcp_handshake",
+    "title": {
+      "en": "TCP Three-Way Handshake",
+      "ru": "TCP Three-Way Handshake"
+    },
+    "subject": "Web Engineering",
+    "category": "foundations",
+    "aliases": [
+      "tcp handshake",
+      "three way handshake",
+      "3-way handshake",
+      "tcp",
+      "syn ack",
+      "tcp connection"
+    ],
+    "search_query": "tcp three way handshake syn ack",
+    "intro": {
+      "en": "Before TCP sends any data, the two computers agree to talk and synchronise their sequence numbers. This short exchange is the three-way handshake.",
+      "ru": "TCP data bhejne se pehle dono computers baat karne par ittefaq karte hain aur apne sequence numbers milate hain. Yeh chhota sa tabadla three-way handshake hai."
+    },
+    "definition": {
+      "en": "The TCP three-way handshake establishes a connection with three segments: the client sends SYN, the server replies SYN-ACK, and the client answers ACK.",
+      "ru": "TCP three-way handshake teen segments se connection banata hai: client SYN bhejta hai, server SYN-ACK se jawab deta hai, aur client ACK bhejta hai."
+    },
+    "explanation": {
+      "en": "1) The client sends a segment with the SYN flag and a random initial sequence number x. 2) The server replies with SYN and ACK flags, its own initial sequence number y and acknowledgement number x + 1 (meaning 'I received your SYN'). 3) The client sends ACK with acknowledgement number y + 1. Now both sides know each other's starting sequence numbers and the connection is ESTABLISHED. Three messages are the minimum that confirms both directions work. Random initial sequence numbers protect against old duplicate segments and spoofing. A SYN flood attack sends many SYNs without completing step 3, filling the server's half-open connection queue. Closing uses FIN and ACK segments from both sides (a four-way exchange).",
+      "ru": "1) Client SYN flag aur random shuruati sequence number x ke saath segment bhejta hai. 2) Server SYN aur ACK flags, apne shuruati sequence number y aur acknowledgement number x + 1 ke saath jawab deta hai (matlab 'tumhara SYN mil gaya'). 3) Client acknowledgement number y + 1 ke saath ACK bhejta hai. Ab dono ko ek doosre ke shuruati sequence numbers maloom hain aur connection ESTABLISHED hai. Teen messages kam se kam hain jo dono simton ka kaam karna tasdeeq karte hain. Random shuruati sequence numbers purane duplicate segments aur spoofing se bachate hain. SYN flood attack bohat se SYN bhejta hai lekin step 3 poora nahi karta, jis se server ki adhoore connections wali queue bhar jati hai. Band karne ke liye dono taraf se FIN aur ACK segments jate hain (chaar hisson wala tabadla)."
+    },
+    "example": {
+      "en": "Client initial sequence number = 1000, server initial sequence number = 5000. 1) Client -> Server: SYN, seq = 1000. 2) Server -> Client: SYN-ACK, seq = 5000, ack = 1001. 3) Client -> Server: ACK, seq = 1001, ack = 5001. The first data byte from the client will have sequence number 1001.",
+      "ru": "Client ka shuruati sequence number = 1000, server ka = 5000. 1) Client -> Server: SYN, seq = 1000. 2) Server -> Client: SYN-ACK, seq = 5000, ack = 1001. 3) Client -> Server: ACK, seq = 1001, ack = 5001. Client ke pehle data byte ka sequence number 1001 hoga."
+    },
+    "key_concepts": [
+      {
+        "term": "SYN",
+        "en": "Synchronise flag: asks to open a connection and carries the initial sequence number.",
+        "ru": "Synchronise flag: connection kholne ki darkhwast aur shuruati sequence number."
+      },
+      {
+        "term": "ACK",
+        "en": "Acknowledgement; the ack number is the next byte expected.",
+        "ru": "Acknowledgement; ack number agla mutawaqqa byte hai."
+      },
+      {
+        "term": "Initial sequence number",
+        "en": "Randomly chosen starting byte number for each direction.",
+        "ru": "Har simt ke liye random chuna gaya shuruati byte number."
+      },
+      {
+        "term": "SYN flood",
+        "en": "Attack that leaves many half-open connections.",
+        "ru": "Attack jo bohat si adhoori connections chhor deta hai."
+      }
+    ],
+    "formulas": [
+      {
+        "latex": "ack_{SYN\\text{-}ACK} = x + 1, \\quad ack_{ACK} = y + 1",
+        "en": "Acknowledgement numbers in the handshake.",
+        "ru": "Handshake mein acknowledgement numbers."
+      }
+    ],
+    "code": [
+      "def handshake(client_isn, server_isn):",
+      "    steps = [",
+      "        ('client -> server', 'SYN', {'seq': client_isn}),",
+      "        ('server -> client', 'SYN-ACK', {'seq': server_isn, 'ack': client_isn + 1}),",
+      "        ('client -> server', 'ACK', {'seq': client_isn + 1, 'ack': server_isn + 1}),",
+      "    ]",
+      "    for direction, flags, fields in steps:",
+      "        print(f'{direction:17} {flags:8} {fields}')",
+      "",
+      "handshake(client_isn=1000, server_isn=5000)"
+    ],
+    "code_explanation": [
+      {
+        "en": "The function prints the three segments with their sequence and acknowledgement numbers.",
+        "ru": "Function teeno segments un ke sequence aur acknowledgement numbers ke saath print karta hai."
+      },
+      {
+        "en": "Each ack number is the other side's sequence number plus one (SYN consumes one sequence number).",
+        "ru": "Har ack number doosri taraf ka sequence number + 1 hai (SYN ek sequence number istemal karta hai)."
+      }
+    ],
+    "applications": [
+      {
+        "en": "Every HTTP/HTTPS web request starts with a TCP handshake (HTTP/1.1 and HTTP/2).",
+        "ru": "Har HTTP/HTTPS web request TCP handshake se shuru hoti hai (HTTP/1.1 aur HTTP/2)."
+      },
+      {
+        "en": "Firewalls track handshake states to allow or block connections.",
+        "ru": "Firewalls handshake ki halat dekh kar connections allow ya block karte hain."
+      },
+      {
+        "en": "Understanding SYN flood attacks and their defences.",
+        "ru": "SYN flood attacks aur un se bachao samajhna."
+      }
+    ],
+    "exam_points": [
+      {
+        "en": "Draw the three segments with seq and ack numbers.",
+        "ru": "Teen segments seq aur ack numbers ke saath banayein."
+      },
+      {
+        "en": "Explain why two messages are not enough.",
+        "ru": "Batayein do messages kyun kaafi nahi."
+      },
+      {
+        "en": "Describe connection termination (FIN/ACK).",
+        "ru": "Connection band karna (FIN/ACK) bayan karein."
+      }
+    ],
+    "common_mistakes": [
+      {
+        "en": "Writing the ack number equal to the received sequence number instead of plus one.",
+        "ru": "Ack number ko + 1 ki jagah mile hue sequence number ke barabar likhna."
+      },
+      {
+        "en": "Thinking UDP also performs a handshake.",
+        "ru": "Yeh samajhna ke UDP bhi handshake karta hai."
+      },
+      {
+        "en": "Forgetting that each side has its own sequence number.",
+        "ru": "Bhool jana ke har taraf ka apna sequence number hota hai."
+      }
+    ],
+    "questions": [
+      {
+        "type": "mcq",
+        "kind": "basic",
+        "q": {
+          "en": "What is the correct order of the TCP three-way handshake?",
+          "ru": "TCP three-way handshake ki sahi tarteeb kya hai?"
+        },
+        "options": [
+          {
+            "en": "SYN, SYN-ACK, ACK",
+            "ru": "SYN, SYN-ACK, ACK"
+          },
+          {
+            "en": "ACK, SYN, SYN-ACK",
+            "ru": "ACK, SYN, SYN-ACK"
+          },
+          {
+            "en": "SYN, ACK, FIN",
+            "ru": "SYN, ACK, FIN"
+          },
+          {
+            "en": "SYN-ACK, SYN, ACK",
+            "ru": "SYN-ACK, SYN, ACK"
+          }
+        ],
+        "answer": 0,
+        "hints": [
+          {
+            "en": "The client asks first.",
+            "ru": "Pehle client poochta hai."
+          }
+        ],
+        "explanation": {
+          "en": "Client SYN, server SYN-ACK, client ACK.",
+          "ru": "Client SYN, server SYN-ACK, client ACK."
+        },
+        "difficulty": "easy"
+      },
+      {
+        "type": "numerical",
+        "kind": "problem",
+        "q": {
+          "en": "The client's SYN has seq = 1000. What acknowledgement number does the server put in its SYN-ACK?",
+          "ru": "Client ke SYN mein seq = 1000 hai. Server apne SYN-ACK mein kaunsa acknowledgement number dega?"
+        },
+        "answer": 1001,
+        "tolerance": 0,
+        "hints": [
+          {
+            "en": "The ack number is the next sequence number expected.",
+            "ru": "Ack number agla mutawaqqa sequence number hai."
+          }
+        ],
+        "explanation": {
+          "en": "SYN consumes one sequence number, so ack = 1000 + 1 = 1001.",
+          "ru": "SYN ek sequence number leta hai, is liye ack = 1001."
+        },
+        "difficulty": "medium"
+      },
+      {
+        "type": "short",
+        "kind": "conceptual",
+        "q": {
+          "en": "Why does TCP use three messages instead of two?",
+          "ru": "TCP do ki jagah teen messages kyun istemal karta hai?"
+        },
+        "answer": "Both sides must send their initial sequence number and receive an acknowledgement for it; with only two messages the server would not know whether the client received its sequence number, so the third ACK confirms the server-to-client direction.",
+        "keywords": [
+          "both sides",
+          "sequence number",
+          "acknowledge",
+          "confirm"
+        ],
+        "hints": [
+          {
+            "en": "Each side needs its own SYN acknowledged.",
+            "ru": "Har taraf ko apne SYN ki tasdeeq chahiye."
+          }
+        ],
+        "explanation": {
+          "en": "The third message acknowledges the server's SYN, so both directions are confirmed.",
+          "ru": "Teesra message server ke SYN ki tasdeeq karta hai, is tarah dono simtein confirm hoti hain."
+        },
+        "difficulty": "medium"
+      }
+    ],
+    "video_queries": [
+      "TCP three way handshake explained",
+      "TCP vs UDP explained networking"
+    ],
+    "subtopics": [
+      {
+        "name": "SYN",
+        "terms": [
+          "syn"
+        ]
+      },
+      {
+        "name": "SYN-ACK",
+        "terms": [
+          "syn ack",
+          "syn-ack"
+        ]
+      },
+      {
+        "name": "ACK",
+        "terms": [
+          "ack"
+        ]
+      },
+      {
+        "name": "Connection termination",
+        "terms": [
+          "fin"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "html_basics",
+    "title": {
+      "en": "HTML Structure and Semantic Elements",
+      "ru": "HTML ka Dhancha aur Semantic Elements"
+    },
+    "subject": "Web Engineering",
+    "category": "front_end",
+    "aliases": [
+      "html",
+      "html5",
+      "html tags",
+      "semantic html",
+      "forms",
+      "html forms",
+      "dom tree",
+      "html structure",
+      "accessibility"
+    ],
+    "search_query": "html basics tags elements semantic html forms",
+    "video_queries": [
+      "HTML tutorial for beginners elements tags structure",
+      "semantic HTML5 elements explained"
+    ],
+    "subtopics": [
+      {
+        "name": "Document structure",
+        "terms": [
+          "doctype",
+          "head",
+          "body"
+        ]
+      },
+      {
+        "name": "Semantic elements",
+        "terms": [
+          "semantic",
+          "header",
+          "nav",
+          "article",
+          "section"
+        ]
+      },
+      {
+        "name": "Forms",
+        "terms": [
+          "form",
+          "input"
+        ]
+      },
+      {
+        "name": "Links and images",
+        "terms": [
+          "anchor",
+          "href",
+          "img"
+        ]
+      }
+    ],
+    "practice": [
+      "web_live"
+    ],
+    "code_language": "html",
+    "intro": {
+      "en": "HTML gives a web page its structure: headings, paragraphs, links, images and forms. Browsers turn it into the DOM tree that CSS styles and JavaScript controls.",
+      "ru": "HTML web page ko dhancha deta hai: headings, paragraphs, links, images aur forms. Browser ise DOM tree mein badalta hai jise CSS sajata aur JavaScript control karta hai."
+    },
+    "definition": {
+      "en": "HTML (HyperText Markup Language) describes the structure and meaning of web content using elements written as tags, for example <p>text</p>. Elements can have attributes (href, src, alt, id, class) and are nested to form a tree.",
+      "ru": "HTML (HyperText Markup Language) web content ka dhancha aur maani elements ke zariye bayan karta hai jo tags ki shakal mein likhe jate hain, maslan <p>text</p>. Elements ke attributes hote hain (href, src, alt, id, class) aur yeh ek doosre ke andar ho kar tree banate hain."
+    },
+    "explanation": {
+      "en": "Every page starts with <!DOCTYPE html> and an <html> element containing <head> (metadata: title, charset, viewport, CSS links) and <body> (visible content). Semantic elements describe meaning: <header>, <nav>, <main>, <article>, <section>, <aside>, <footer>; they help search engines and screen readers more than generic <div> and <span>. Block elements (div, p, h1) start on a new line; inline elements (span, a, strong) flow inside text. Forms collect input: <form action method> with <input type=text/email/password/number>, <label for>, <select> and <button>. Accessibility basics: alt text for images, labels for inputs, a logical heading order (h1 then h2) and sufficient colour contrast.",
+      "ru": "Har page <!DOCTYPE html> aur <html> element se shuru hota hai jis mein <head> (metadata: title, charset, viewport, CSS links) aur <body> (nazar aane wala content) hote hain. Semantic elements maani batate hain: <header>, <nav>, <main>, <article>, <section>, <aside>, <footer>; yeh aam <div> aur <span> se zyada search engines aur screen readers ki madad karte hain. Block elements (div, p, h1) nayi line se shuru hote hain; inline elements (span, a, strong) text ke andar chalte hain. Forms input lete hain: <form action method> mein <input type=text/email/password/number>, <label for>, <select> aur <button>. Accessibility ki buniyad: images ke liye alt text, inputs ke liye labels, headings ki mantiqi tarteeb (pehle h1 phir h2) aur rangon ka kaafi contrast."
+    },
+    "example": {
+      "en": "A student profile page: <header> with the university logo, <nav> with links, <main> containing an <article> with <h1>Ali Raza</h1>, a <p> about the student and an <img src=photo.jpg alt='Photo of Ali Raza'>, and a <form> with a labelled email input and a submit button, followed by a <footer>. Paste the code below into the live editor to see it rendered.",
+      "ru": "Student profile page: <header> mein university ka logo, <nav> mein links, <main> mein <article> jis mein <h1>Ali Raza</h1>, student ke baare mein <p> aur <img src=photo.jpg alt='Photo of Ali Raza'>, aur label wale email input aur submit button ke saath <form>, aakhir mein <footer>. Neeche wala code live editor mein paste kar ke dekhein."
+    },
+    "key_concepts": [
+      {
+        "term": "Element / tag / attribute",
+        "en": "<a href='...'>text</a>: element a, tags <a> and </a>, attribute href.",
+        "ru": "<a href='...'>text</a>: element a, tags <a> aur </a>, attribute href."
+      },
+      {
+        "term": "Semantic HTML",
+        "en": "Elements chosen by meaning, not appearance.",
+        "ru": "Elements shakal ki jagah maani ke hisaab se chune jayein."
+      },
+      {
+        "term": "Block vs inline",
+        "en": "New line and full width vs flowing with the text.",
+        "ru": "Nayi line aur poori chaurai vs text ke saath behna."
+      }
+    ],
+    "formulas": [],
+    "code": [
+      "<!DOCTYPE html>",
+      "<html lang='en'>",
+      "<head><meta charset='utf-8'><title>Student Profile</title></head>",
+      "<body>",
+      "  <header><h1>Ali Raza</h1></header>",
+      "  <nav><a href='#courses'>Courses</a> | <a href='#contact'>Contact</a></nav>",
+      "  <main>",
+      "    <section id='courses'>",
+      "      <h2>Courses</h2>",
+      "      <ul><li>Web Engineering</li><li>Compiler Construction</li></ul>",
+      "    </section>",
+      "    <section id='contact'>",
+      "      <h2>Contact</h2>",
+      "      <form>",
+      "        <label for='email'>Email</label>",
+      "        <input id='email' type='email' required>",
+      "        <button type='submit'>Send</button>",
+      "      </form>",
+      "    </section>",
+      "  </main>",
+      "  <footer>BSCS Semester V</footer>",
+      "</body>",
+      "</html>"
+    ],
+    "code_explanation": [
+      {
+        "en": "The page uses semantic elements: header, nav, main, section and footer.",
+        "ru": "Page semantic elements istemal karta hai: header, nav, main, section aur footer."
+      },
+      {
+        "en": "label for='email' connects the label to the input, which helps screen readers.",
+        "ru": "label for='email' label ko input se jorta hai, jo screen readers ki madad karta hai."
+      },
+      {
+        "en": "type='email' with required makes the browser validate the input before submitting.",
+        "ru": "type='email' aur required se browser jama karne se pehle input check karta hai."
+      }
+    ],
+    "applications": [
+      {
+        "en": "Every web page and web app user interface.",
+        "ru": "Har web page aur web app ka interface."
+      },
+      {
+        "en": "Email templates and documentation sites.",
+        "ru": "Email templates aur documentation sites."
+      },
+      {
+        "en": "Search engine optimisation through semantic structure.",
+        "ru": "Semantic dhanche se search engine optimisation."
+      }
+    ],
+    "exam_points": [
+      {
+        "en": "Write the skeleton of an HTML5 document.",
+        "ru": "HTML5 document ka dhancha likhein."
+      },
+      {
+        "en": "Explain semantic elements and why they matter.",
+        "ru": "Semantic elements aur un ki ahmiyat samjhayein."
+      },
+      {
+        "en": "Create a form with labelled inputs.",
+        "ru": "Label wale inputs ke saath form banayein."
+      }
+    ],
+    "common_mistakes": [
+      {
+        "en": "Using <div> for everything instead of semantic elements.",
+        "ru": "Semantic elements ki jagah har cheez ke liye <div> istemal karna."
+      },
+      {
+        "en": "Missing alt text on images.",
+        "ru": "Images par alt text na dena."
+      },
+      {
+        "en": "Skipping heading levels (h1 then h4) for styling.",
+        "ru": "Styling ke liye heading levels chhorna (h1 ke baad h4)."
+      }
+    ],
+    "questions": [
+      {
+        "type": "mcq",
+        "kind": "basic",
+        "difficulty": "easy",
+        "q": {
+          "en": "Which element should contain the main navigation links?",
+          "ru": "Main navigation links kis element mein hone chahiyein?"
+        },
+        "options": [
+          {
+            "en": "<nav>",
+            "ru": "<nav>"
+          },
+          {
+            "en": "<footer>",
+            "ru": "<footer>"
+          },
+          {
+            "en": "<span>",
+            "ru": "<span>"
+          },
+          {
+            "en": "<aside>",
+            "ru": "<aside>"
+          }
+        ],
+        "answer": 0,
+        "hints": [
+          {
+            "en": "Its name describes navigation.",
+            "ru": "Is ka naam navigation batata hai."
+          }
+        ],
+        "explanation": {
+          "en": "<nav> marks a block of navigation links.",
+          "ru": "<nav> navigation links ke block ki nishandahi karta hai."
+        }
+      },
+      {
+        "type": "tf",
+        "kind": "conceptual",
+        "difficulty": "easy",
+        "q": {
+          "en": "The alt attribute of an image is shown to screen-reader users and when the image cannot load.",
+          "ru": "Image ka alt attribute screen-reader users ko aur image load na hone par dikhaya jata hai."
+        },
+        "answer": true,
+        "hints": [
+          {
+            "en": "It is the text alternative of the image.",
+            "ru": "Yeh image ka text mutabadil hai."
+          }
+        ],
+        "explanation": {
+          "en": "True: alt provides the image's meaning as text.",
+          "ru": "Sahi: alt image ka maani text ki shakal mein deta hai."
+        }
+      },
+      {
+        "type": "mcq",
+        "kind": "conceptual",
+        "difficulty": "medium",
+        "q": {
+          "en": "Which of these is an inline element by default?",
+          "ru": "In mein se kaunsa default mein inline element hai?"
+        },
+        "options": [
+          {
+            "en": "<span>",
+            "ru": "<span>"
+          },
+          {
+            "en": "<div>",
+            "ru": "<div>"
+          },
+          {
+            "en": "<p>",
+            "ru": "<p>"
+          },
+          {
+            "en": "<section>",
+            "ru": "<section>"
+          }
+        ],
+        "answer": 0,
+        "hints": [
+          {
+            "en": "It does not start a new line.",
+            "ru": "Yeh nayi line shuru nahi karta."
+          }
+        ],
+        "explanation": {
+          "en": "span is inline; div, p and section are block elements.",
+          "ru": "span inline hai; div, p aur section block elements hain."
+        }
+      }
+    ]
+  },
+  {
+    "id": "css_layout",
+    "title": {
+      "en": "CSS: Selectors, Box Model and Flexbox",
+      "ru": "CSS: Selectors, Box Model aur Flexbox"
+    },
+    "subject": "Web Engineering",
+    "category": "front_end",
+    "aliases": [
+      "css",
+      "box model",
+      "flexbox",
+      "css grid",
+      "selectors",
+      "specificity",
+      "responsive design",
+      "media queries",
+      "css layout"
+    ],
+    "search_query": "css box model flexbox selectors specificity",
+    "video_queries": [
+      "CSS box model explained margin padding border",
+      "CSS flexbox tutorial explained"
+    ],
+    "subtopics": [
+      {
+        "name": "Selectors",
+        "terms": [
+          "selector",
+          "class selector",
+          "id selector"
+        ]
+      },
+      {
+        "name": "Box model",
+        "terms": [
+          "box model",
+          "padding",
+          "margin",
+          "border"
+        ]
+      },
+      {
+        "name": "Flexbox",
+        "terms": [
+          "flexbox",
+          "justify-content",
+          "align-items"
+        ]
+      },
+      {
+        "name": "Responsive design",
+        "terms": [
+          "media query",
+          "responsive"
+        ]
+      }
+    ],
+    "practice": [
+      "web_live"
+    ],
+    "code_language": "html",
+    "intro": {
+      "en": "CSS controls how HTML looks: colours, fonts, spacing and layout. Understanding the box model and flexbox solves most layout problems.",
+      "ru": "CSS control karta hai ke HTML kaisa dikhe: rang, fonts, faasle aur layout. Box model aur flexbox samajh kar zyada tar layout masail hal ho jate hain."
+    },
+    "definition": {
+      "en": "CSS (Cascading Style Sheets) applies style rules to elements chosen by selectors. Every element is a box with content, padding, border and margin (the box model); flexbox is a one-dimensional layout system that arranges children in a row or column.",
+      "ru": "CSS (Cascading Style Sheets) selectors se chune gaye elements par style rules lagata hai. Har element ek box hai jis mein content, padding, border aur margin hote hain (box model); flexbox ek-dimensional layout system hai jo bachon ko row ya column mein tarteeb deta hai."
+    },
+    "explanation": {
+      "en": "Selectors: element (p), class (.card), id (#main), descendant (nav a), pseudo-class (a:hover). When rules conflict, the cascade decides: more specific selectors win (inline style > id > class > element), and with equal specificity the later rule wins. In the default box model (content-box) the width you set is only the content, so the total width = width + left/right padding + left/right border (+ margins outside). box-sizing: border-box makes width include padding and border, which is easier. Flexbox: display: flex on the parent; flex-direction sets the main axis; justify-content aligns along the main axis (space-between, center); align-items along the cross axis; flex: 1 lets items grow. Responsive design uses relative units (%, rem), flexible layouts and media queries such as @media (max-width: 600px) to adapt to small screens.",
+      "ru": "Selectors: element (p), class (.card), id (#main), descendant (nav a), pseudo-class (a:hover). Jab rules takrayein to cascade faisla karta hai: zyada specific selector jeet-ta hai (inline style > id > class > element), aur barabar specificity par baad wala rule jeet-ta hai. Default box model (content-box) mein di gayi width sirf content ki hai, is liye kul width = width + left/right padding + left/right border (+ bahar margins). box-sizing: border-box se width mein padding aur border shamil ho jate hain, jo aasan hai. Flexbox: parent par display: flex; flex-direction main axis tay karta hai; justify-content main axis par tarteeb deta hai (space-between, center); align-items cross axis par; flex: 1 items ko barhne deta hai. Responsive design relative units (%, rem), lachakdaar layouts aur @media (max-width: 600px) jaisi media queries se chhoti screens ke mutabiq dhalta hai."
+    },
+    "example": {
+      "en": "A box with width: 200px; padding: 20px; border: 5px solid; margin: 10px. Content-box: rendered width = 200 + 2x20 + 2x5 = 250px, and it occupies 270px including margins. With box-sizing: border-box the rendered width is exactly 200px (the content shrinks to 150px).",
+      "ru": "Box: width: 200px; padding: 20px; border: 5px solid; margin: 10px. Content-box: dikhne wali width = 200 + 2x20 + 2x5 = 250px, aur margins samet 270px jagah leta hai. box-sizing: border-box ke saath dikhne wali width bilkul 200px (content sikur kar 150px)."
+    },
+    "key_concepts": [
+      {
+        "term": "Specificity",
+        "en": "inline > id > class/attribute/pseudo-class > element.",
+        "ru": "inline > id > class/attribute/pseudo-class > element."
+      },
+      {
+        "term": "Box model",
+        "en": "content + padding + border + margin.",
+        "ru": "content + padding + border + margin."
+      },
+      {
+        "term": "Flexbox axes",
+        "en": "justify-content = main axis, align-items = cross axis.",
+        "ru": "justify-content = main axis, align-items = cross axis."
+      }
+    ],
+    "formulas": [
+      {
+        "latex": "W_{total} = w + 2p + 2b + 2m",
+        "en": "Horizontal space taken by a content-box element (equal sides).",
+        "ru": "Content-box element ki ufqi jagah (barabar sides)."
+      }
+    ],
+    "code": [
+      "<style>",
+      "  * { box-sizing: border-box; }",
+      "  .row { display: flex; gap: 12px; justify-content: space-between; align-items: center; }",
+      "  .card { flex: 1; padding: 16px; border: 2px solid #4A90E2; border-radius: 10px; background: #EAF4FF; }",
+      "  .card.highlight { background: #4A90E2; color: white; }",
+      "  @media (max-width: 600px) { .row { flex-direction: column; } }",
+      "</style>",
+      "<div class='row'>",
+      "  <div class='card'>Operating Systems</div>",
+      "  <div class='card highlight'>Web Engineering</div>",
+      "  <div class='card'>Compiler Construction</div>",
+      "</div>"
+    ],
+    "code_explanation": [
+      {
+        "en": "display: flex puts the three cards in a row; flex: 1 makes them share the width equally.",
+        "ru": "display: flex teeno cards ko row mein rakhta hai; flex: 1 unhein chaurai barabar baant-ne deta hai."
+      },
+      {
+        "en": ".card.highlight is more specific than .card, so its background wins.",
+        "ru": ".card.highlight .card se zyada specific hai, is liye us ka background jeet-ta hai."
+      },
+      {
+        "en": "The media query stacks the cards vertically on narrow screens.",
+        "ru": "Media query tang screens par cards ko upar neeche kar deti hai."
+      }
+    ],
+    "applications": [
+      {
+        "en": "Responsive websites that work on phones and desktops.",
+        "ru": "Phones aur desktops par chalne wali responsive websites."
+      },
+      {
+        "en": "Design systems and UI component libraries.",
+        "ru": "Design systems aur UI component libraries."
+      }
+    ],
+    "exam_points": [
+      {
+        "en": "Compute the rendered width of a box.",
+        "ru": "Box ki dikhne wali width nikalein."
+      },
+      {
+        "en": "Order selectors by specificity.",
+        "ru": "Selectors ko specificity ke hisaab se tarteeb dein."
+      },
+      {
+        "en": "Build a layout with flexbox and a media query.",
+        "ru": "Flexbox aur media query se layout banayein."
+      }
+    ],
+    "common_mistakes": [
+      {
+        "en": "Forgetting that padding and border add to the width in content-box.",
+        "ru": "Bhool jana ke content-box mein padding aur border width mein izafa karte hain."
+      },
+      {
+        "en": "Using align-items when justify-content is needed (main vs cross axis).",
+        "ru": "justify-content ki jagah align-items istemal karna (main vs cross axis)."
+      },
+      {
+        "en": "Overusing !important instead of fixing specificity.",
+        "ru": "Specificity theek karne ki jagah !important ka hadd se zyada istemal."
+      }
+    ],
+    "questions": [
+      {
+        "type": "numerical",
+        "kind": "problem",
+        "difficulty": "medium",
+        "q": {
+          "en": "content-box element: width 300px, padding 10px, border 2px (all sides). What is its rendered width in px (without margin)?",
+          "ru": "content-box element: width 300px, padding 10px, border 2px (har taraf). Margin ke baghair dikhne wali width kitne px?"
+        },
+        "answer": 324,
+        "tolerance": 0,
+        "hints": [
+          {
+            "en": "300 + 2 x 10 + 2 x 2.",
+            "ru": "300 + 2 x 10 + 2 x 2."
+          }
+        ],
+        "explanation": {
+          "en": "300 + 20 + 4 = 324px.",
+          "ru": "300 + 20 + 4 = 324px."
+        }
+      },
+      {
+        "type": "mcq",
+        "kind": "conceptual",
+        "difficulty": "medium",
+        "q": {
+          "en": "Which selector has the highest specificity?",
+          "ru": "Kis selector ki specificity sab se zyada hai?"
+        },
+        "options": [
+          {
+            "en": "#menu",
+            "ru": "#menu"
+          },
+          {
+            "en": ".menu a",
+            "ru": ".menu a"
+          },
+          {
+            "en": "nav ul li a",
+            "ru": "nav ul li a"
+          },
+          {
+            "en": "a:hover",
+            "ru": "a:hover"
+          }
+        ],
+        "answer": 0,
+        "hints": [
+          {
+            "en": "One id beats any number of classes and elements.",
+            "ru": "Ek id kitni bhi classes aur elements par bhari hai."
+          }
+        ],
+        "explanation": {
+          "en": "An id selector outranks class, pseudo-class and element selectors.",
+          "ru": "Id selector class, pseudo-class aur element selectors se upar hai."
+        }
+      },
+      {
+        "type": "tf",
+        "kind": "conceptual",
+        "difficulty": "easy",
+        "q": {
+          "en": "In a row flex container, justify-content aligns items horizontally.",
+          "ru": "Row flex container mein justify-content items ko ufqi (horizontal) tarteeb deta hai."
+        },
+        "answer": true,
+        "hints": [
+          {
+            "en": "In a row, the main axis is horizontal.",
+            "ru": "Row mein main axis ufqi hai."
+          }
+        ],
+        "explanation": {
+          "en": "True: justify-content works on the main axis, which is horizontal for flex-direction: row.",
+          "ru": "Sahi: justify-content main axis par kaam karta hai, jo flex-direction: row mein ufqi hai."
+        }
+      }
+    ]
+  },
+  {
+    "id": "javascript_dom",
+    "title": {
+      "en": "JavaScript and the DOM",
+      "ru": "JavaScript aur DOM"
+    },
+    "subject": "Web Engineering",
+    "category": "front_end",
+    "aliases": [
+      "javascript",
+      "js",
+      "dom",
+      "document object model",
+      "event listener",
+      "events",
+      "event loop",
+      "async",
+      "promises",
+      "fetch",
+      "async await"
+    ],
+    "search_query": "javascript dom manipulation events event listener",
+    "video_queries": [
+      "JavaScript DOM manipulation tutorial events",
+      "JavaScript event loop promises async await explained"
+    ],
+    "subtopics": [
+      {
+        "name": "Selecting elements",
+        "terms": [
+          "queryselector",
+          "getelementbyid"
+        ]
+      },
+      {
+        "name": "Events",
+        "terms": [
+          "addeventlistener",
+          "event listener",
+          "click event"
+        ]
+      },
+      {
+        "name": "Event loop",
+        "terms": [
+          "event loop",
+          "call stack"
+        ]
+      },
+      {
+        "name": "Async / fetch",
+        "terms": [
+          "promise",
+          "async",
+          "await",
+          "fetch"
+        ]
+      }
+    ],
+    "practice": [
+      "web_live"
+    ],
+    "code_language": "html",
+    "intro": {
+      "en": "HTML is the structure and CSS the style; JavaScript makes the page interactive - reacting to clicks, validating forms and loading data without reloading the page.",
+      "ru": "HTML dhancha aur CSS sajawat hai; JavaScript page ko interactive banata hai - clicks par rad-e-amal, forms check karna aur page reload kiye baghair data lana."
+    },
+    "definition": {
+      "en": "JavaScript is the programming language of the browser. The DOM (Document Object Model) is the tree of objects that represents the page; JavaScript reads and changes the DOM and reacts to events such as clicks with event listeners.",
+      "ru": "JavaScript browser ki programming language hai. DOM (Document Object Model) objects ka tree hai jo page ko dikhata hai; JavaScript DOM parhta aur badalta hai aur event listeners se clicks jaise events par rad-e-amal karta hai."
+    },
+    "explanation": {
+      "en": "document.querySelector('#id' or '.class') finds elements; element.textContent, classList.add and style change them; document.createElement and appendChild add new ones. element.addEventListener('click', handler) runs a function when an event happens; events bubble from the target up through its ancestors, so one listener on a parent can handle many children (event delegation). JavaScript in the browser runs on a single thread with an event loop: long work blocks the page, so slow operations such as network requests are asynchronous. fetch(url) returns a Promise; with async/await the code reads top-to-bottom: const res = await fetch('/api/students'); const data = await res.json(). let and const have block scope; === compares without type conversion.",
+      "ru": "document.querySelector('#id' ya '.class') elements dhoondta hai; element.textContent, classList.add aur style unhein badalte hain; document.createElement aur appendChild naye shamil karte hain. element.addEventListener('click', handler) event hone par function chalata hai; events target se us ke ancestors ki taraf upar bubble karte hain, is liye parent par ek listener kai bachon ko sambhal sakta hai (event delegation). Browser mein JavaScript ek thread aur event loop par chalta hai: lamba kaam page ko rok deta hai, is liye network requests jaise dheeme kaam asynchronous hote hain. fetch(url) Promise wapas karta hai; async/await se code upar se neeche parha jata hai: const res = await fetch('/api/students'); const data = await res.json(). let aur const block scope rakhte hain; === type badle baghair muqabla karta hai."
+    },
+    "example": {
+      "en": "A counter: a <button> and a <span id='count'>0</span>. The script finds both with querySelector, keeps a variable n = 0 and adds a click listener that increments n and sets span.textContent = n. Clicking three times shows 3 without reloading the page. Run the code below in the live editor.",
+      "ru": "Counter: ek <button> aur <span id='count'>0</span>. Script querySelector se dono dhoondta hai, variable n = 0 rakhta hai aur click listener lagata hai jo n barha kar span.textContent = n karta hai. Teen dafa click karne par page reload kiye baghair 3 dikhta hai. Neeche wala code live editor mein chalayein."
+    },
+    "key_concepts": [
+      {
+        "term": "DOM",
+        "en": "Live tree of page objects that scripts can change.",
+        "ru": "Page ke objects ka zinda tree jise scripts badal sakte hain."
+      },
+      {
+        "term": "Event bubbling",
+        "en": "Events travel from the target up to its ancestors.",
+        "ru": "Events target se ancestors ki taraf upar jate hain."
+      },
+      {
+        "term": "Promise / async-await",
+        "en": "A value that will arrive later; await pauses until it does.",
+        "ru": "Aisi value jo baad mein aayegi; await us ke aane tak rukta hai."
+      }
+    ],
+    "formulas": [],
+    "code": [
+      "<button id='btn'>Click me</button>",
+      "<p>Clicked <span id='count'>0</span> times</p>",
+      "<ul id='list'></ul>",
+      "<script>",
+      "  let n = 0;",
+      "  const span = document.querySelector('#count');",
+      "  document.querySelector('#btn').addEventListener('click', () => {",
+      "    n += 1;",
+      "    span.textContent = n;",
+      "    const li = document.createElement('li');",
+      "    li.textContent = 'Click number ' + n;",
+      "    document.querySelector('#list').appendChild(li);",
+      "  });",
+      "</script>"
+    ],
+    "code_explanation": [
+      {
+        "en": "querySelector finds the button and the span by id.",
+        "ru": "querySelector id se button aur span dhoondta hai."
+      },
+      {
+        "en": "The arrow function runs on every click and updates the DOM.",
+        "ru": "Arrow function har click par chalta hai aur DOM update karta hai."
+      },
+      {
+        "en": "createElement and appendChild add a new list item each time.",
+        "ru": "createElement aur appendChild har dafa nayi list item shamil karte hain."
+      }
+    ],
+    "applications": [
+      {
+        "en": "Form validation, menus, modals and interactive dashboards.",
+        "ru": "Form validation, menus, modals aur interactive dashboards."
+      },
+      {
+        "en": "Single-page applications (React, Vue) built on the DOM.",
+        "ru": "DOM par bani single-page applications (React, Vue)."
+      },
+      {
+        "en": "Loading data from APIs with fetch.",
+        "ru": "fetch se APIs ka data lana."
+      }
+    ],
+    "exam_points": [
+      {
+        "en": "Select elements, change content and add event listeners.",
+        "ru": "Elements chunein, content badlein aur event listeners lagayein."
+      },
+      {
+        "en": "Explain event bubbling and delegation.",
+        "ru": "Event bubbling aur delegation samjhayein."
+      },
+      {
+        "en": "Explain asynchronous code with promises and async/await.",
+        "ru": "Promises aur async/await se asynchronous code samjhayein."
+      }
+    ],
+    "common_mistakes": [
+      {
+        "en": "Running a script before the element exists (place scripts at the end or use defer).",
+        "ru": "Element banne se pehle script chalana (scripts aakhir mein rakhein ya defer istemal karein)."
+      },
+      {
+        "en": "Using == and getting surprising type conversions.",
+        "ru": "== istemal kar ke ajeeb type conversions pana."
+      },
+      {
+        "en": "Forgetting await, so a Promise is used instead of its value.",
+        "ru": "await bhool jana, jis se value ki jagah Promise istemal hota hai."
+      }
+    ],
+    "questions": [
+      {
+        "type": "mcq",
+        "kind": "basic",
+        "difficulty": "easy",
+        "q": {
+          "en": "Which method runs a function when a button is clicked?",
+          "ru": "Button click hone par function kaunsa method chalata hai?"
+        },
+        "options": [
+          {
+            "en": "addEventListener('click', fn)",
+            "ru": "addEventListener('click', fn)"
+          },
+          {
+            "en": "querySelector('click')",
+            "ru": "querySelector('click')"
+          },
+          {
+            "en": "appendChild(fn)",
+            "ru": "appendChild(fn)"
+          },
+          {
+            "en": "fetch('click')",
+            "ru": "fetch('click')"
+          }
+        ],
+        "answer": 0,
+        "hints": [
+          {
+            "en": "It listens for an event.",
+            "ru": "Yeh event ka intezar karta hai."
+          }
+        ],
+        "explanation": {
+          "en": "addEventListener registers the handler for the click event.",
+          "ru": "addEventListener click event ka handler register karta hai."
+        }
+      },
+      {
+        "type": "tf",
+        "kind": "conceptual",
+        "difficulty": "medium",
+        "q": {
+          "en": "fetch() returns the response data immediately, synchronously.",
+          "ru": "fetch() response ka data foran, synchronous tor par deta hai."
+        },
+        "answer": false,
+        "hints": [
+          {
+            "en": "Network requests take time.",
+            "ru": "Network requests mein waqt lagta hai."
+          }
+        ],
+        "explanation": {
+          "en": "False: it returns a Promise that resolves later.",
+          "ru": "Ghalat: yeh Promise deta hai jo baad mein poora hota hai."
+        }
+      },
+      {
+        "type": "mcq",
+        "kind": "conceptual",
+        "difficulty": "medium",
+        "q": {
+          "en": "What does '5' === 5 evaluate to in JavaScript?",
+          "ru": "JavaScript mein '5' === 5 ka natija kya hai?"
+        },
+        "options": [
+          {
+            "en": "false",
+            "ru": "false"
+          },
+          {
+            "en": "true",
+            "ru": "true"
+          },
+          {
+            "en": "an error",
+            "ru": "error"
+          },
+          {
+            "en": "undefined",
+            "ru": "undefined"
+          }
+        ],
+        "answer": 0,
+        "hints": [
+          {
+            "en": "=== also compares types.",
+            "ru": "=== types bhi milata hai."
+          }
+        ],
+        "explanation": {
+          "en": "A string and a number are different types, so strict equality is false.",
+          "ru": "String aur number alag types hain, is liye strict equality false hai."
+        }
+      }
+    ]
+  },
+  {
+    "id": "rest_api",
+    "title": {
+      "en": "REST APIs and JSON",
+      "ru": "REST APIs aur JSON"
+    },
+    "subject": "Web Engineering",
+    "category": "back_end",
+    "aliases": [
+      "rest",
+      "rest api",
+      "restful",
+      "api",
+      "json",
+      "crud",
+      "endpoints",
+      "web api",
+      "backend",
+      "server side"
+    ],
+    "search_query": "rest api crud http methods json endpoints",
+    "video_queries": [
+      "what is a REST API explained",
+      "REST API design CRUD HTTP methods JSON"
+    ],
+    "subtopics": [
+      {
+        "name": "Resources and endpoints",
+        "terms": [
+          "endpoint",
+          "resource"
+        ]
+      },
+      {
+        "name": "CRUD",
+        "terms": [
+          "crud"
+        ]
+      },
+      {
+        "name": "JSON",
+        "terms": [
+          "json"
+        ]
+      },
+      {
+        "name": "Statelessness",
+        "terms": [
+          "stateless"
+        ]
+      }
+    ],
+    "practice": [
+      "web_http"
+    ],
+    "intro": {
+      "en": "Mobile apps, web front ends and other servers talk to a back end through APIs. REST is the most common style for designing these web APIs.",
+      "ru": "Mobile apps, web front ends aur doosre servers back end se APIs ke zariye baat karte hain. In web APIs ko design karne ka sab se aam andaaz REST hai."
+    },
+    "definition": {
+      "en": "A REST API exposes resources (students, courses) at URLs called endpoints and manipulates them with standard HTTP methods - GET (read), POST (create), PUT/PATCH (update), DELETE (delete) - usually exchanging data as JSON, with each request containing all the information the server needs (stateless).",
+      "ru": "REST API resources (students, courses) ko URLs par dikhati hai jinhein endpoints kehte hain aur unhein standard HTTP methods se badalti hai - GET (parhna), POST (banana), PUT/PATCH (update), DELETE (hatana) - aam taur par data JSON mein, aur har request mein server ki zaroorat ki saari maloomat hoti hai (stateless)."
+    },
+    "explanation": {
+      "en": "Good REST design uses nouns for resources and HTTP methods for actions: GET /students lists students, GET /students/42 returns one, POST /students creates, PUT /students/42 replaces, PATCH /students/42 updates some fields, DELETE /students/42 removes. Nested resources show relationships: GET /students/42/courses. Query parameters filter and paginate: GET /students?semester=5&page=2. Responses use meaningful status codes (200, 201 Created, 204 No Content, 400 Bad Request, 404 Not Found, 422) and JSON bodies. Because the server keeps no session state for REST, authentication is sent with every request, typically as a token in the Authorization header. Versioning (/api/v1/) avoids breaking existing clients.",
+      "ru": "Acha REST design resources ke liye nouns aur actions ke liye HTTP methods istemal karta hai: GET /students students ki list, GET /students/42 ek student, POST /students naya banata hai, PUT /students/42 poora badalta hai, PATCH /students/42 kuch fields update karta hai, DELETE /students/42 hatata hai. Nested resources rishte dikhate hain: GET /students/42/courses. Query parameters filter aur pagination karte hain: GET /students?semester=5&page=2. Responses mani-khez status codes (200, 201 Created, 204 No Content, 400 Bad Request, 404 Not Found, 422) aur JSON bodies istemal karte hain. REST mein server session ki state nahi rakhta, is liye authentication har request ke saath bheji jati hai, aam taur par Authorization header mein token. Versioning (/api/v1/) purane clients ko tootne se bachati hai."
+    },
+    "example": {
+      "en": "A course API: POST /api/v1/courses with {\"code\": \"CS301\", \"title\": \"Web Engineering\"} returns 201 and the new course with id 1. GET /api/v1/courses/1 returns 200 and that JSON. DELETE /api/v1/courses/1 returns 204, and a second GET then returns 404. The Python code below implements exactly this behaviour in memory.",
+      "ru": "Course API: POST /api/v1/courses {\"code\": \"CS301\", \"title\": \"Web Engineering\"} ke saath 201 aur id 1 wala naya course deta hai. GET /api/v1/courses/1 200 aur wohi JSON deta hai. DELETE /api/v1/courses/1 204 deta hai, aur us ke baad GET 404 deta hai. Neeche ka Python code bilkul yahi rawaiyya memory mein banata hai."
+    },
+    "key_concepts": [
+      {
+        "term": "Resource + method",
+        "en": "URL names the thing, HTTP method names the action.",
+        "ru": "URL cheez ka naam, HTTP method action ka naam."
+      },
+      {
+        "term": "JSON",
+        "en": "Text format for objects, arrays, strings, numbers, booleans and null.",
+        "ru": "Objects, arrays, strings, numbers, booleans aur null ka text format."
+      },
+      {
+        "term": "Stateless",
+        "en": "Each request carries its own authentication and context.",
+        "ru": "Har request apni authentication aur context saath laati hai."
+      }
+    ],
+    "formulas": [],
+    "code": [
+      "import json",
+      "",
+      "courses, next_id = {}, [1]",
+      "",
+      "def handle(method, path, body=None):",
+      "    parts = path.strip('/').split('/')        # e.g. ['api', 'v1', 'courses', '1']",
+      "    cid = int(parts[3]) if len(parts) > 3 else None",
+      "    if method == 'POST' and cid is None:",
+      "        course = {'id': next_id[0], **json.loads(body)}",
+      "        courses[course['id']] = course",
+      "        next_id[0] += 1",
+      "        return 201, course",
+      "    if method == 'GET':",
+      "        if cid is None:",
+      "            return 200, list(courses.values())",
+      "        return (200, courses[cid]) if cid in courses else (404, {'error': 'not found'})",
+      "    if method == 'DELETE' and cid in courses:",
+      "        del courses[cid]",
+      "        return 204, None",
+      "    return 404, {'error': 'not found'}",
+      "",
+      "print(handle('POST', '/api/v1/courses', json.dumps({'code': 'CS301', 'title': 'Web Engineering'})))",
+      "print(handle('GET', '/api/v1/courses/1'))",
+      "print(handle('DELETE', '/api/v1/courses/1'))",
+      "print(handle('GET', '/api/v1/courses/1'))"
+    ],
+    "code_explanation": [
+      {
+        "en": "handle() mimics a server: it routes by method and path and returns (status, JSON body).",
+        "ru": "handle() server ki naql karta hai: method aur path ke hisaab se raasta chunta hai aur (status, JSON body) deta hai."
+      },
+      {
+        "en": "POST returns 201 Created, DELETE returns 204 No Content, a missing id returns 404.",
+        "ru": "POST 201 Created, DELETE 204 No Content, aur ghayab id 404 deta hai."
+      }
+    ],
+    "applications": [
+      {
+        "en": "Mobile and web apps talking to their servers.",
+        "ru": "Mobile aur web apps ka apne servers se baat karna."
+      },
+      {
+        "en": "Public APIs (maps, payments, the YouTube Data API used by ClipSage).",
+        "ru": "Public APIs (maps, payments, ClipSage mein istemal hone wali YouTube Data API)."
+      },
+      {
+        "en": "Microservices communicating inside a company.",
+        "ru": "Company ke andar microservices ka aapas mein rabta."
+      }
+    ],
+    "exam_points": [
+      {
+        "en": "Design endpoints for a given resource with correct methods and status codes.",
+        "ru": "Diye gaye resource ke liye sahi methods aur status codes ke saath endpoints design karein."
+      },
+      {
+        "en": "Explain the REST constraints, especially statelessness.",
+        "ru": "REST ki pabandiyan, khaas tor par statelessness, samjhayein."
+      },
+      {
+        "en": "Write a JSON request and response.",
+        "ru": "JSON request aur response likhein."
+      }
+    ],
+    "common_mistakes": [
+      {
+        "en": "Putting verbs in URLs (/getStudents) instead of using HTTP methods.",
+        "ru": "HTTP methods ki jagah URLs mein verbs (/getStudents) likhna."
+      },
+      {
+        "en": "Returning 200 for errors with an error message in the body.",
+        "ru": "Errors par body mein message ke saath 200 lautana."
+      },
+      {
+        "en": "Storing user sessions on the server and calling it RESTful.",
+        "ru": "Server par user sessions rakh kar use RESTful kehna."
+      }
+    ],
+    "questions": [
+      {
+        "type": "mcq",
+        "kind": "application",
+        "difficulty": "easy",
+        "q": {
+          "en": "Which request should create a new student?",
+          "ru": "Naya student banane ke liye kaunsi request honi chahiye?"
+        },
+        "options": [
+          {
+            "en": "POST /students",
+            "ru": "POST /students"
+          },
+          {
+            "en": "GET /students/create",
+            "ru": "GET /students/create"
+          },
+          {
+            "en": "DELETE /students",
+            "ru": "DELETE /students"
+          },
+          {
+            "en": "GET /createStudent",
+            "ru": "GET /createStudent"
+          }
+        ],
+        "answer": 0,
+        "hints": [
+          {
+            "en": "Use the method that creates, on the collection URL.",
+            "ru": "Collection URL par banane wala method istemal karein."
+          }
+        ],
+        "explanation": {
+          "en": "POST to the collection creates a new member (status 201).",
+          "ru": "Collection par POST naya member banata hai (status 201)."
+        }
+      },
+      {
+        "type": "mcq",
+        "kind": "conceptual",
+        "difficulty": "medium",
+        "q": {
+          "en": "A successful DELETE with no response body should return:",
+          "ru": "Kamyab DELETE jis ki koi response body na ho, kya lautaye?"
+        },
+        "options": [
+          {
+            "en": "204 No Content",
+            "ru": "204 No Content"
+          },
+          {
+            "en": "201 Created",
+            "ru": "201 Created"
+          },
+          {
+            "en": "404 Not Found",
+            "ru": "404 Not Found"
+          },
+          {
+            "en": "302 Found",
+            "ru": "302 Found"
+          }
+        ],
+        "answer": 0,
+        "hints": [
+          {
+            "en": "Success, but nothing to send back.",
+            "ru": "Kamyabi, lekin wapas bhejne ko kuch nahi."
+          }
+        ],
+        "explanation": {
+          "en": "204 means success with an empty body.",
+          "ru": "204 ka matlab khali body ke saath kamyabi."
+        }
+      },
+      {
+        "type": "tf",
+        "kind": "conceptual",
+        "difficulty": "medium",
+        "q": {
+          "en": "In REST, the server should remember each client's login state between requests.",
+          "ru": "REST mein server ko har client ki login state requests ke darmiyan yaad rakhni chahiye."
+        },
+        "answer": false,
+        "hints": [
+          {
+            "en": "One of the REST constraints is statelessness.",
+            "ru": "REST ki ek pabandi statelessness hai."
+          }
+        ],
+        "explanation": {
+          "en": "False: each request carries its own credentials (e.g. a token).",
+          "ru": "Ghalat: har request apni credentials (maslan token) saath laati hai."
+        }
+      }
+    ]
+  },
+  {
+    "id": "cookies_sessions",
+    "title": {
+      "en": "Cookies, Sessions and Web Security Basics",
+      "ru": "Cookies, Sessions aur Web Security ki Buniyad"
+    },
+    "subject": "Web Engineering",
+    "category": "back_end",
+    "aliases": [
+      "cookies",
+      "cookie",
+      "session",
+      "sessions",
+      "authentication",
+      "jwt",
+      "token",
+      "web security",
+      "xss",
+      "csrf",
+      "sql injection",
+      "same origin"
+    ],
+    "search_query": "cookies sessions authentication xss csrf",
+    "video_queries": [
+      "cookies vs sessions vs tokens explained",
+      "web security XSS CSRF SQL injection explained"
+    ],
+    "subtopics": [
+      {
+        "name": "Cookies",
+        "terms": [
+          "cookie"
+        ]
+      },
+      {
+        "name": "Sessions",
+        "terms": [
+          "session"
+        ]
+      },
+      {
+        "name": "Tokens / JWT",
+        "terms": [
+          "jwt",
+          "token"
+        ]
+      },
+      {
+        "name": "XSS",
+        "terms": [
+          "xss",
+          "cross site scripting"
+        ]
+      },
+      {
+        "name": "CSRF",
+        "terms": [
+          "csrf",
+          "cross site request forgery"
+        ]
+      },
+      {
+        "name": "SQL injection",
+        "terms": [
+          "sql injection"
+        ]
+      }
+    ],
+    "practice": [],
+    "intro": {
+      "en": "HTTP forgets every request, yet websites keep you logged in. Cookies and sessions make that possible - and they must be protected against common attacks.",
+      "ru": "HTTP har request bhool jata hai, phir bhi websites aap ko logged in rakhti hain. Cookies aur sessions yeh mumkin banate hain - aur inhein aam hamlon se bachana zaroori hai."
+    },
+    "definition": {
+      "en": "A cookie is a small piece of data the server asks the browser to store and send back with later requests. A session keeps user data on the server and identifies it with a session id stored in a cookie; token-based authentication (e.g. JWT) instead sends a signed token with every request.",
+      "ru": "Cookie data ka chhota tukra hai jise server browser se save karne aur baad ki requests ke saath wapas bhejne ko kehta hai. Session user ka data server par rakhta hai aur use cookie mein rakhe session id se pehchanta hai; token-based authentication (maslan JWT) is ki jagah har request ke saath signed token bhejti hai."
+    },
+    "explanation": {
+      "en": "The server sends 'Set-Cookie: sid=abc123; HttpOnly; Secure; SameSite=Lax'; the browser then adds 'Cookie: sid=abc123' to requests for that site. HttpOnly hides the cookie from JavaScript (limits XSS damage), Secure sends it only over HTTPS and SameSite limits cross-site sending (helps against CSRF). On login the server checks the password hash, creates a session record and returns its id. Common attacks: XSS - an attacker injects a script into a page (fix: escape output, Content-Security-Policy); CSRF - another site makes the browser send an authenticated request (fix: SameSite cookies, CSRF tokens); SQL injection - user input changes a database query (fix: parameterised queries). Passwords must be stored as salted hashes (bcrypt, argon2), never as plain text.",
+      "ru": "Server 'Set-Cookie: sid=abc123; HttpOnly; Secure; SameSite=Lax' bhejta hai; phir browser us site ki requests mein 'Cookie: sid=abc123' shamil karta hai. HttpOnly cookie ko JavaScript se chhupata hai (XSS ka nuqsan kam), Secure ise sirf HTTPS par bhejta hai aur SameSite doosri sites se bhejna mehdood karta hai (CSRF ke khilaf madad). Login par server password hash check karta hai, session record banata hai aur us ki id lautata hai. Aam hamle: XSS - hamla awar page mein script dal deta hai (hal: output escape karna, Content-Security-Policy); CSRF - doosri site browser se authenticated request bhijwati hai (hal: SameSite cookies, CSRF tokens); SQL injection - user ka input database query badal deta hai (hal: parameterised queries). Passwords hamesha salted hashes (bcrypt, argon2) ki shakal mein save hon, kabhi saada text mein nahi."
+    },
+    "example": {
+      "en": "A login form posts the email and password; the server finds the user, verifies the bcrypt hash, stores {user_id: 42} under a random session id and replies with Set-Cookie: sid=<random>; HttpOnly; Secure. On the next page request the browser sends the cookie, the server looks up the session and knows it is user 42. Logging out deletes the session on the server.",
+      "ru": "Login form email aur password bhejta hai; server user dhoondta hai, bcrypt hash check karta hai, ek random session id ke neeche {user_id: 42} rakhta hai aur Set-Cookie: sid=<random>; HttpOnly; Secure ke saath jawab deta hai. Agli page request par browser cookie bhejta hai, server session dhoondta hai aur jaan leta hai ke yeh user 42 hai. Logout server par session mita deta hai."
+    },
+    "key_concepts": [
+      {
+        "term": "Cookie flags",
+        "en": "HttpOnly, Secure, SameSite, Expires/Max-Age.",
+        "ru": "HttpOnly, Secure, SameSite, Expires/Max-Age."
+      },
+      {
+        "term": "Session vs token",
+        "en": "Server stores state vs client carries a signed token.",
+        "ru": "Server state rakhta hai vs client signed token saath laata hai."
+      },
+      {
+        "term": "XSS / CSRF / SQL injection",
+        "en": "Injected script / forged request / injected query.",
+        "ru": "Dala gaya script / jaali request / dali gayi query."
+      }
+    ],
+    "formulas": [],
+    "code": [
+      "import hashlib, hmac, os, sqlite3",
+      "",
+      "def hash_password(password, salt=None):",
+      "    salt = salt or os.urandom(16)",
+      "    return salt, hashlib.pbkdf2_hmac('sha256', password.encode(), salt, 100_000)",
+      "",
+      "salt, stored = hash_password('s3cret!')",
+      "_, attempt = hash_password('s3cret!', salt)",
+      "print('password ok:', hmac.compare_digest(stored, attempt))",
+      "",
+      "db = sqlite3.connect(':memory:')",
+      "db.execute('CREATE TABLE users(name TEXT)')",
+      "db.execute('INSERT INTO users VALUES (?)', ('ali',))",
+      "evil = \"x' OR '1'='1\"",
+      "safe = db.execute('SELECT * FROM users WHERE name = ?', (evil,)).fetchall()",
+      "print('parameterised query result for the injection attempt:', safe)"
+    ],
+    "code_explanation": [
+      {
+        "en": "Passwords are hashed with a random salt and PBKDF2; only the salt and hash are stored.",
+        "ru": "Passwords random salt aur PBKDF2 se hash hote hain; sirf salt aur hash save hote hain."
+      },
+      {
+        "en": "The '?' placeholder sends user input as data, so the SQL injection string matches nothing.",
+        "ru": "'?' placeholder user ka input data ke taur par bhejta hai, is liye SQL injection wali string kisi se nahi milti."
+      }
+    ],
+    "applications": [
+      {
+        "en": "Login systems, shopping carts and preferences.",
+        "ru": "Login systems, shopping carts aur pasand."
+      },
+      {
+        "en": "Securing any web application (OWASP Top 10).",
+        "ru": "Kisi bhi web application ko mehfooz banana (OWASP Top 10)."
+      }
+    ],
+    "exam_points": [
+      {
+        "en": "Explain how sessions work on top of stateless HTTP.",
+        "ru": "Stateless HTTP par sessions kaise kaam karte hain, samjhayein."
+      },
+      {
+        "en": "Compare session cookies and JWT tokens.",
+        "ru": "Session cookies aur JWT tokens ka muqabla karein."
+      },
+      {
+        "en": "Describe XSS, CSRF and SQL injection and their defences.",
+        "ru": "XSS, CSRF aur SQL injection aur un se bachao bayan karein."
+      }
+    ],
+    "common_mistakes": [
+      {
+        "en": "Storing passwords in plain text or with a fast unsalted hash.",
+        "ru": "Passwords saada text ya baghair salt ke tez hash mein rakhna."
+      },
+      {
+        "en": "Building SQL queries by string concatenation.",
+        "ru": "String jor kar SQL queries banana."
+      },
+      {
+        "en": "Storing sensitive data in cookies readable by JavaScript.",
+        "ru": "Hassas data aisi cookies mein rakhna jinhein JavaScript parh sake."
+      }
+    ],
+    "questions": [
+      {
+        "type": "mcq",
+        "kind": "conceptual",
+        "difficulty": "medium",
+        "q": {
+          "en": "Which cookie flag prevents JavaScript from reading the cookie?",
+          "ru": "Kaunsa cookie flag JavaScript ko cookie parhne se rokta hai?"
+        },
+        "options": [
+          {
+            "en": "HttpOnly",
+            "ru": "HttpOnly"
+          },
+          {
+            "en": "Secure",
+            "ru": "Secure"
+          },
+          {
+            "en": "SameSite",
+            "ru": "SameSite"
+          },
+          {
+            "en": "Max-Age",
+            "ru": "Max-Age"
+          }
+        ],
+        "answer": 0,
+        "hints": [
+          {
+            "en": "Only for HTTP, not for scripts.",
+            "ru": "Sirf HTTP ke liye, scripts ke liye nahi."
+          }
+        ],
+        "explanation": {
+          "en": "HttpOnly hides the cookie from document.cookie, which limits XSS.",
+          "ru": "HttpOnly cookie ko document.cookie se chhupata hai, jis se XSS mehdood hota hai."
+        }
+      },
+      {
+        "type": "mcq",
+        "kind": "application",
+        "difficulty": "medium",
+        "q": {
+          "en": "The best defence against SQL injection is:",
+          "ru": "SQL injection ka behtareen bachao kya hai?"
+        },
+        "options": [
+          {
+            "en": "Parameterised (prepared) queries",
+            "ru": "Parameterised (prepared) queries"
+          },
+          {
+            "en": "Hiding the database name",
+            "ru": "Database ka naam chhupana"
+          },
+          {
+            "en": "Using GET instead of POST",
+            "ru": "POST ki jagah GET istemal karna"
+          },
+          {
+            "en": "Longer passwords",
+            "ru": "Lambe passwords"
+          }
+        ],
+        "answer": 0,
+        "hints": [
+          {
+            "en": "Keep input separate from the query text.",
+            "ru": "Input ko query ke text se alag rakhein."
+          }
+        ],
+        "explanation": {
+          "en": "Parameters are never interpreted as SQL code.",
+          "ru": "Parameters ko kabhi SQL code nahi samjha jata."
+        }
+      },
+      {
+        "type": "tf",
+        "kind": "conceptual",
+        "difficulty": "easy",
+        "q": {
+          "en": "With server-side sessions, the browser stores the full user data in the cookie.",
+          "ru": "Server-side sessions mein browser poora user data cookie mein rakhta hai."
+        },
+        "answer": false,
+        "hints": [
+          {
+            "en": "What is actually inside the session cookie?",
+            "ru": "Session cookie ke andar asal mein kya hota hai?"
+          }
+        ],
+        "explanation": {
+          "en": "False: the cookie only holds a random session id; the data stays on the server.",
+          "ru": "Ghalat: cookie mein sirf random session id hoti hai; data server par rehta hai."
+        }
+      }
+    ]
+  }
+]

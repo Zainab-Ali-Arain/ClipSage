@@ -33,6 +33,7 @@ KINDS = {
     "determinant": {"en": "Determinant", "ru": "Determinant"},
     "inverse": {"en": "Matrix inverse", "ru": "Matrix ka inverse"},
     "eigen": {"en": "Eigenvalues (2 x 2)", "ru": "Eigenvalues (2 x 2)"},
+    "gaussian_elimination": {"en": "Gaussian elimination / rank", "ru": "Gaussian elimination / rank"},
     "vectors": {"en": "Vectors: dot product, norm, cosine", "ru": "Vectors: dot product, norm, cosine"},
     "statistics": {"en": "Mean, variance, standard deviation", "ru": "Mean, variance, standard deviation"},
     "bayes": {"en": "Bayes' theorem", "ru": "Bayes' theorem"},
@@ -258,6 +259,78 @@ def eigen2(A: np.ndarray) -> dict:
     return _result("eigen", steps, sym, text, "NumPy linalg.eigvals" if ok else "MISMATCH",
                    {"en": "Eigenvalues tell how much a matrix stretches its special (eigen) directions; PCA uses them.",
                     "ru": "Eigenvalues batati hain matrix apni khaas (eigen) simton ko kitna khenchti hai; PCA inhein istemal karta hai."})
+
+
+def _row_str(row) -> str:
+    return "[" + ", ".join(str(x) for x in row) + "]"
+
+
+def gaussian_elimination(aug: np.ndarray) -> dict:
+    """
+    Row-reduce an augmented matrix [A | b] (last column = b) to reduced row
+    echelon form with exact fractions, recording every row operation.
+    """
+    M = sp.Matrix(np.atleast_2d(aug).tolist()).applyfunc(lambda v: sp.nsimplify(v))
+    rows, cols = M.shape
+    if cols < 2:
+        raise MathInputError("enter an augmented matrix with at least one variable column and the b column")
+    n_vars = cols - 1
+    steps = [_step(f"Augmented matrix [A | b]: {', '.join(_row_str(M.row(i)) for i in range(rows))}",
+                   f"Augmented matrix [A | b]: {', '.join(_row_str(M.row(i)) for i in range(rows))}")]
+    pivot_cols, r = [], 0
+    for c in range(n_vars):
+        piv = next((i for i in range(r, rows) if M[i, c] != 0), None)
+        if piv is None:
+            continue
+        if piv != r:
+            M.row_swap(piv, r)
+            steps.append(_step(f"Swap R{piv + 1} and R{r + 1} to get a non-zero pivot.",
+                               f"Non-zero pivot ke liye R{piv + 1} aur R{r + 1} ki jagah badlein."))
+        if M[r, c] != 1:
+            f = M[r, c]
+            M[r, :] = M[r, :] / f
+            steps.append(_step(f"R{r + 1} = R{r + 1} / {f}  ->  {_row_str(M.row(r))}",
+                               f"R{r + 1} = R{r + 1} / {f}  ->  {_row_str(M.row(r))}"))
+        for i in range(rows):
+            if i != r and M[i, c] != 0:
+                f = M[i, c]
+                M[i, :] = M[i, :] - f * M[r, :]
+                steps.append(_step(f"R{i + 1} = R{i + 1} - ({f}) R{r + 1}  ->  {_row_str(M.row(i))}",
+                                   f"R{i + 1} = R{i + 1} - ({f}) R{r + 1}  ->  {_row_str(M.row(i))}"))
+        pivot_cols.append(c)
+        r += 1
+        if r == rows:
+            break
+    rank = len(pivot_cols)
+    inconsistent = any(all(M[i, j] == 0 for j in range(n_vars)) and M[i, n_vars] != 0 for i in range(rows))
+    steps.append(_step(f"Reduced row echelon form: {', '.join(_row_str(M.row(i)) for i in range(rows))}; rank(A) = {rank}",
+                       f"Reduced row echelon form: {', '.join(_row_str(M.row(i)) for i in range(rows))}; rank(A) = {rank}"))
+    names = [f"x{j + 1}" for j in range(n_vars)]
+    if inconsistent:
+        kind, text, answer = "none", "no solution (inconsistent system)", None
+        steps.append(_step("A row reads 0 = non-zero, so the system has no solution.",
+                           "Ek row 0 = non-zero kehti hai, is liye system ka koi hal nahi."))
+    elif rank == n_vars:
+        sol = [M[pivot_cols.index(j), n_vars] for j in range(n_vars)]
+        kind, answer = "unique", [float(v) for v in sol]
+        text = ", ".join(f"{nm} = {v}" for nm, v in zip(names, sol))
+        steps.append(_step(f"Every variable has a pivot: unique solution {text}.",
+                           f"Har variable ka pivot hai: ek hi hal {text}."))
+    else:
+        free = [names[j] for j in range(n_vars) if j not in pivot_cols]
+        kind, answer = "infinite", None
+        text = f"infinitely many solutions (free variables: {', '.join(free)})"
+        steps.append(_step(f"Free variables {', '.join(free)}: infinitely many solutions.",
+                           f"Free variables {', '.join(free)}: be-shumar hal."))
+    A = np.array(np.atleast_2d(aug)[:, :-1], dtype=float)
+    ok = rank == np.linalg.matrix_rank(A)
+    if kind == "unique":
+        ok = ok and np.allclose(A @ np.array(answer), np.array(np.atleast_2d(aug)[:, -1], dtype=float))
+    return _result("gaussian_elimination", steps, answer, text,
+                   "NumPy matrix_rank + substitution" if ok else "MISMATCH",
+                   {"en": "Row operations do not change the solutions; the pivots give the rank.",
+                    "ru": "Row operations hal nahi badaltin; pivots rank batate hain."},
+                   rank=rank, solution_kind=kind, rref=[[str(x) for x in M.row(i)] for i in range(rows)])
 
 
 def vectors(u: np.ndarray, v: np.ndarray) -> dict:
@@ -609,8 +682,8 @@ def detect_and_solve(text: str) -> dict:
 # ---------------------------------------------------------------------------
 # Practice problems
 # ---------------------------------------------------------------------------
-PRACTICE_KINDS = ["matrix_multiply", "determinant", "vectors", "statistics", "bayes", "derivative",
-                  "equation", "gradient_descent", "binomial"]
+PRACTICE_KINDS = ["matrix_multiply", "determinant", "vectors", "gaussian_elimination", "statistics", "bayes",
+                  "derivative", "equation", "gradient_descent", "binomial"]
 
 
 def practice_problem(kind: str, seed: Optional[int] = None) -> dict:
@@ -624,6 +697,19 @@ def practice_problem(kind: str, seed: Optional[int] = None) -> dict:
                                                  "ru": f"A = {mat_str(A)}, B = {mat_str(B)}. AB ka (1,1) element kya hai?"},
                 "answer": float(sol["answer"][0, 0]), "tolerance": 1e-6, "solution": sol,
                 "hint": {"en": "Row 1 of A dotted with column 1 of B.", "ru": "A ki row 1 ka B ke column 1 se dot product."}}
+    if kind == "gaussian_elimination":
+        while True:
+            A = np.array([[r(-3, 4) for _ in range(3)] for _ in range(3)])
+            if round(np.linalg.det(A)) != 0:
+                break
+        x = np.array([r(-3, 4) for _ in range(3)])
+        aug = np.column_stack([A, A @ x])
+        sol = gaussian_elimination(aug)
+        eqs = "; ".join(" + ".join(f"{A[i, j]}x{j + 1}" for j in range(3)) + f" = {A[i] @ x}" for i in range(3))
+        return {"kind": kind, "q": {"en": f"Solve by Gaussian elimination: {eqs}. What is x1?",
+                                    "ru": f"Gaussian elimination se hal karein: {eqs}. x1 kya hai?"},
+                "answer": float(x[0]), "tolerance": 1e-6, "solution": sol,
+                "hint": {"en": "Eliminate x1 from rows 2 and 3 first.", "ru": "Pehle rows 2 aur 3 se x1 khatam karein."}}
     if kind == "determinant":
         A = np.array([[r(-4, 6), r(-4, 6)], [r(-4, 6), r(-4, 6)]])
         sol = determinant(A)

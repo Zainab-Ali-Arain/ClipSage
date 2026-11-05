@@ -14,9 +14,11 @@ and never at query time. Re-running the script resumes where it stopped.
 Videos are NOT downloaded - only metadata and captions are stored.
 
 Usage:
-    python -m clipsage.collect                    # metadata + transcripts
-    python -m clipsage.collect --max-videos 50    # small trial run
+    python -m clipsage.collect                    # topic video library (2 per lesson) + transcripts
+    python -m clipsage.collect --per-topic 3      # more videos per topic
+    python -m clipsage.collect --subject "Operating Systems"   # one subject only
     python -m clipsage.collect --skip-metadata    # only fetch missing transcripts
+    python -m clipsage.collect --channels         # old mode: scan channels in config/sources.json
 """
 
 import argparse
@@ -31,7 +33,7 @@ from . import config
 from .utils import parse_iso_duration, read_json, write_json, youtube_link
 
 VIDEO_FIELDS = [
-    "video_id", "title", "channel_id", "channel_title", "subject", "source",
+    "video_id", "title", "channel_id", "channel_title", "subject", "topic_id", "source",
     "duration_seconds", "published_at", "has_captions", "default_audio_language",
     "view_count", "description", "url",
 ]
@@ -287,6 +289,85 @@ def collect_metadata(collector: YouTubeCollector, max_total: Optional[int] = Non
 
 
 # --------------------------------------------------------------------------
+# Topic-based video library (one YouTube search per lesson topic)
+# --------------------------------------------------------------------------
+LIBRARY_CACHE = "library_searches.json"
+
+
+def _relevant(video: dict, topic: dict) -> bool:
+    """The title or description must mention the topic (title words or an alias)."""
+    from .text import contains_term
+
+    text = f"{video.get('title', '')} {video.get('description', '')[:400]}".lower()
+    names = [topic["title"]["en"]] + topic.get("aliases", [])
+    if any(contains_term(text, n.lower()) for n in names):
+        return True
+    words = [w for w in re.findall(r"[a-z0-9']+", topic["title"]["en"].lower()) if len(w) > 3]
+    return sum(1 for w in words if w in text) >= max(1, len(words) // 2)
+
+
+def collect_library(collector: "YouTubeCollector", per_topic: int = 2, subjects: Optional[List[str]] = None,
+                    topics: Optional[Dict[str, dict]] = None) -> Dict[str, dict]:
+    """
+    For every lesson topic, search YouTube with its `video_queries` and keep the
+    best `per_topic` videos that (1) have captions, (2) are English, (3) are
+    3 min - 3 h long, (4) mention the topic, and (5) are not already used by
+    another topic. Search results are cached so that a run interrupted by the
+    daily quota continues the next day without repeating searches.
+    """
+    from .knowledge import load_topics
+
+    topics = topics or load_topics()
+    videos = load_existing_videos()
+    cache_path = config.RAW_DIR / LIBRARY_CACHE
+    cache = read_json(cache_path) if cache_path.exists() else {}
+    used = set(videos)
+    have = {}
+    for v in videos.values():
+        if v.get("topic_id"):
+            have[v["topic_id"]] = have.get(v["topic_id"], 0) + 1
+
+    try:
+        for topic in topics.values():
+            if subjects and topic["subject"] not in subjects:
+                continue
+            need = per_topic - have.get(topic["id"], 0)
+            for query in topic.get("video_queries", []):
+                if need <= 0:
+                    break
+                if query not in cache:
+                    cache[query] = collector.search_videos(query, max_results=15)
+                    write_json(cache_path, cache)
+                candidates = [c for c in cache[query] if c["video_id"] not in used and _relevant(c, topic)]
+                if not candidates:
+                    continue
+                details = collector.video_details([c["video_id"] for c in candidates])
+                for c in candidates:  # keep YouTube's relevance order
+                    d = details.get(c["video_id"])
+                    if need <= 0 or not d or not d.get("has_captions") or not is_acceptable(d):
+                        continue
+                    d.update(subject=topic["subject"], topic_id=topic["id"], source=f"library:{query}",
+                             url=youtube_link(d["video_id"]))
+                    videos[d["video_id"]] = d
+                    used.add(d["video_id"])
+                    need -= 1
+                    have[topic["id"]] = have.get(topic["id"], 0) + 1
+            print(f"  {topic['subject']:22} {topic['id']:26} {have.get(topic['id'], 0)} video(s)")
+    except QuotaExceeded as e:
+        print(f"  ! {e} Run the same command again tomorrow - finished searches are cached.")
+
+    save_videos(videos)
+    per_subject: Dict[str, int] = {}
+    for v in videos.values():
+        if v.get("topic_id"):
+            per_subject[v["subject"]] = per_subject.get(v["subject"], 0) + 1
+    print(f"Library: {sum(per_subject.values())} topic videos " +
+          ", ".join(f"{k}: {n}" for k, n in sorted(per_subject.items())) +
+          f" (quota used this run: {collector.quota.used} units)")
+    return videos
+
+
+# --------------------------------------------------------------------------
 # Transcript collection
 # --------------------------------------------------------------------------
 def fetch_transcript(video_id: str, api=None) -> dict:
@@ -362,6 +443,10 @@ def main(argv=None):
     parser.add_argument("--max-videos", type=int, default=None, help="cap on total videos")
     parser.add_argument("--skip-metadata", action="store_true", help="only fetch missing transcripts")
     parser.add_argument("--skip-transcripts", action="store_true", help="only collect metadata")
+    parser.add_argument("--channels", action="store_true",
+                        help="old mode: scan the channels in config/sources.json instead of the topic library")
+    parser.add_argument("--per-topic", type=int, default=2, help="library videos per lesson topic (default 2)")
+    parser.add_argument("--subject", action="append", help="only this subject (repeatable)")
     args = parser.parse_args(argv)
 
     if args.skip_metadata:
@@ -373,7 +458,11 @@ def main(argv=None):
         if not api_key:
             sys.exit(f"Set {config.YOUTUBE_API_KEY_ENV} in a .env file in the project folder "
                      f"(see .env.example) or as an environment variable.")
-        videos = collect_metadata(YouTubeCollector(api_key), args.max_videos)
+        collector = YouTubeCollector(api_key)
+        if args.channels:
+            videos = collect_metadata(collector, args.max_videos)
+        else:
+            videos = collect_library(collector, per_topic=args.per_topic, subjects=args.subject)
 
     if not args.skip_transcripts:
         collect_transcripts(videos)

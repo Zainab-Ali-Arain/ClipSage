@@ -10,32 +10,28 @@ A student types a topic, such as *overfitting*, *binary search tree* or *TCP han
 
 The project follows the proposal step by step. [`docs/proposal_mapping.md`](docs/proposal_mapping.md) shows where each item of the proposal is implemented.
 
-### Study features (version 2)
+### Study features (version 3)
 
-On top of the ML pipeline, ClipSage is a full bilingual study app:
+ClipSage covers **exactly six subjects**: Operating Systems, Machine Learning, Linear Algebra, Compiler Construction, Web Engineering and Computer Architecture (45 written topics in total).
 
-| Section | What it does |
+| Page | What it does |
 |---|---|
-| **Dashboard** | Topic search, recent searches, recommended topics, recently viewed lectures, saved topics, progress at a glance |
-| **Explore Topics** | 20 core topics (ML algorithms, NLP, maths, CS) with written lessons; any other topic is explained from the lectures |
-| **Video Lectures** | Lecture timeline with the main terms of every section, the most useful sections for your topic, jump-to-time player, *"What is taught between 10:20 and 15:30?"* and questions about a lecture, all answered from the transcript |
-| **Topic Learning** | Introduction, definition, Roman Urdu explanation, detailed explanation, worked example, concepts, formulas, workflow, Python code, applications, lecture references, exam points, common mistakes, practice |
-| **Practice & Quizzes** | MCQ, numerical and written questions with hints, retries, bilingual feedback and scores. Written answers are graded by meaning (Sentence-BERT similarity plus key terms). Fill-in-the-blank questions are built from real lecture sentences |
-| **Mathematics Playground** | Matrices, determinant, inverse, eigenvalues, vectors, statistics, Bayes, binomial, derivatives, integrals, minima, equations and gradient descent, solved step by step and verified with SymPy, NumPy or SciPy, plus random practice problems that are checked automatically |
-| **ML Algorithm Playground** | Linear and logistic regression, gradient descent, KNN, Naive Bayes, decision tree, SVM, K-Means (animated iterations), TF-IDF, cosine similarity and Sentence-BERT, on sample data or your own CSV, with intermediate calculations and plots |
-| **Saved Topics / Learning Progress / Settings** | Bookmarks, per-topic scores, topics to review, language and retrieval settings |
+| **Dashboard** | Search box, the six subject cards (topics, questions, videos, saved items, session score), recent searches and lectures of this session |
+| **Subject** (pick one in the sidebar) | Its own environment with Overview (statistics, topic graph, progress), Topics & Theory, Examples, Video References, Quiz, Algorithm Practice, Numerical Practice, Saved and a search limited to that subject |
+| **Search** | Shows your exact query, the detected subject, topic and language, then a two-column result: the explanation on the left, the matching lecture video (embedded, title, timestamps of the sub-topics, YouTube link) on the right, plus related topics, questions and practice |
+| **Video Library** | Every collected lecture by subject and topic, timeline of sections, jump-to-time, *"What is taught between 10:20 and 15:30?"* and questions about a lecture |
+| **Mathematics / ML Algorithm Playground** | Step-by-step maths (verified with SymPy/NumPy/SciPy) and ML algorithms with intermediate calculations and plots |
+| **Saved Data / Settings** | Per-subject saved items (view and delete), response language and retrieval settings |
 
-**Languages:** you can choose English, Roman Urdu or both. Roman Urdu is written in English letters. All Roman Urdu text was written by hand; nothing is machine-translated. Lecture transcripts always stay in their original English.
+Practice tools per subject (all answers are computed, never typed in): CPU scheduling (FCFS, SJF, SRTF, Priority, Round Robin), page replacement (FIFO, LRU, OPT), paging address translation, Banker's algorithm; two's complement, IEEE 754, cache simulator, 5-stage pipeline with hazards, CPI and Amdahl's law; lexer, FIRST/FOLLOW and LL(1) table, SLR(1) shift-reduce parser, three-address code; Gaussian elimination and matrix tools; a live HTML/CSS/JS editor and an HTTP request builder; the ML playground. Quizzes have MCQ, true/false, conceptual short-answer and numerical questions with easy/medium/hard levels.
 
-**Source labels:** every block is labelled as one of these:
+**Language.** The interface is always English. The *answer* follows the language of your question: ClipSage detects English or Roman Urdu with a word lexicon plus a character n-gram Naive Bayes classifier trained on the bilingual lessons (about 96% cross-validated accuracy). Settings can force English or Roman Urdu. Roman Urdu text was written by hand; lecture transcripts stay in English.
 
-- 🎥 **From lectures:** a retrieved transcript, with real timestamps
-- 📘 **ClipSage notes:** a written explanation
-- **Additional example**
-- 🧮 **Computed result**
-- **Sample data:** synthetic, clearly marked
+**Videos are never invented.** Every video comes from the YouTube Data API run on your computer, and every timestamp comes from that video's captions. If no reliable video or timestamp exists for a topic, ClipSage says so instead of guessing.
 
-Nothing is ever presented as coming from a lecture unless it does.
+**Nothing is saved automatically.** Searches, answers and notes stay in the browser session. Data is written only when you click a Save button (Save Topic, Save Notes, Save Quiz Results, Save Progress, Save Learning Material, Save result), and each subject has its own file in `data/user/subjects/`.
+
+**Source labels:** 🎥 *From lectures* (real transcript with timestamps), 📘 *ClipSage notes* (written lesson), 🧮 *Computed result*, *Sample data* (synthetic, clearly marked).
 
 ---
 
@@ -86,21 +82,25 @@ cp .env.example .env    # then paste your key into .env
 
 ## Build the dataset and index
 
-1. Check `config/sources.json`. It lists the trusted channels and playlists. Open each `@handle` on YouTube to confirm it is the right channel, and add playlist IDs for lecture series you want.
-2. Check `config/topics.json`. It lists the subjects and the keywords used to select videos.
-3. Double-click **`run_pipeline.bat`**, or run each step yourself:
+Double-click **`run_pipeline.bat`**, or run each step yourself:
 
 ```bash
-python -m clipsage.collect --max-videos 50   # Stage 1 (try a small run first; no flag = up to 500 videos)
+python -m clipsage.collect                   # Stage 1: topic video library (2 videos per topic, all six subjects)
 python -m clipsage.preprocess                # Stage 2
 python -m clipsage.index                     # Stage 3 (downloads the SBERT model once)
 python -m clipsage.explore                   # dataset report  -> reports/dataset_report.md
 python -m clipsage.topics --lda-topics 10    # LDA topics      -> reports/lda_topics.md
 ```
 
+Stage 1 searches YouTube with the `video_queries` of every lesson in `knowledge/*.json` and keeps only videos that have English captions, last 3 minutes to 3 hours, match the topic and are not duplicates. Useful options:
+
+- `--per-topic 3`: more videos per topic (default 2, which gives about 90 videos)
+- `--subject "Operating Systems"`: only one subject (repeatable)
+- `--channels`: the old mode that scans the channels in `config/sources.json`
+
 Notes on Stage 1:
 
-- **Quota.** The free quota is 10,000 units per day. Listing a channel costs 1 unit per 50 videos, a search costs 100 units. The script counts the units it uses and stops safely before the limit. Everything is cached in `data/raw/`, so re-running only fetches what is missing.
+- **Quota.** The free quota is 10,000 units per day and each search costs 100 units, so the 45 topics may need two days. The script stops safely before the limit and caches every search in `data/raw/library_searches.json`; run it again the next day and it continues where it stopped.
 - **Transcripts** are fetched with `youtube-transcript-api`. Human-made English captions are preferred over auto-generated ones. Videos without English captions are skipped and logged in `data/raw/collection_log.csv`.
 - **Blocked requests.** If YouTube starts refusing transcript requests (`IpBlocked`), wait a few hours or switch to another connection, then continue with `python -m clipsage.collect --skip-metadata`. YouTube blocks cloud servers, so collect from a home or university connection.
 
@@ -114,7 +114,7 @@ streamlit run app.py
 
 Then open http://localhost:8501.
 
-The app has a light-blue dashboard with 10 sections in the sidebar. Lessons, quizzes and both playgrounds work even before you collect any data. Video references and lecture navigation need the index built by `run_pipeline.bat`.
+The app has a light-blue dashboard. Choose a subject from the sidebar dropdown and use *Back to dashboard* to return. Lessons, quizzes and all practice tools work even before you collect any data. Video references and timestamps need the library built by `run_pipeline.bat`.
 
 You can also query from the command line:
 
@@ -152,7 +152,7 @@ The reference summaries for ROUGE are in `evaluation/reference_summaries.json`. 
 pytest -q
 ```
 
-The 83 tests use a small **synthetic** corpus with fake video IDs and a stand-in embedder, so they need neither the API key nor the SBERT download. They cover:
+The 168 tests use a small **synthetic** corpus with fake video IDs and a stand-in embedder, so they need neither the API key nor the SBERT download. They cover:
 
 - every pipeline stage
 - every lesson's Python code (it is executed)
@@ -160,6 +160,10 @@ The 83 tests use a small **synthetic** corpus with fake video IDs and a stand-in
 - every maths solver, checked against NumPy, SymPy and SciPy
 - every playground algorithm, checked against scikit-learn
 - lecture navigation and time-range explanations
+- language detection, query analysis and the six subjects
+- every OS, architecture, compiler and linear algebra simulator, and the numerical practice generators
+- the video library (relevance filter, cache, no unrelated videos in the video panel)
+- explicit per-subject saving (no file is written before Save)
 
 ## Project structure
 
@@ -183,12 +187,18 @@ clipsage/
   quiz.py                  grading (MCQ / numerical / SBERT short answers), lecture fill-in-the-blank
   mathsolve.py             step-by-step maths with SymPy/NumPy verification
   playground.py            ML algorithms with intermediate calculations and plots
-  knowledge.py, i18n.py    bilingual lessons loader, English / Roman Urdu UI text
-  progress.py              local learning progress (data/user/progress.json)
-  ui/                      the 10 dashboard pages
-knowledge/                 hand-written bilingual lessons + question banks (JSON, easy to extend)
+  knowledge.py, i18n.py    bilingual lessons loader, Roman Urdu text helpers
+  subjects.py              the six subjects (config/subjects.json) and their topics
+  langdetect.py            English / Roman Urdu detection (lexicon + char n-gram Naive Bayes)
+  search.py                query analysis: topic, subject, language
+  library.py               topic video library, video panel, caption timestamps of sub-topics
+  simulators.py            OS, architecture, compiler and linear algebra algorithms
+  practice_gen.py          numerical practice problems per subject
+  progress.py              session activity (memory only) + per-subject saved data
+  ui/                      dashboard, subject environment, search, video library, playgrounds, tools
+knowledge/                 one JSON file per subject: bilingual lessons, questions, video queries
 .streamlit/config.toml     light-blue theme
-config/                    sources.json (channels/playlists), topics.json (subjects)
+config/                    subjects.json (six subjects and their tools), sources.json, topics.json
 evaluation/                30 test queries, reference summaries, labelling sheets
 docs/                      proposal mapping, usability survey
 reports/                   generated results and charts
@@ -201,7 +211,7 @@ legacy/whisper_rag_prototype/   the earlier upload-a-video prototype (kept for r
 - ClipSage uses only the official YouTube Data API and publicly available captions.
 - Videos are **never downloaded or re-hosted**. The app only links to youtube.com, and the embedded player is YouTube's own.
 - Every explanation sentence credits its video and channel.
-- Learning progress (recent searches, quiz scores, saved topics, language) is stored only on the student's own computer in `data/user/progress.json`. It is never uploaded, and Learning Progress → Reset clears it.
+- Nothing is saved automatically. Items saved with a Save button are stored only on the student's own computer in `data/user/subjects/<subject>.json`. They are never uploaded, and Saved Data → Manage deletes them.
 - ClipSage is a study aid. Students should watch the referenced lectures.
 
 ## Team roles

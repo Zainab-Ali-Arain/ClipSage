@@ -1,0 +1,373 @@
+[
+  {
+    "id": "number_representation",
+    "title": {"en": "Number Representation: Binary, Two's Complement and IEEE 754", "ru": "Number Representation: Binary, Two's Complement aur IEEE 754"},
+    "subject": "Computer Architecture",
+    "category": "foundations",
+    "aliases": ["binary", "hexadecimal", "number systems", "twos complement", "two's complement", "signed numbers", "ieee 754", "floating point", "number representation", "overflow"],
+    "search_query": "binary hexadecimal two's complement ieee 754 floating point",
+    "video_queries": ["two's complement representation explained computer organization", "IEEE 754 floating point representation explained"],
+    "subtopics": [{"name": "Binary and hex", "terms": ["binary", "hexadecimal"]}, {"name": "Two's complement", "terms": ["two's complement", "twos complement"]}, {"name": "IEEE 754", "terms": ["ieee 754", "floating point", "mantissa", "exponent"]}, {"name": "Overflow", "terms": ["overflow"]}],
+    "practice": ["ca_numbers"],
+    "intro": {"en": "Inside the CPU everything is bits. How integers, negative numbers and fractions are encoded decides the range of values a computer can store and how arithmetic works.",
+              "ru": "CPU ke andar sab kuch bits hai. Integers, manfi numbers aur fractions kaise encode hote hain, isi se tay hota hai ke computer kitni range ki values rakh sakta hai aur hisaab kaise hota hai."},
+    "definition": {"en": "Unsigned integers are stored in plain binary. Signed integers use two's complement: a negative number -x is stored as (invert the bits of x) + 1, giving the range -2^(n-1) to 2^(n-1) - 1 for n bits. Real numbers use IEEE 754 floating point: sign, biased exponent and fraction (mantissa).",
+                   "ru": "Unsigned integers saade binary mein rakhe jate hain. Signed integers two's complement istemal karte hain: manfi number -x ko (x ke bits ulat kar) + 1 rakha jata hai, jis se n bits mein range -2^(n-1) se 2^(n-1) - 1 tak hoti hai. Real numbers IEEE 754 floating point istemal karte hain: sign, biased exponent aur fraction (mantissa)."},
+    "explanation": {"en": "Each hexadecimal digit is exactly 4 bits, so 1011 0110 = 0xB6. Two's complement makes addition and subtraction use the same circuit, has a single zero and its most significant bit shows the sign. Overflow happens when the result does not fit: adding two positive numbers gives a negative result or vice versa. Sign extension copies the sign bit when widening (8-bit 1111 0011 = -13 becomes 16-bit 1111 1111 1111 0011). IEEE 754 single precision has 1 sign bit, 8 exponent bits (bias 127) and 23 fraction bits; value = (-1)^s x 1.fraction x 2^(exponent - 127). Double precision uses 1, 11 (bias 1023) and 52 bits. Many decimals such as 0.1 cannot be represented exactly, which is why 0.1 + 0.2 is not exactly 0.3.",
+                    "ru": "Har hexadecimal digit bilkul 4 bits hai, is liye 1011 0110 = 0xB6. Two's complement jama aur tafreeq ke liye ek hi circuit istemal karta hai, is mein ek hi zero hota hai aur sab se ahem bit sign batata hai. Overflow tab hota hai jab natija samaa na sake: do positive numbers jama karne se manfi natija aaye ya is ka ulat. Sign extension width barhate waqt sign bit copy karti hai (8-bit 1111 0011 = -13, 16-bit mein 1111 1111 1111 0011). IEEE 754 single precision mein 1 sign bit, 8 exponent bits (bias 127) aur 23 fraction bits hain; value = (-1)^s x 1.fraction x 2^(exponent - 127). Double precision 1, 11 (bias 1023) aur 52 bits istemal karta hai. 0.1 jaise kai decimals bilkul durust nahi ban sakte, isi liye 0.1 + 0.2 bilkul 0.3 nahi hota."},
+    "example": {"en": "-13 in 8-bit two's complement: 13 = 0000 1101, invert = 1111 0010, add 1 = 1111 0011 (0xF3). 5.75 in IEEE 754 single precision: 5.75 = 101.11 (binary) = 1.0111 x 2^2; sign 0, exponent 2 + 127 = 129 = 1000 0001, fraction 0111 followed by zeros; bits 0 10000001 01110000000000000000000 = 0x40B80000.",
+                "ru": "-13 ko 8-bit two's complement mein: 13 = 0000 1101, ulat = 1111 0010, 1 jama = 1111 0011 (0xF3). 5.75 ko IEEE 754 single precision mein: 5.75 = 101.11 (binary) = 1.0111 x 2^2; sign 0, exponent 2 + 127 = 129 = 1000 0001, fraction 0111 aur baqi zero; bits 0 10000001 01110000000000000000000 = 0x40B80000."},
+    "key_concepts": [
+      {"term": "Two's complement range", "en": "-2^(n-1) to 2^(n-1) - 1 (e.g. -128 to 127 for 8 bits).", "ru": "-2^(n-1) se 2^(n-1) - 1 (maslan 8 bits mein -128 se 127)."},
+      {"term": "Overflow", "en": "Same-sign operands, different-sign result.", "ru": "Ek jaise sign wale operands, mukhtalif sign ka natija."},
+      {"term": "Biased exponent", "en": "Stored exponent = real exponent + 127 (single precision).", "ru": "Save hone wala exponent = asal exponent + 127 (single precision)."}
+    ],
+    "formulas": [{"latex": "-x = \\overline{x} + 1", "en": "Negation in two's complement.", "ru": "Two's complement mein manfi banana."},
+                 {"latex": "V = (-1)^s \\times 1.f \\times 2^{e-127}", "en": "IEEE 754 single-precision value.", "ru": "IEEE 754 single-precision value."}],
+    "code": [
+      "import struct",
+      "",
+      "def twos_complement(value, bits=8):",
+      "    return format(value & (2 ** bits - 1), f'0{bits}b')",
+      "",
+      "print('-13 ->', twos_complement(-13), hex(-13 & 0xFF))",
+      "print('127 + 1 in 8 bits wraps to', int(twos_complement(128), 2) - 256)",
+      "bits = struct.unpack('>I', struct.pack('>f', 5.75))[0]",
+      "print('5.75 ->', format(bits, '032b'), hex(bits))",
+      "print('0.1 + 0.2 =', 0.1 + 0.2)"
+    ],
+    "code_explanation": [
+      {"en": "Masking with 2^bits - 1 gives the two's complement bit pattern of a negative number.", "ru": "2^bits - 1 se mask karne par manfi number ka two's complement bit pattern milta hai."},
+      {"en": "struct packs 5.75 as a 32-bit IEEE 754 float so we can print its bits.", "ru": "struct 5.75 ko 32-bit IEEE 754 float mein pack karta hai taake us ke bits print ho sakein."}
+    ],
+    "applications": [
+      {"en": "Integer types in C/Java (int8 to int64) and overflow bugs.", "ru": "C/Java ki integer types (int8 se int64) aur overflow bugs."},
+      {"en": "Floating-point precision in scientific computing and ML (float32, float16).", "ru": "Scientific computing aur ML mein floating-point precision (float32, float16)."}
+    ],
+    "exam_points": [
+      {"en": "Convert between decimal, binary and hex.", "ru": "Decimal, binary aur hex ke darmiyan tabdeel karein."},
+      {"en": "Write negative numbers in two's complement and detect overflow.", "ru": "Manfi numbers two's complement mein likhein aur overflow pakarein."},
+      {"en": "Encode and decode IEEE 754 single precision.", "ru": "IEEE 754 single precision encode aur decode karein."}
+    ],
+    "common_mistakes": [
+      {"en": "Forgetting to add 1 after inverting the bits.", "ru": "Bits ulatne ke baad 1 jama karna bhool jana."},
+      {"en": "Forgetting the exponent bias of 127.", "ru": "Exponent ka 127 bias bhool jana."},
+      {"en": "Forgetting the hidden leading 1 of normalised floats.", "ru": "Normalised floats ka chhupa hua shuru wala 1 bhool jana."}
+    ],
+    "questions": [
+      {"type": "mcq", "kind": "problem", "difficulty": "medium", "q": {"en": "What is -13 in 8-bit two's complement?", "ru": "8-bit two's complement mein -13 kya hai?"},
+       "options": [{"en": "11110011", "ru": "11110011"}, {"en": "10001101", "ru": "10001101"}, {"en": "11110010", "ru": "11110010"}, {"en": "00001101", "ru": "00001101"}],
+       "answer": 0, "hints": [{"en": "13 = 00001101; invert then add 1.", "ru": "13 = 00001101; ulat kar 1 jama karein."}],
+       "explanation": {"en": "Invert -> 11110010, add 1 -> 11110011.", "ru": "Ulat -> 11110010, 1 jama -> 11110011."}},
+      {"type": "numerical", "kind": "problem", "difficulty": "easy", "q": {"en": "What is the smallest value of an 8-bit two's complement integer?", "ru": "8-bit two's complement integer ki sab se chhoti value kya hai?"},
+       "answer": -128, "tolerance": 0, "hints": [{"en": "-2^(n-1).", "ru": "-2^(n-1)."}],
+       "explanation": {"en": "-2^7 = -128.", "ru": "-2^7 = -128."}},
+      {"type": "numerical", "kind": "problem", "difficulty": "medium", "q": {"en": "In IEEE 754 single precision, what is the stored (biased) exponent of 5.75?", "ru": "IEEE 754 single precision mein 5.75 ka save hone wala (biased) exponent kya hai?"},
+       "answer": 129, "tolerance": 0, "hints": [{"en": "5.75 = 1.0111 x 2^2.", "ru": "5.75 = 1.0111 x 2^2."}],
+       "explanation": {"en": "2 + 127 = 129.", "ru": "2 + 127 = 129."}},
+      {"type": "tf", "kind": "conceptual", "difficulty": "easy", "q": {"en": "Adding two positive two's complement numbers and getting a negative result indicates overflow.", "ru": "Do positive two's complement numbers jama karne par manfi natija overflow ki nishani hai."},
+       "answer": true, "hints": [{"en": "The true result is too large for the bits.", "ru": "Asal natija bits ke liye bohat bara hai."}],
+       "explanation": {"en": "True: same-sign operands with a different-sign result means overflow.", "ru": "Sahi: ek jaise sign ke operands aur mukhtalif sign ka natija overflow hai."}}
+    ]
+  },
+  {
+    "id": "instruction_cycle",
+    "title": {"en": "Instruction Set Architecture and the Instruction Cycle", "ru": "Instruction Set Architecture aur Instruction Cycle"},
+    "subject": "Computer Architecture",
+    "category": "processor",
+    "aliases": ["instruction cycle", "fetch decode execute", "isa", "instruction set architecture", "addressing modes", "risc", "cisc", "registers", "von neumann", "datapath", "mips"],
+    "search_query": "fetch decode execute cycle instruction set architecture addressing modes",
+    "video_queries": ["fetch decode execute cycle explained", "addressing modes computer organization architecture"],
+    "subtopics": [{"name": "Fetch", "terms": ["fetch"]}, {"name": "Decode", "terms": ["decode"]}, {"name": "Execute", "terms": ["execute"]}, {"name": "Addressing modes", "terms": ["addressing mode", "immediate", "register indirect"]}, {"name": "RISC vs CISC", "terms": ["risc", "cisc"]}],
+    "practice": ["ca_performance"],
+    "intro": {"en": "The instruction set architecture (ISA) is the contract between software and hardware: it lists the instructions a CPU understands. The CPU runs them one after another in the fetch-decode-execute cycle.",
+              "ru": "Instruction set architecture (ISA) software aur hardware ke darmiyan muahida hai: is mein woh instructions hain jo CPU samajhta hai. CPU inhein fetch-decode-execute cycle mein ek ke baad ek chalata hai."},
+    "definition": {"en": "The instruction cycle is the repeated sequence a CPU follows for every instruction: fetch it from memory at the address in the program counter (PC), decode its opcode and operands, execute it (ALU operation, memory access or branch) and write back the result, then move to the next instruction.",
+                   "ru": "Instruction cycle woh dohraya jane wala silsila hai jo CPU har instruction ke liye karta hai: program counter (PC) ke address se memory se instruction lana (fetch), us ka opcode aur operands samajhna (decode), use chalana (execute - ALU operation, memory access ya branch) aur natija likhna (write back), phir agli instruction par jana."},
+    "explanation": {"en": "Fetch: MAR <- PC, IR <- Memory[MAR], PC <- PC + instruction size. Decode: the control unit reads the opcode in the instruction register (IR) and selects registers. Execute: the ALU computes, or the address of a load/store is calculated and memory is accessed, or a branch updates the PC. Addressing modes describe where operands come from: immediate (the value is in the instruction), register, direct/absolute (memory address in the instruction), register indirect (address in a register), displacement/base+offset (register + constant, used for arrays and stack variables) and PC-relative (branches). RISC ISAs (ARM, RISC-V, MIPS) use few simple fixed-length instructions and load/store architecture, which is easy to pipeline; CISC ISAs (x86) have many complex variable-length instructions that can access memory directly. In the von Neumann architecture instructions and data share one memory.",
+                    "ru": "Fetch: MAR <- PC, IR <- Memory[MAR], PC <- PC + instruction size. Decode: control unit instruction register (IR) ka opcode parhta hai aur registers chunta hai. Execute: ALU hisaab karta hai, ya load/store ka address nikal kar memory access hota hai, ya branch PC update karta hai. Addressing modes batate hain operands kahan se aate hain: immediate (value instruction mein), register, direct/absolute (memory address instruction mein), register indirect (address register mein), displacement/base+offset (register + constant, arrays aur stack variables ke liye) aur PC-relative (branches). RISC ISAs (ARM, RISC-V, MIPS) kam, saadi aur ek hi length ki instructions aur load/store architecture istemal karte hain, jinhein pipeline karna aasan hai; CISC ISAs (x86) mein bohat si complex, mukhtalif length ki instructions hain jo seedha memory access kar sakti hain. Von Neumann architecture mein instructions aur data ek hi memory share karte hain."},
+    "example": {"en": "MIPS 'lw $t0, 8($s1)' (displacement mode): fetch the instruction at PC and set PC = PC + 4; decode opcode lw, base register $s1, offset 8, destination $t0; execute: address = $s1 + 8; memory: read that word; write back into $t0. If $s1 = 1000, the word at address 1008 is loaded.",
+                "ru": "MIPS 'lw $t0, 8($s1)' (displacement mode): PC wali instruction fetch karein aur PC = PC + 4; decode: opcode lw, base register $s1, offset 8, manzil $t0; execute: address = $s1 + 8; memory: woh word parhein; write back: $t0 mein. Agar $s1 = 1000 ho to address 1008 ka word load hota hai."},
+    "key_concepts": [
+      {"term": "PC and IR", "en": "Program counter holds the next address; instruction register holds the current instruction.", "ru": "Program counter agla address rakhta hai; instruction register mojooda instruction."},
+      {"term": "Addressing modes", "en": "Immediate, register, direct, register indirect, displacement, PC-relative.", "ru": "Immediate, register, direct, register indirect, displacement, PC-relative."},
+      {"term": "RISC vs CISC", "en": "Simple fixed instructions vs complex variable ones.", "ru": "Saadi muqarrar instructions vs complex mukhtalif."}
+    ],
+    "formulas": [{"latex": "EA = R_{base} + \\text{offset}", "en": "Effective address in displacement mode.", "ru": "Displacement mode mein effective address."}],
+    "code": [
+      "memory = {0: ('LOAD', 'R1', 100), 4: ('ADDI', 'R1', 5), 8: ('STORE', 'R1', 104), 12: ('HALT',), 100: 37}",
+      "regs, pc = {'R1': 0}, 0",
+      "while True:",
+      "    instr = memory[pc]                 # fetch",
+      "    pc += 4",
+      "    op = instr[0]                      # decode",
+      "    if op == 'LOAD':                   # execute + write back",
+      "        regs[instr[1]] = memory[instr[2]]",
+      "    elif op == 'ADDI':",
+      "        regs[instr[1]] += instr[2]",
+      "    elif op == 'STORE':",
+      "        memory[instr[2]] = regs[instr[1]]",
+      "    elif op == 'HALT':",
+      "        break",
+      "    print(f'PC={pc:3} {instr} -> R1={regs[\"R1\"]}')",
+      "print('memory[104] =', memory[104])"
+    ],
+    "code_explanation": [
+      {"en": "A tiny CPU simulator: the loop is the fetch-decode-execute cycle.", "ru": "Chhota CPU simulator: loop hi fetch-decode-execute cycle hai."},
+      {"en": "The PC advances by 4 bytes after each fetch, like a 32-bit RISC machine.", "ru": "Har fetch ke baad PC 4 bytes aage barhta hai, jaise 32-bit RISC machine mein."}
+    ],
+    "applications": [
+      {"en": "x86 in PCs and servers, ARM in phones, RISC-V in research and embedded chips.", "ru": "PCs aur servers mein x86, phones mein ARM, research aur embedded chips mein RISC-V."},
+      {"en": "Compilers generate code for a specific ISA.", "ru": "Compilers kisi khaas ISA ke liye code banate hain."}
+    ],
+    "exam_points": [
+      {"en": "Describe each step of the instruction cycle with register transfers.", "ru": "Register transfers ke saath instruction cycle ka har step bayan karein."},
+      {"en": "Compute effective addresses for each addressing mode.", "ru": "Har addressing mode ka effective address nikalein."},
+      {"en": "Compare RISC and CISC.", "ru": "RISC aur CISC ka muqabla karein."}
+    ],
+    "common_mistakes": [
+      {"en": "Forgetting that the PC is incremented during fetch, before execute.", "ru": "Bhool jana ke PC fetch ke dauran, execute se pehle, barhta hai."},
+      {"en": "Confusing immediate (value) with direct (address) addressing.", "ru": "Immediate (value) ko direct (address) addressing samajhna."},
+      {"en": "Saying RISC means fewer instructions per program (it is usually more, but each is simpler).", "ru": "Yeh kehna ke RISC ka matlab program mein kam instructions (aam taur par zyada hoti hain, lekin har ek saada)."}
+    ],
+    "questions": [
+      {"type": "mcq", "kind": "basic", "difficulty": "easy", "q": {"en": "Which register holds the address of the next instruction to fetch?", "ru": "Kaunsa register agli fetch hone wali instruction ka address rakhta hai?"},
+       "options": [{"en": "Program counter (PC)", "ru": "Program counter (PC)"}, {"en": "Instruction register (IR)", "ru": "Instruction register (IR)"}, {"en": "Accumulator", "ru": "Accumulator"}, {"en": "Stack pointer", "ru": "Stack pointer"}],
+       "answer": 0, "hints": [{"en": "It 'counts' through the program.", "ru": "Yeh program mein aage 'ginta' hai."}],
+       "explanation": {"en": "The PC points to the next instruction.", "ru": "PC agli instruction ki taraf ishara karta hai."}},
+      {"type": "numerical", "kind": "problem", "difficulty": "easy", "q": {"en": "Register R2 = 2000. What is the effective address of the operand 12(R2)?", "ru": "Register R2 = 2000. Operand 12(R2) ka effective address kya hai?"},
+       "answer": 2012, "tolerance": 0, "hints": [{"en": "Displacement mode: base + offset.", "ru": "Displacement mode: base + offset."}],
+       "explanation": {"en": "2000 + 12 = 2012.", "ru": "2000 + 12 = 2012."}},
+      {"type": "mcq", "kind": "conceptual", "difficulty": "medium", "q": {"en": "In 'ADDI R1, R1, 5', the operand 5 uses which addressing mode?", "ru": "'ADDI R1, R1, 5' mein operand 5 kaunsa addressing mode hai?"},
+       "options": [{"en": "Immediate", "ru": "Immediate"}, {"en": "Direct", "ru": "Direct"}, {"en": "Register indirect", "ru": "Register indirect"}, {"en": "PC-relative", "ru": "PC-relative"}],
+       "answer": 0, "hints": [{"en": "The value itself is inside the instruction.", "ru": "Value khud instruction ke andar hai."}],
+       "explanation": {"en": "A constant embedded in the instruction is immediate addressing.", "ru": "Instruction mein maujood constant immediate addressing hai."}},
+      {"type": "tf", "kind": "conceptual", "difficulty": "medium", "q": {"en": "RISC architectures are usually load/store architectures.", "ru": "RISC architectures aam taur par load/store architectures hoti hain."},
+       "answer": true, "hints": [{"en": "Only special instructions touch memory.", "ru": "Sirf khaas instructions memory chhooti hain."}],
+       "explanation": {"en": "True: arithmetic works on registers; only loads and stores access memory.", "ru": "Sahi: hisaab registers par hota hai; sirf loads aur stores memory access karte hain."}}
+    ]
+  },
+  {
+    "id": "pipelining",
+    "title": {"en": "Instruction Pipelining and Hazards", "ru": "Instruction Pipelining aur Hazards"},
+    "subject": "Computer Architecture",
+    "category": "processor",
+    "aliases": ["pipelining", "pipeline", "hazards", "data hazard", "control hazard", "structural hazard", "forwarding", "stall", "branch prediction", "pipeline speedup"],
+    "search_query": "instruction pipelining hazards forwarding stalls speedup",
+    "video_queries": ["instruction pipelining computer architecture 5 stage", "pipeline hazards data control structural forwarding"],
+    "subtopics": [{"name": "Five stages", "terms": ["fetch", "decode", "execute", "memory", "write back"]}, {"name": "Data hazards", "terms": ["data hazard", "raw hazard"]}, {"name": "Forwarding", "terms": ["forwarding", "bypassing"]}, {"name": "Control hazards", "terms": ["control hazard", "branch prediction"]}, {"name": "Speedup", "terms": ["speedup"]}],
+    "practice": ["ca_pipeline"],
+    "intro": {"en": "Pipelining is the assembly-line idea applied to the CPU: while one instruction executes, the next is decoded and a third is fetched. It is the main reason modern CPUs finish about one instruction per cycle.",
+              "ru": "Pipelining CPU par assembly line ka idea hai: jab ek instruction execute ho rahi ho, agli decode aur teesri fetch ho rahi hoti hai. Jadeed CPUs ke har cycle mein takreeban ek instruction mukammal karne ki asal wajah yahi hai."},
+    "definition": {"en": "A pipeline divides instruction execution into stages - classically IF (fetch), ID (decode/register read), EX (execute), MEM (memory access) and WB (write back) - so that several instructions overlap. Hazards are situations that prevent the next instruction from entering the pipeline in the next cycle.",
+                   "ru": "Pipeline instruction ke chalne ko stages mein baantti hai - classic tor par IF (fetch), ID (decode/register read), EX (execute), MEM (memory access) aur WB (write back) - taake kai instructions ek doosre par aa sakein. Hazards woh halaat hain jo agli instruction ko agle cycle mein pipeline mein dakhil hone se rokte hain."},
+    "explanation": {"en": "With k stages and n instructions, an ideal pipeline needs k + (n - 1) cycles instead of n x k, so the speedup is n k / (k + n - 1), approaching k for large n. Three kinds of hazards: structural (two instructions need the same hardware, e.g. one memory port), data (an instruction needs a result not yet written - read after write, RAW) and control (the next instruction depends on a branch outcome). Data hazards are reduced by forwarding (bypassing the ALU result directly to the next instruction); a load followed immediately by a use still needs one stall (load-use hazard). Control hazards are handled by stalling, branch prediction (static or dynamic with history tables) or delayed branches. Every stall adds a cycle, so CPI = 1 + stall cycles per instruction.",
+                    "ru": "k stages aur n instructions ke saath behtareen pipeline ko n x k ki jagah k + (n - 1) cycles chahiye, is liye speedup n k / (k + n - 1) hai, jo bare n par k ke qareeb pohanchta hai. Teen qisam ke hazards: structural (do instructions ko ek hi hardware chahiye, maslan memory ka ek port), data (instruction ko aisa natija chahiye jo abhi likha nahi gaya - read after write, RAW) aur control (agli instruction branch ke natije par munhasir hai). Data hazards forwarding se kam hote hain (ALU ka natija seedha agli instruction ko dena); load ke foran baad istemal ko phir bhi ek stall chahiye (load-use hazard). Control hazards stall, branch prediction (static ya history tables wala dynamic) ya delayed branches se sambhale jate hain. Har stall ek cycle barhata hai, is liye CPI = 1 + har instruction ke stall cycles."},
+    "example": {"en": "5-stage pipeline, 100 instructions, no hazards: 5 + 99 = 104 cycles versus 500 without pipelining, speedup 500 / 104 = 4.81. If 20% of instructions are loads and half of them are followed by a dependent instruction (1 stall each), CPI = 1 + 0.2 x 0.5 x 1 = 1.1.",
+                "ru": "5-stage pipeline, 100 instructions, koi hazard nahi: 5 + 99 = 104 cycles, pipelining ke baghair 500, speedup 500 / 104 = 4.81. Agar 20% instructions loads hon aur un mein se aadhi ke foran baad dependent instruction ho (har ek par 1 stall), to CPI = 1 + 0.2 x 0.5 x 1 = 1.1."},
+    "key_concepts": [
+      {"term": "Ideal pipeline time", "en": "k + n - 1 cycles.", "ru": "k + n - 1 cycles."},
+      {"term": "RAW hazard", "en": "Read after write: use before the result is written.", "ru": "Read after write: natija likhe jane se pehle istemal."},
+      {"term": "Forwarding", "en": "Passing a result directly between pipeline stages.", "ru": "Natija pipeline stages ke darmiyan seedha dena."}
+    ],
+    "formulas": [{"latex": "S = \\frac{n k}{k + n - 1}", "en": "Ideal pipeline speedup.", "ru": "Behtareen pipeline speedup."},
+                 {"latex": "CPI_{pipe} = 1 + \\text{stall cycles per instruction}", "en": "CPI with stalls.", "ru": "Stalls ke saath CPI."}],
+    "code": [
+      "def pipeline_table(n_instr, stages=('IF', 'ID', 'EX', 'MEM', 'WB')):",
+      "    k = len(stages)",
+      "    total = k + n_instr - 1",
+      "    for i in range(n_instr):",
+      "        row = ['  .  '] * total",
+      "        for s, name in enumerate(stages):",
+      "            row[i + s] = f'{name:^5}'",
+      "        print(f'I{i + 1}: ' + ''.join(row))",
+      "    return total",
+      "",
+      "cycles = pipeline_table(4)",
+      "print('cycles:', cycles, '| speedup for 100 instructions:', round(100 * 5 / (5 + 99), 2))"
+    ],
+    "code_explanation": [
+      {"en": "Each instruction starts one cycle after the previous one, so the stages overlap diagonally.", "ru": "Har instruction pichli se ek cycle baad shuru hoti hai, is liye stages tirchhe tor par ek doosre par aati hain."},
+      {"en": "4 instructions finish in 5 + 3 = 8 cycles instead of 20.", "ru": "4 instructions 20 ki jagah 5 + 3 = 8 cycles mein mukammal hoti hain."}
+    ],
+    "applications": [
+      {"en": "Every modern CPU (deep pipelines with 10-20 stages).", "ru": "Har jadeed CPU (10-20 stages wali gehri pipelines)."},
+      {"en": "Compilers reorder instructions to avoid stalls.", "ru": "Compilers stalls se bachne ke liye instructions ki tarteeb badalte hain."}
+    ],
+    "exam_points": [
+      {"en": "Draw a pipeline diagram and count cycles.", "ru": "Pipeline diagram banayein aur cycles ginein."},
+      {"en": "Identify hazards in a code sequence and show forwarding/stalls.", "ru": "Code mein hazards pehchanein aur forwarding/stalls dikhayein."},
+      {"en": "Compute speedup and CPI with stalls.", "ru": "Stalls ke saath speedup aur CPI nikalein."}
+    ],
+    "common_mistakes": [
+      {"en": "Thinking pipelining reduces the time of a single instruction (it increases throughput, not latency).", "ru": "Yeh samajhna ke pipelining ek instruction ka waqt kam karti hai (yeh throughput barhati hai, latency nahi)."},
+      {"en": "Forgetting that forwarding cannot remove the load-use stall.", "ru": "Bhool jana ke forwarding load-use stall khatam nahi kar sakti."},
+      {"en": "Using n x k instead of k + n - 1 cycles for the pipelined time.", "ru": "Pipelined waqt ke liye k + n - 1 ki jagah n x k istemal karna."}
+    ],
+    "questions": [
+      {"type": "numerical", "kind": "problem", "difficulty": "medium", "q": {"en": "How many cycles does a 5-stage ideal pipeline need for 100 instructions?", "ru": "5-stage behtareen pipeline ko 100 instructions ke liye kitne cycles chahiyein?"},
+       "answer": 104, "tolerance": 0, "hints": [{"en": "k + n - 1.", "ru": "k + n - 1."}],
+       "explanation": {"en": "5 + 100 - 1 = 104.", "ru": "5 + 100 - 1 = 104."}},
+      {"type": "numerical", "kind": "problem", "difficulty": "medium", "q": {"en": "20% of instructions are loads and half of the loads cause a 1-cycle stall. What is the CPI?", "ru": "20% instructions loads hain aur aadhe loads 1-cycle stall karte hain. CPI kya hai?"},
+       "answer": 1.1, "tolerance": 0.001, "hints": [{"en": "CPI = 1 + stalls per instruction.", "ru": "CPI = 1 + har instruction ke stalls."}],
+       "explanation": {"en": "1 + 0.2 x 0.5 x 1 = 1.1.", "ru": "1 + 0.2 x 0.5 x 1 = 1.1."}},
+      {"type": "mcq", "kind": "conceptual", "difficulty": "medium", "q": {"en": "'ADD R1, R2, R3' followed by 'SUB R4, R1, R5' causes a:", "ru": "'ADD R1, R2, R3' ke baad 'SUB R4, R1, R5' kya paida karta hai?"},
+       "options": [{"en": "Data (RAW) hazard", "ru": "Data (RAW) hazard"}, {"en": "Control hazard", "ru": "Control hazard"}, {"en": "Structural hazard", "ru": "Structural hazard"}, {"en": "No hazard", "ru": "Koi hazard nahi"}],
+       "answer": 0, "hints": [{"en": "SUB reads R1 which ADD writes.", "ru": "SUB R1 parhta hai jo ADD likhta hai."}],
+       "explanation": {"en": "Read-after-write on R1; forwarding resolves it without a stall.", "ru": "R1 par read-after-write; forwarding ise stall ke baghair hal karti hai."}},
+      {"type": "tf", "kind": "conceptual", "difficulty": "easy", "q": {"en": "Pipelining reduces the latency of each individual instruction.", "ru": "Pipelining har instruction ki latency kam karti hai."},
+       "answer": false, "hints": [{"en": "Each instruction still passes through every stage.", "ru": "Har instruction phir bhi har stage se guzarti hai."}],
+       "explanation": {"en": "False: it increases throughput; single-instruction latency stays the same or grows slightly.", "ru": "Ghalat: yeh throughput barhati hai; ek instruction ki latency wahi rehti ya thori barhti hai."}}
+    ]
+  },
+  {
+    "id": "cache_memory",
+    "title": {"en": "Cache Memory and the Memory Hierarchy", "ru": "Cache Memory aur Memory Hierarchy"},
+    "subject": "Computer Architecture",
+    "category": "memory",
+    "aliases": ["cache", "cache memory", "memory hierarchy", "direct mapped cache", "set associative", "fully associative", "cache mapping", "hit rate", "miss rate", "amat", "locality", "tag index offset"],
+    "search_query": "cache memory mapping direct mapped set associative hit miss",
+    "video_queries": ["cache memory mapping direct mapped set associative explained", "memory hierarchy locality of reference cache"],
+    "subtopics": [{"name": "Locality", "terms": ["locality", "temporal", "spatial"]}, {"name": "Direct mapped", "terms": ["direct mapped", "direct mapping"]}, {"name": "Set associative", "terms": ["set associative"]}, {"name": "Tag / index / offset", "terms": ["tag", "index", "offset"]}, {"name": "Hit and miss", "terms": ["cache hit", "cache miss", "miss penalty"]}],
+    "practice": ["ca_cache"],
+    "intro": {"en": "Main memory is about 100 times slower than the CPU. Caches - small, fast memories close to the CPU - hide most of that delay by keeping recently used data nearby.",
+              "ru": "Main memory CPU se takreeban 100 guna dheemi hai. Caches - CPU ke qareeb chhoti, tez memories - haal mein istemal hua data paas rakh kar is der ka zyada tar hissa chhupa dete hain."},
+    "definition": {"en": "A cache stores copies of memory blocks. An address is split into tag, index and block offset; the index selects a cache line (or set), the tag identifies which memory block is stored there, and a hit means the data is found in the cache. Mapping can be direct-mapped, set-associative or fully associative.",
+                   "ru": "Cache memory blocks ki copies rakhta hai. Address tag, index aur block offset mein toot-ta hai; index cache line (ya set) chunta hai, tag batata hai wahan kaunsa memory block rakha hai, aur hit ka matlab data cache mein mil gaya. Mapping direct-mapped, set-associative ya fully associative ho sakti hai."},
+    "explanation": {"en": "Caches work because of locality: temporal (recently used data is used again) and spatial (nearby addresses are used soon). The memory hierarchy goes registers -> L1 -> L2 -> L3 -> main memory -> disk, each level larger and slower. For a cache of C bytes with blocks of B bytes and associativity A: offset bits = log2 B, number of sets = C / (B x A), index bits = log2(sets), tag bits = address bits - index - offset. Direct-mapped (A = 1) is simple and fast but suffers conflict misses when two blocks map to the same line; set-associative caches reduce conflicts and use a replacement policy (LRU) inside each set. Misses are compulsory (first access), capacity (cache too small) or conflict. Average memory access time AMAT = hit time + miss rate x miss penalty. Writes use write-through or write-back (with a dirty bit).",
+                    "ru": "Caches locality ki wajah se kaam karte hain: temporal (haal mein istemal hua data dobara istemal hota hai) aur spatial (qareebi addresses jaldi istemal hote hain). Memory hierarchy registers -> L1 -> L2 -> L3 -> main memory -> disk hai, har level bara aur dheema. C bytes ke cache, B bytes ke blocks aur associativity A ke liye: offset bits = log2 B, sets ki tadaad = C / (B x A), index bits = log2(sets), tag bits = address bits - index - offset. Direct-mapped (A = 1) saada aur tez hai lekin jab do blocks ek hi line par map hon to conflict misses hote hain; set-associative caches conflicts kam karte hain aur har set ke andar replacement policy (LRU) istemal karte hain. Misses compulsory (pehli rasai), capacity (cache chhota) ya conflict hote hain. Average memory access time AMAT = hit time + miss rate x miss penalty. Writes write-through ya write-back (dirty bit ke saath) istemal karte hain."},
+    "example": {"en": "32-bit addresses, 64 KB direct-mapped cache, 16-byte blocks: offset = log2 16 = 4 bits, lines = 65536 / 16 = 4096, index = 12 bits, tag = 32 - 12 - 4 = 16 bits. With hit time 1 ns, miss rate 5% and miss penalty 100 ns: AMAT = 1 + 0.05 x 100 = 6 ns.",
+                "ru": "32-bit addresses, 64 KB direct-mapped cache, 16-byte blocks: offset = log2 16 = 4 bits, lines = 65536 / 16 = 4096, index = 12 bits, tag = 32 - 12 - 4 = 16 bits. Hit time 1 ns, miss rate 5% aur miss penalty 100 ns ke saath: AMAT = 1 + 0.05 x 100 = 6 ns."},
+    "key_concepts": [
+      {"term": "Tag / index / offset", "en": "Which block / which line or set / which byte in the block.", "ru": "Kaunsa block / kaunsi line ya set / block ka kaunsa byte."},
+      {"term": "Three Cs of misses", "en": "Compulsory, capacity, conflict.", "ru": "Compulsory, capacity, conflict."},
+      {"term": "AMAT", "en": "Hit time + miss rate x miss penalty.", "ru": "Hit time + miss rate x miss penalty."}
+    ],
+    "formulas": [{"latex": "\\text{offset} = \\log_2 B, \\; \\text{index} = \\log_2 \\frac{C}{B A}, \\; \\text{tag} = m - \\text{index} - \\text{offset}", "en": "Address breakdown (m address bits).", "ru": "Address ki taqseem (m address bits)."},
+                 {"latex": "AMAT = t_{hit} + r_{miss} \\times t_{penalty}", "en": "Average memory access time.", "ru": "Average memory access time."}],
+    "code": [
+      "import math",
+      "",
+      "def address_split(address_bits, cache_bytes, block_bytes, ways=1):",
+      "    offset = int(math.log2(block_bytes))",
+      "    sets = cache_bytes // (block_bytes * ways)",
+      "    index = int(math.log2(sets))",
+      "    return address_bits - index - offset, index, offset",
+      "",
+      "tag, index, offset = address_split(32, 64 * 1024, 16)",
+      "print(f'tag {tag} bits, index {index} bits, offset {offset} bits')",
+      "",
+      "address = 0x1234ABCD",
+      "print('offset =', address & 0xF, ' index =', (address >> 4) & 0xFFF, ' tag =', hex(address >> 16))",
+      "print('AMAT =', 1 + 0.05 * 100, 'ns')"
+    ],
+    "code_explanation": [
+      {"en": "The bit counts follow the formulas: offset from the block size, index from the number of sets.", "ru": "Bits ki ginti formulas ke mutabiq hai: offset block size se, index sets ki tadaad se."},
+      {"en": "Masking and shifting extract the offset, index and tag fields of a real address.", "ru": "Masking aur shifting asal address ke offset, index aur tag nikalte hain."}
+    ],
+    "applications": [
+      {"en": "L1/L2/L3 caches in every CPU; GPU caches.", "ru": "Har CPU ke L1/L2/L3 caches; GPU caches."},
+      {"en": "Writing cache-friendly code (loop order over arrays).", "ru": "Cache-friendly code likhna (arrays par loop ki tarteeb)."},
+      {"en": "The same ideas in web caches, CDNs and databases.", "ru": "Yahi ideas web caches, CDNs aur databases mein."}
+    ],
+    "exam_points": [
+      {"en": "Compute tag, index and offset bits for a given cache.", "ru": "Diye gaye cache ke liye tag, index aur offset bits nikalein."},
+      {"en": "Simulate hits and misses for an address sequence.", "ru": "Addresses ki tarteeb ke liye hits aur misses simulate karein."},
+      {"en": "Compute AMAT and compare mapping schemes.", "ru": "AMAT nikalein aur mapping schemes ka muqabla karein."}
+    ],
+    "common_mistakes": [
+      {"en": "Using the number of lines instead of sets for the index in a set-associative cache.", "ru": "Set-associative cache mein index ke liye sets ki jagah lines ki tadaad istemal karna."},
+      {"en": "Mixing up bits and bytes when computing the offset.", "ru": "Offset nikalte waqt bits aur bytes gadmad karna."},
+      {"en": "Adding the miss penalty to every access instead of multiplying by the miss rate.", "ru": "Miss rate se zarab karne ki jagah har access mein miss penalty jama karna."}
+    ],
+    "questions": [
+      {"type": "numerical", "kind": "problem", "difficulty": "medium", "q": {"en": "32-bit addresses, 64 KB direct-mapped cache, 16-byte blocks. How many tag bits?", "ru": "32-bit addresses, 64 KB direct-mapped cache, 16-byte blocks. Kitne tag bits?"},
+       "answer": 16, "tolerance": 0, "hints": [{"en": "Offset 4 bits, index 12 bits.", "ru": "Offset 4 bits, index 12 bits."}],
+       "explanation": {"en": "32 - 12 - 4 = 16.", "ru": "32 - 12 - 4 = 16."}},
+      {"type": "numerical", "kind": "problem", "difficulty": "easy", "q": {"en": "Hit time 1 ns, miss rate 5%, miss penalty 100 ns. AMAT in ns?", "ru": "Hit time 1 ns, miss rate 5%, miss penalty 100 ns. AMAT kitne ns?"},
+       "answer": 6, "tolerance": 0.001, "hints": [{"en": "1 + 0.05 x 100.", "ru": "1 + 0.05 x 100."}],
+       "explanation": {"en": "1 + 5 = 6 ns.", "ru": "1 + 5 = 6 ns."}},
+      {"type": "mcq", "kind": "conceptual", "difficulty": "medium", "q": {"en": "Looping over an array element by element mainly benefits from:", "ru": "Array par element by element loop zyada tar kis se faida uthata hai?"},
+       "options": [{"en": "Spatial locality", "ru": "Spatial locality"}, {"en": "Temporal locality", "ru": "Temporal locality"}, {"en": "Conflict misses", "ru": "Conflict misses"}, {"en": "Write-through", "ru": "Write-through"}],
+       "answer": 0, "hints": [{"en": "Neighbouring addresses come in the same block.", "ru": "Qareebi addresses ek hi block mein aate hain."}],
+       "explanation": {"en": "Consecutive elements share cache blocks: spatial locality.", "ru": "Lagatar elements cache blocks share karte hain: spatial locality."}},
+      {"type": "tf", "kind": "conceptual", "difficulty": "medium", "q": {"en": "A fully associative cache has no conflict misses.", "ru": "Fully associative cache mein conflict misses nahi hote."},
+       "answer": true, "hints": [{"en": "A block can go into any line.", "ru": "Block kisi bhi line mein ja sakta hai."}],
+       "explanation": {"en": "True: only compulsory and capacity misses remain.", "ru": "Sahi: sirf compulsory aur capacity misses rehte hain."}}
+    ]
+  },
+  {
+    "id": "cpu_performance",
+    "title": {"en": "CPU Performance, CPI and Amdahl's Law", "ru": "CPU Performance, CPI aur Amdahl's Law"},
+    "subject": "Computer Architecture",
+    "category": "performance",
+    "aliases": ["cpu performance", "cpi", "cpu time", "clock rate", "mips rating", "amdahl's law", "amdahls law", "speedup", "performance equation", "benchmark"],
+    "search_query": "cpu performance equation cpi clock rate amdahl's law",
+    "video_queries": ["CPU performance equation CPI clock rate computer architecture", "Amdahl's law explained example"],
+    "subtopics": [{"name": "CPU time equation", "terms": ["cpu time", "execution time"]}, {"name": "CPI", "terms": ["cpi", "cycles per instruction"]}, {"name": "Amdahl's law", "terms": ["amdahl"]}],
+    "practice": ["ca_performance"],
+    "intro": {"en": "Is a 3 GHz processor always faster than a 2 GHz one? Not necessarily. The CPU performance equation shows how clock rate, instruction count and cycles per instruction work together.",
+              "ru": "Kya 3 GHz processor hamesha 2 GHz se tez hota hai? Zaroori nahi. CPU performance equation dikhati hai ke clock rate, instruction count aur cycles per instruction mil kar kaise kaam karte hain."},
+    "definition": {"en": "CPU time = instruction count x CPI x clock cycle time = instruction count x CPI / clock rate. CPI is the average number of clock cycles per instruction. Amdahl's law gives the overall speedup when only a fraction f of the execution is sped up by a factor s: speedup = 1 / ((1 - f) + f / s).",
+                   "ru": "CPU time = instruction count x CPI x clock cycle time = instruction count x CPI / clock rate. CPI har instruction ke average clock cycles hain. Amdahl's law batata hai jab chalne ke waqt ka sirf hissa f, s guna tez ho to kul speedup kitna hoga: speedup = 1 / ((1 - f) + f / s)."},
+    "explanation": {"en": "Instruction count depends on the program, compiler and ISA; CPI on the microarchitecture (pipeline, caches) and instruction mix; clock rate on technology and design. With an instruction mix, CPI = sum over classes of (fraction x CPI of the class). Performance = 1 / execution time, and 'A is n times faster than B' means time_B / time_A = n. MIPS = instruction count / (time x 10^6) is misleading across ISAs. Amdahl's law shows the limit of improving one part: if 80% of the time is sped up infinitely, the total speedup is at most 1 / 0.2 = 5. It also limits parallel speedup on p processors: 1 / ((1 - f) + f / p).",
+                    "ru": "Instruction count program, compiler aur ISA par munhasir hai; CPI microarchitecture (pipeline, caches) aur instructions ke mix par; clock rate technology aur design par. Instructions ke mix ke saath CPI = har class ke (hissa x us class ka CPI) ka sum. Performance = 1 / execution time, aur 'A, B se n guna tez hai' ka matlab time_B / time_A = n. MIPS = instruction count / (time x 10^6) mukhtalif ISAs mein gumrah kun hai. Amdahl's law ek hisse ko behtar karne ki had dikhata hai: agar 80% waqt la-mehdood tez ho jaye to bhi kul speedup zyada se zyada 1 / 0.2 = 5 hai. Yeh p processors par parallel speedup ki had bhi batata hai: 1 / ((1 - f) + f / p)."},
+    "example": {"en": "Program: 10^9 instructions, CPI 2, clock 2 GHz -> time = 10^9 x 2 / (2 x 10^9) = 1 s. Instruction mix 50% ALU (CPI 1), 30% load/store (CPI 2), 20% branch (CPI 3): CPI = 0.5 + 0.6 + 0.6 = 1.7. If 80% of the time is made 4 times faster: speedup = 1 / (0.2 + 0.8 / 4) = 1 / 0.4 = 2.5.",
+                "ru": "Program: 10^9 instructions, CPI 2, clock 2 GHz -> time = 10^9 x 2 / (2 x 10^9) = 1 s. Instructions ka mix 50% ALU (CPI 1), 30% load/store (CPI 2), 20% branch (CPI 3): CPI = 0.5 + 0.6 + 0.6 = 1.7. Agar 80% waqt 4 guna tez ho jaye: speedup = 1 / (0.2 + 0.8 / 4) = 1 / 0.4 = 2.5."},
+    "key_concepts": [
+      {"term": "Performance equation", "en": "Time = IC x CPI / clock rate.", "ru": "Time = IC x CPI / clock rate."},
+      {"term": "Weighted CPI", "en": "Sum of fraction x CPI per instruction class.", "ru": "Har instruction class ke hissa x CPI ka sum."},
+      {"term": "Amdahl's law", "en": "The unimproved part limits the total speedup.", "ru": "Behtar na hone wala hissa kul speedup ko mehdood karta hai."}
+    ],
+    "formulas": [{"latex": "T_{CPU} = \\frac{IC \\times CPI}{f_{clock}}", "en": "CPU time.", "ru": "CPU time."},
+                 {"latex": "CPI = \\sum_i p_i \\, CPI_i", "en": "Average CPI from an instruction mix.", "ru": "Instructions ke mix se average CPI."},
+                 {"latex": "S = \\frac{1}{(1 - f) + f / s}", "en": "Amdahl's law.", "ru": "Amdahl's law."}],
+    "code": [
+      "def cpu_time(ic, cpi, clock_hz):",
+      "    return ic * cpi / clock_hz",
+      "",
+      "def amdahl(fraction, factor):",
+      "    return 1 / ((1 - fraction) + fraction / factor)",
+      "",
+      "mix = {'ALU': (0.5, 1), 'load/store': (0.3, 2), 'branch': (0.2, 3)}",
+      "cpi = sum(p * c for p, c in mix.values())",
+      "print('CPU time:', cpu_time(1e9, 2, 2e9), 's')",
+      "print('average CPI:', round(cpi, 2))",
+      "print('Amdahl speedup:', amdahl(0.8, 4))",
+      "print('limit with infinite speed-up of 80%:', round(amdahl(0.8, 1e12), 3))"
+    ],
+    "code_explanation": [
+      {"en": "cpu_time is the performance equation; amdahl is Amdahl's law.", "ru": "cpu_time performance equation hai; amdahl Amdahl's law hai."},
+      {"en": "Even an infinitely faster 80% gives at most 5x, showing the law's limit.", "ru": "80% hissa la-mehdood tez ho tab bhi zyada se zyada 5x, yahi qanoon ki had hai."}
+    ],
+    "applications": [
+      {"en": "Comparing processors and judging benchmark claims.", "ru": "Processors ka muqabla aur benchmark daawon ko parakhna."},
+      {"en": "Deciding which part of a program is worth optimising.", "ru": "Faisla karna ke program ka kaunsa hissa optimise karne layak hai."},
+      {"en": "Estimating speedup on multi-core processors.", "ru": "Multi-core processors par speedup ka andaza."}
+    ],
+    "exam_points": [
+      {"en": "Compute CPU time and compare two machines.", "ru": "CPU time nikal kar do machines ka muqabla karein."},
+      {"en": "Compute average CPI from an instruction mix.", "ru": "Instructions ke mix se average CPI nikalein."},
+      {"en": "Apply Amdahl's law, including its upper limit.", "ru": "Amdahl's law lagayein, us ki upari had samet."}
+    ],
+    "common_mistakes": [
+      {"en": "Comparing processors by clock rate alone.", "ru": "Sirf clock rate se processors ka muqabla karna."},
+      {"en": "Forgetting units (GHz = 10^9 Hz, ns = 10^-9 s).", "ru": "Units bhool jana (GHz = 10^9 Hz, ns = 10^-9 s)."},
+      {"en": "Applying the speed-up factor to the whole program instead of the fraction.", "ru": "Speed-up factor sirf hisse ki jagah poore program par lagana."}
+    ],
+    "questions": [
+      {"type": "numerical", "kind": "problem", "difficulty": "easy", "q": {"en": "10^9 instructions, CPI 2, clock 2 GHz. CPU time in seconds?", "ru": "10^9 instructions, CPI 2, clock 2 GHz. CPU time kitne seconds?"},
+       "answer": 1, "tolerance": 0.001, "hints": [{"en": "IC x CPI / clock rate.", "ru": "IC x CPI / clock rate."}],
+       "explanation": {"en": "2 x 10^9 cycles / 2 x 10^9 Hz = 1 s.", "ru": "2 x 10^9 cycles / 2 x 10^9 Hz = 1 s."}},
+      {"type": "numerical", "kind": "problem", "difficulty": "medium", "q": {"en": "Mix: 50% CPI 1, 30% CPI 2, 20% CPI 3. Average CPI?", "ru": "Mix: 50% CPI 1, 30% CPI 2, 20% CPI 3. Average CPI?"},
+       "answer": 1.7, "tolerance": 0.001, "hints": [{"en": "0.5 x 1 + 0.3 x 2 + 0.2 x 3.", "ru": "0.5 x 1 + 0.3 x 2 + 0.2 x 3."}],
+       "explanation": {"en": "0.5 + 0.6 + 0.6 = 1.7.", "ru": "0.5 + 0.6 + 0.6 = 1.7."}},
+      {"type": "numerical", "kind": "exam", "difficulty": "hard", "q": {"en": "80% of a program is made 4 times faster. What is the overall speedup?", "ru": "Program ka 80% hissa 4 guna tez kiya gaya. Kul speedup kya hai?"},
+       "answer": 2.5, "tolerance": 0.001, "hints": [{"en": "1 / (0.2 + 0.8 / 4).", "ru": "1 / (0.2 + 0.8 / 4)."}],
+       "explanation": {"en": "1 / 0.4 = 2.5.", "ru": "1 / 0.4 = 2.5."}},
+      {"type": "tf", "kind": "conceptual", "difficulty": "easy", "q": {"en": "A processor with a higher clock rate is always faster.", "ru": "Zyada clock rate wala processor hamesha tez hota hai."},
+       "answer": false, "hints": [{"en": "Time also depends on instruction count and CPI.", "ru": "Waqt instruction count aur CPI par bhi munhasir hai."}],
+       "explanation": {"en": "False: a higher CPI or more instructions can outweigh a faster clock.", "ru": "Ghalat: zyada CPI ya zyada instructions tez clock par bhari par sakti hain."}}
+    ]
+  }
+]

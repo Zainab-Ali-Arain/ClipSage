@@ -19,7 +19,7 @@ This table maps every item of the ClipSage proposal to the code that implements 
 |---|---|
 | Text-based topic queries | `app.py` text box, `pipeline.py` CLI |
 | English lectures with transcripts only | `collect.py` (`TRANSCRIPT_LANGUAGES`, `default_audio_language` filter) |
-| Five CS subjects; more can be added later | `config/topics.json` (add a subject, re-run the pipeline) |
+| CS subjects (now exactly six) | `config/subjects.json`, `knowledge/<subject>.json` |
 | Simple web interface | `app.py` (Streamlit) |
 | *Out of scope:* no downloading or re-hosting of videos | Only metadata and captions are stored; the app links to youtube.com |
 | *Out of scope:* content indexed in advance, not in real time | Stages 1–3 run offline; queries only read `data/index/` |
@@ -113,13 +113,26 @@ All tools listed in the proposal are used except these:
 
 | Feature | Where | Data source |
 |---|---|---|
-| References with thumbnail, segment start–end, link, excerpt, concepts, why useful | `lectures.segment_references`, `ui/learn.py` | Transcripts and metadata. Reasons are computed from similarity, definitions found and mentions |
-| Structured lessons (intro, definition, Roman Urdu, example, concepts, formulas, applications, exam points, mistakes) | `knowledge/*.json`, `ui/learn.py` | Hand-written notes, labelled as such |
+| References with thumbnail, segment start–end, link, excerpt, concepts, why useful | `lectures.segment_references`, `ui/topic_view.py` | Transcripts and metadata. Reasons are computed from similarity, definitions found and mentions |
+| Structured lessons (intro, definition, Roman Urdu, example, concepts, formulas, applications, exam points, mistakes) | `knowledge/*.json`, `ui/topic_view.py` | Hand-written notes, labelled as such |
 | English / Roman Urdu / both | `i18n.py`, `ui/common.py` | Hand-written; no machine translation |
-| Practice questions with hints, retries and scores | `quiz.py`, `progress.py`, `ui/learn.py` | Question banks and fill-in-the-blank questions built from lecture sentences |
+| Practice questions with hints, retries and scores | `quiz.py`, `progress.py`, `ui/topic_view.py` | Question banks and fill-in-the-blank questions built from lecture sentences |
 | Lecture navigation and "what is taught between A and B" | `lectures.video_timeline`, `explain_range`, `ask_lecture`, `ui/videos.py` | Transcripts only |
 | Mathematics problem solving | `mathsolve.py`, `ui/math_page.py` | Computed with SymPy, NumPy and SciPy |
 | ML algorithm playground and visualisations | `playground.py`, `ui/ml_page.py` | Computed by the algorithms on sample or uploaded data |
 | Light-blue dashboard with 10 sections | `app.py`, `ui/`, `.streamlit/config.toml` | - |
 
 **Limitation:** ClipSage has no large language model. Roman Urdu is therefore available for the written lessons and the interface. For lecture excerpts, ClipSage fills a Roman Urdu template with the segment's real time range and key terms, and keeps the transcript itself in English. An optional LLM could later translate excerpts, but its output would have to be labelled as machine-generated.
+
+## Version 3: six subjects, language detection, video library
+
+| Requirement | Where |
+|---|---|
+| Detect English or Roman Urdu from the query; answer in that language, UI always English | `langdetect.py`, `ui/common.py` (`rlang`, `content`, `ui`) |
+| Search result shows the query, subject, topic, explanation, video, related questions and practice | `search.py` (`analyze_query`), `ui/home.py` (`search_page`), `ui/topic_view.py` (`render_topic`) |
+| Explanation left, video right (embedded, title, sub-topic timestamps, link) | `ui/topic_view.py` (`video_panel`), `library.py` (`videos_for_topic`, `subtopic_timestamps`, `is_about_topic`) |
+| Exactly six subjects, each with its own environment and a way back to the dashboard | `config/subjects.json`, `subjects.py`, `ui/subject_page.py`, `app.py` sidebar |
+| Overview, topics, theory, examples, videos, quiz, algorithm and numerical practice, saved, subject search | `ui/subject_page.py`, `ui/tools.py`, `simulators.py`, `practice_gen.py` |
+| Quizzes: MCQ, true/false, conceptual, numerical, difficulty levels | `knowledge/*.json`, `quiz.py`, `ui/topic_view.py` |
+| Video library of real videos with timestamps and no duplicates | `collect.py` (`collect_library`, `_relevant`), `preprocess.py` (`topic_id`), `ui/videos.py` |
+| Nothing saved automatically; saved data per subject | `progress.py` (`SessionActivity`, `SubjectStore`), Save buttons in the UI |
