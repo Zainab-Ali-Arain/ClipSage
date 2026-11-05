@@ -292,6 +292,8 @@ def collect_metadata(collector: YouTubeCollector, max_total: Optional[int] = Non
 # Topic-based video library (one YouTube search per lesson topic)
 # --------------------------------------------------------------------------
 LIBRARY_CACHE = "library_searches.json"
+LIBRARY_REJECTED = "library_rejected.json"   # videos without any English transcript - never picked again
+NO_TRANSCRIPT = ("no_english_transcript", "too_short", "video_unavailable")
 
 
 def _relevant(video: dict, topic: dict) -> bool:
@@ -310,9 +312,11 @@ def collect_library(collector: "YouTubeCollector", per_topic: int = 2, subjects:
                     topics: Optional[Dict[str, dict]] = None) -> Dict[str, dict]:
     """
     For every lesson topic, search YouTube with its `video_queries` and keep the
-    best `per_topic` videos that (1) have captions, (2) are English, (3) are
-    3 min - 3 h long, (4) mention the topic, and (5) are not already used by
-    another topic. Search results are cached so that a run interrupted by the
+    best `per_topic` videos that (1) are English, (2) are 3 min - 3 h long,
+    (3) mention the topic, (4) are not already used by another topic and
+    (5) are not known to lack an English transcript. Videos with human-made
+    captions are preferred; videos with only auto-generated captions are
+    accepted too (most lecture videos have only those). Search results are cached so that a run interrupted by the
     daily quota continues the next day without repeating searches.
     """
     from .knowledge import load_topics
@@ -321,7 +325,9 @@ def collect_library(collector: "YouTubeCollector", per_topic: int = 2, subjects:
     videos = load_existing_videos()
     cache_path = config.RAW_DIR / LIBRARY_CACHE
     cache = read_json(cache_path) if cache_path.exists() else {}
-    used = set(videos)
+    rejected_path = config.RAW_DIR / LIBRARY_REJECTED
+    rejected = set(read_json(rejected_path)) if rejected_path.exists() else set()
+    used = set(videos) | rejected
     have = {}
     for v in videos.values():
         if v.get("topic_id"):
@@ -342,9 +348,11 @@ def collect_library(collector: "YouTubeCollector", per_topic: int = 2, subjects:
                 if not candidates:
                     continue
                 details = collector.video_details([c["video_id"] for c in candidates])
-                for c in candidates:  # keep YouTube's relevance order
+                # human captions first, otherwise YouTube's relevance order (sorted() is stable)
+                candidates = sorted(candidates, key=lambda c: not (details.get(c["video_id"]) or {}).get("has_captions"))
+                for c in candidates:
                     d = details.get(c["video_id"])
-                    if need <= 0 or not d or not d.get("has_captions") or not is_acceptable(d):
+                    if need <= 0 or not d or not is_acceptable(d):
                         continue
                     d.update(subject=topic["subject"], topic_id=topic["id"], source=f"library:{query}",
                              url=youtube_link(d["video_id"]))
@@ -390,7 +398,8 @@ def fetch_transcript(video_id: str, api=None) -> dict:
     return {"video_id": video_id, "language": transcript.language_code, "kind": kind, "snippets": snippets}
 
 
-def collect_transcripts(videos: Dict[str, dict]) -> None:
+def collect_transcripts(videos: Dict[str, dict]) -> Dict[str, str]:
+    """Download missing transcripts; returns the status of every video tried in this run."""
     from youtube_transcript_api import (
         IpBlocked, NoTranscriptFound, RequestBlocked, TranscriptsDisabled,
         VideoUnavailable, YouTubeTranscriptApi,
@@ -436,6 +445,21 @@ def collect_transcripts(videos: Dict[str, dict]) -> None:
 
     have = sum(1 for vid in videos if (config.TRANSCRIPT_DIR / f"{vid}.json").exists())
     print(f"Done. {have}/{len(videos)} videos have a usable English transcript.")
+    return {r["video_id"]: r["status"] for r in log_rows}
+
+
+def replace_videos_without_transcripts(videos: Dict[str, dict], statuses: Dict[str, str]) -> List[str]:
+    """Drop library videos that turned out to have no English transcript and remember them,
+    so the next collect_library() call picks other videos for those topics."""
+    bad = [vid for vid, st in statuses.items() if st in NO_TRANSCRIPT and videos.get(vid, {}).get("topic_id")]
+    if bad:
+        path = config.RAW_DIR / LIBRARY_REJECTED
+        rejected = set(read_json(path)) if path.exists() else set()
+        write_json(path, sorted(rejected | set(bad)))
+        for vid in bad:
+            videos.pop(vid, None)
+        save_videos(videos)
+    return bad
 
 
 def main(argv=None):
@@ -463,6 +487,14 @@ def main(argv=None):
             videos = collect_metadata(collector, args.max_videos)
         else:
             videos = collect_library(collector, per_topic=args.per_topic, subjects=args.subject)
+            for _ in range(3):   # replace videos that have no English captions at all
+                if args.skip_transcripts:
+                    break
+                bad = replace_videos_without_transcripts(videos, collect_transcripts(videos))
+                if not bad:
+                    return
+                print(f"{len(bad)} video(s) had no English captions - looking for replacements...")
+                videos = collect_library(collector, per_topic=args.per_topic, subjects=args.subject)
 
     if not args.skip_transcripts:
         collect_transcripts(videos)

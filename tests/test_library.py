@@ -56,7 +56,8 @@ def test_library_keeps_relevant_captioned_unique_videos(raw_dir):
     assert all(len(ids) == 2 for ids in by_topic.values())
     all_ids = [i for ids in by_topic.values() for i in ids]
     assert len(all_ids) == len(set(all_ids))                      # no duplicates across topics
-    assert not any(i.endswith(("nocaps", "offtopic")) for i in all_ids)
+    assert not any(i.endswith("offtopic") for i in all_ids)
+    assert not any(i.endswith("nocaps") for i in all_ids)        # human-captioned videos are preferred
     assert all(v["subject"] == "Operating Systems" for v in videos.values())
 
 
@@ -95,3 +96,21 @@ def test_video_panel_uses_real_topic_videos_and_caption_timestamps(built):
     assert not is_about_topic(engine, "fake_os_001", topics["processes_threads"])
     assert videos_for_topic(topics["processes_threads"], engine, "tfidf") == []
     assert videos_for_topic(topics["eigenvalues"], engine, "tfidf") == []
+
+
+def test_auto_caption_videos_are_accepted_and_missing_transcripts_replaced(raw_dir):
+    class AutoOnly(FakeCollector):
+        def video_details(self, ids):
+            out = super().video_details(ids)
+            for d in out.values():
+                d["has_captions"] = False         # only auto-generated captions, like most lectures
+            return out
+
+    topics = {"ll1_parsing": load_topics()["ll1_parsing"]}
+    videos = collect.collect_library(AutoOnly(), per_topic=2, topics=topics)
+    assert len(videos) == 2
+    first = sorted(videos)
+    bad = collect.replace_videos_without_transcripts(videos, {first[0]: "no_english_transcript", first[1]: "ok_auto"})
+    assert bad == [first[0]]
+    again = collect.collect_library(AutoOnly(), per_topic=2, topics=topics)
+    assert len(again) == 2 and first[0] not in again and first[1] in again

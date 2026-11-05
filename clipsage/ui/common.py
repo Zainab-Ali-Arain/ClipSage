@@ -168,11 +168,17 @@ def bullet_list(items, cls: str = "") -> None:
 # ---------------------------------------------------------------------------
 # Cached resources
 # ---------------------------------------------------------------------------
-@st.cache_resource(show_spinner=False)
-def _load_sage():
+@st.cache_resource(show_spinner=False, max_entries=1)
+def _load_sage(index_stamp: float):
+    """index_stamp changes when run_pipeline.bat rebuilds the index, so the new index is loaded without a restart."""
     from ..pipeline import ClipSage
 
     return ClipSage()
+
+
+def _index_stamp() -> float:
+    files = [p for p in config.INDEX_DIR.glob("*") if p.is_file()] + [config.VIDEOS_CSV]
+    return max((p.stat().st_mtime for p in files if p.exists()), default=0.0)
 
 
 def get_sage():
@@ -182,7 +188,7 @@ def get_sage():
     if not index_available():
         return None
     try:
-        return _load_sage()
+        return _load_sage(_index_stamp())
     except Exception as e:  # corrupt / out-of-sync index
         st.session_state["index_error"] = str(e)
         return None
