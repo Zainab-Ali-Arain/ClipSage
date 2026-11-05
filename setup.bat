@@ -31,6 +31,8 @@ if errorlevel 1 (
 echo [2/3] Installing packages (first time downloads ~2 GB, mostly PyTorch)...
 call venv\Scripts\activate.bat
 python -m pip install --upgrade pip
+REM CPU-only PyTorch: smaller download and avoids GPU DLL problems on Windows
+pip install torch==2.5.1 --index-url https://download.pytorch.org/whl/cpu
 pip install -r requirements.txt
 if errorlevel 1 (
     echo ERROR: package installation failed - see the messages above.
